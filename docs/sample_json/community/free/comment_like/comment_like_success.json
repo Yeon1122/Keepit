@@ -1,0 +1,9 @@
+{
+  "message": "댓글 좋아요 상태가 변경되었습니다.",
+  "status": 200,
+  "data": {
+    "comment_id": 10,
+    "user_id": 2,
+    "liked": true
+  }
+}

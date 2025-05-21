@@ -18,7 +18,7 @@
         ],
         "my_posts": [
             { "id": 101, "category": "question", "title": "ETF추천해주세욧?"},
-            { "id": 95, "category": "free", "title": "관세 전쟁 대체 언제까지.."},
+            { "id": 95, "category": "free", "title": "관세 전쟁 대체 언제까지.."}
         ],
         "test_result": {
             "type": "도전형",
