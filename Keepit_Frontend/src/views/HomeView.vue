@@ -13,15 +13,41 @@
                 <button class="go-to-test">투자 스타일 알아보기</button>
             </div>
         </div>
-        <div class="middle-2">
-
+        <div class="carousel">
+            <div class="slides" :style="{ transform: `translateX(-${currentIndex * 100}%)` }">
+            <div class="slide" v-for="(slide, index) in slideContents" :key="index">
+                <div class="card">
+                <div><p>{{ slide[0] }}</p></div>
+                </div>
+            </div>
+            </div>
         </div>
 
     </div>
 </template>
 
 <script setup>
+import { ref, onMounted, onUnmounted } from 'vue'
 
+// 각각 하나의 슬라이드를 구성할 3행짜리 콘텐츠
+const slideContents = [
+  ['정기 예금/적금'],
+  ['현물'],
+  ['주식/ETF'],
+]
+
+const currentIndex = ref(0)
+let interval = null
+
+onMounted(() => {
+  interval = setInterval(() => {
+    currentIndex.value = (currentIndex.value + 1) % slideContents.length
+  }, 3000)
+})
+
+onUnmounted(() => {
+  clearInterval(interval)
+})
 </script>
 
 <style scoped>
@@ -31,6 +57,10 @@
     justify-content: center;
     align-items: center;
     padding: 3rem 2rem;
+
+    max-width: 900px;
+    margin: 0 auto;
+    box-sizing: border-box;
     }
 
     .middle-1 > div {
@@ -82,6 +112,44 @@
 
     .go-to-test:hover {
     background-color: #145c2b;
+    }
+
+    .carousel {
+    overflow: hidden;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .slides {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+    }
+
+    .slide {
+    min-width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    }
+
+    .card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    height: 300px;
+    width: 100%;
+    background-color: #145c2b;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #ffffff;
+    }
+
+    .card div {
+    padding: 1rem;
     }
 
 </style>
