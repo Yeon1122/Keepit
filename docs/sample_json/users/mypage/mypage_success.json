@@ -1,0 +1,37 @@
+{
+    "message":"마이페이지 정보를 불러왔습니다.",
+    "status": 200,
+    "data": {
+        "id": 1,
+        "name": "송영지",
+        "nickname": "동작구 봉춤남",
+        "userid":"youngji123",
+        "email": "youngji@example.com",
+        "region_city": "서울특별시",
+        "region_district": "동작구",
+        "birth": "1999-11-28",
+        "followers": [
+            { "id": 2, "nickname": "킹왕짱하연"}
+        ],
+        "following": [
+            { "id": 3, "nickname": "코딩고수0원"}
+        ],
+        "my_posts": [
+            { "id": 101, "category": "question", "title": "ETF추천해주세욧?"},
+            { "id": 95, "category": "free", "title": "관세 전쟁 대체 언제까지.."},
+        ],
+        "test_result": {
+            "type": "도전형",
+            "description": "위험을 감수하고 수익을 추구하는 성향입니다."
+        },
+        "liked_products": {
+            "id": 201, 
+            "type": "예금", 
+            "name":"국민 튼튼 예금", 
+            "bank":"국민은행",
+            "interest_rate": 2.35,
+            "special_rate": 3.75,
+            "term": "36개월"            
+        }
+    }
+}
