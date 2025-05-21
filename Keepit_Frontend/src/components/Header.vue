@@ -44,7 +44,7 @@
         <div class="btns" v-if="!isLoggedIn">
             <!-- 비로그인 시 -->
             <button class="login btn-1">Login</button>
-            <button class="get-started btn-2">Get Started</button>
+            <button class="get-started btn-2" @click="goToSignup">Get Started</button>
         </div>
 
         <div class="btns" v-else>
@@ -64,6 +64,11 @@ const router = useRouter()
 const goHome = () => {
     router.push({ name: 'home' })
     // console.log('move to home')
+}
+
+const goToSignup = () => {
+    router.push({ name: 'signup' })
+    // console.log('move to signup')
 }
 
 // ✅ 로그인 여부 상태 (예시로 false로 초기화)
