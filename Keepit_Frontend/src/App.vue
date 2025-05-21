@@ -1,23 +1,23 @@
 <template>
   <div>
     <div class="page-background">
-        <div class="center-content">
+      <div class="center-content">
         <header class="full-width">
-            <div class="inner">
+          <div class="inner">
             <Header />
-            </div>
+          </div>
         </header>
 
         <main class="container">
-            <RouterView />
+          <RouterView />
         </main>
 
         <footer class="full-width">
-            <div class="inner">
+          <div class="inner">
             <Footer />
-            </div>
+          </div>
         </footer>
-        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -65,10 +65,9 @@ import Footer from '@/components/Footer.vue'
 /* 메인 콘텐츠 중앙 정렬 + 회색 배경 강조 가능 */
 .container {
   width: 100%;
-  padding: 2rem;
   box-sizing: border-box;
-  background-color: #f9f9f9; /* 원하시면 제거 가능 */
+  background-color: #f9f9f9;
+  /* 원하시면 제거 가능 */
   border-radius: 8px;
 }
-
 </style>
