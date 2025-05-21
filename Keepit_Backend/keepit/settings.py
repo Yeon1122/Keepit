@@ -31,11 +31,12 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'users',        # 회원가입, 로그인, 마이페이지, 찜 목록
+    'users',      # 회원가입, 로그인, 마이페이지, 찜 목록
     'products',   # 예금, 적금, 주식, ETF, 현물 등 상품 정보
     'banks',      # 지도 관련 기능
     'community',  # 자유 게시판, 질문 게시판, 댓글, 좋아요
     'tests',      # 금융 성향 결과 테스트, 결과 조회
+    'regions',    # 지도 지역 설정
     'rest_framework',
     'corsheaders',
     'django.contrib.admin',
@@ -128,3 +129,5 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = 'users.User'
