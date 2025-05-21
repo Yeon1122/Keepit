@@ -1,0 +1,10 @@
+{
+  "message": "테스트 결과가 성공적으로 저장되었습니다.",
+  "status": 201,
+  "data": {
+    "user_id": 1,
+    "test_typoe_id": "도전형",
+    "description": "위험을 감수하고 높은 수익을 추구하는 성향입니다.",
+    "score": 24
+  }
+}

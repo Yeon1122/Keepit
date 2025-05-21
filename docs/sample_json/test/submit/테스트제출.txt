@@ -1,0 +1,4 @@
+/api/v1/test/
+
+- 양식 두 개 중에 선택 가능 (submit_request.json)
+- score: 한 페이지에 한 문제 넣을 경우 대비해서 만든 변수, 삭제 가능

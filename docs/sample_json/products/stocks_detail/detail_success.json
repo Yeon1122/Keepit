@@ -1,0 +1,42 @@
+{
+  "message": "상품 상세 정보를 불러왔습니다.",
+  "status": 200,
+  "data": {
+    "id": 2,
+    "type": "주식",
+    "name": "삼성전자",
+    "company": "삼성전자",
+    "stock_code": "005930",
+    "market_type": "KOSPI",
+    "current_price": 76000,
+    "price_change": -300,
+    "sector": "반도체",
+
+    "warning_info": null,
+    
+    "open_price": 77000,
+    "high_price": 77500,
+    "low_price": 75500,
+    "base_price": 76300,
+    "weighted_avg_price": 76400,
+    "high_52w": 81000,
+    "high_52w_date": "2023-12-14",
+    "low_52w": 65000,
+    "low_52w_date": "2023-05-09",
+
+    "per": 14.3,
+    "pbr": 1.9,
+    "eps": 5310,
+    "bps": 38000,
+    "market_cap": 487000000000000,
+    "listed_shares": 5969782550,
+    "settlement_month": 12,
+    "par_value": 100,
+
+    "trade_volume": 18402050,
+    "trade_value": 1400000000000,
+    "foreign_ownership": 50.45,
+    "short_selling_allowed": true,
+    "short_selling_volume": 582000
+  }
+}
