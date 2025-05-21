@@ -1,0 +1,6 @@
+{
+    "message": "로그인에 성공했습니다.",
+    "status": 200,
+    "access": "ACCESS.TOKEN.VALUE",
+    "refresh": "REFRESH.TOKEN.VALUE"
+}
