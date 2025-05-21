@@ -1,0 +1,1 @@
+api/v1/products/compare/?id=1&id=2

@@ -1,0 +1,8 @@
+{
+    "message": "해당 유저를 팔로우했습니다.",
+    "status": 200,
+    "data": {
+        "follower_id": 1, 
+        "following_id": 2
+    }
+}

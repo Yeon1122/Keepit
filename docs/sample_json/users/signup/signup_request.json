@@ -6,5 +6,7 @@
  "password": "keepit2025!",
  "region_city": "서울특별시",
  "region_district": "동작구",
- "birth": "1999-11-28"
+ "birth_year": 1999,
+ "birth_month": 11,
+ "birth_day": 28
 }

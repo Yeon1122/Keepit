@@ -1,0 +1,2 @@
+POST: api/v1/products/{product_id}/like
+DELETE: api/v1/products/{product_id}/like
