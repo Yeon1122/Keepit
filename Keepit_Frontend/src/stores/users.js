@@ -61,7 +61,19 @@ export const useAccountStore = defineStore('account', () => {
   }
 
   // ✅ 로그아웃
-  const logOut = () => {
+  const logOut = async () => {
+    try {
+      await axios.delete('/api/v1/users/logout/', {
+        headers: {
+          Authorization: `Token ${token.value}`
+        }
+      })
+      console.log('✅ 서버 로그아웃 요청 완료')
+    } catch (error) {
+      console.error('❌ 서버 로그아웃 실패:', error.response?.data || error.message)
+    }
+
+    // 프론트 상태 초기화
     token.value = ''
     userId.value = null
     isAuthenticated.value = false

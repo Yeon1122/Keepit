@@ -3,6 +3,10 @@ import HomeView from '@/views/HomeView.vue'
 import SignupView from '@/views/SignupView.vue'
 import LoginView from '@/views/LoginView.vue'
 import SavingsView from '@/views/SavingsView.vue'
+import MypageView from '@/views/MypageView.vue'
+import UsereditView from '@/views/UsereditView.vue'
+import FollowlistView from '@/views/FollowlistView.vue'
+import OtheruserpageView from '@/views/OtheruserpageView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -27,14 +31,26 @@ const router = createRouter({
       name: 'savings',
       component: SavingsView,
     },
-    // {
-    //   path: '/about',
-    //   name: 'about',
-    //   // route level code-splitting
-    //   // this generates a separate chunk (About.[hash].js) for this route
-    //   // which is lazy-loaded when the route is visited.
-    //   component: () => import('../views/AboutView.vue'),
-    // },
+    {
+      path: '/users/mypage',
+      name: 'mypage',
+      component: MypageView,
+    },
+    {
+      path: '/users/mypage/edit',
+      name: 'useredit',
+      component: UsereditView,
+    },
+    {
+      path: '/users/follow/',
+      name: 'followlist',
+      component: FollowlistView,
+    },
+    {
+      path: '/users/:userId',
+      name: 'userpage',
+      component: OtheruserpageView,
+    }
   ],
 })
 
