@@ -14,13 +14,16 @@
       <div class="right">
         <div class="stats-box">
           <div class="stat" @click="goToFollow">
-            <span>팔로우</span><strong>{{ user.following.length }}</strong>
+            <span>팔로우</span>
+            <strong>{{ user.following?.length ?? 0 }}</strong>
           </div>
           <div class="stat" @click="goToFollow">
-            <span>팔로워</span><strong>{{ user.followers.length }}</strong>
+            <span>팔로워</span>
+            <strong>{{ user.followers?.length ?? 0 }}</strong>
           </div>
           <div class="stat">
-            <span>내가 쓴 글</span><strong>{{ user.my_posts.length }}</strong>
+            <span>내가 쓴 글</span>
+            <strong>{{ user.my_posts?.length ?? 0 }}</strong>
           </div>
         </div>
         <div class="buttons">
@@ -30,22 +33,32 @@
     </div>
 
     <!-- 성향 테스트 결과 -->
-    <div v-if="user.test_result" class="section">
+    <div class="section">
       <h4>성향 테스트 결과</h4>
-      <p><strong>{{ user.test_result.type }}</strong></p>
-      <p>{{ user.test_result.description }}</p>
+      <template v-if="user.test_result">
+        <p><strong>{{ user.test_result.type }}</strong></p>
+        <p>{{ user.test_result.description }}</p>
+      </template>
+      <template v-else>
+        <p>성향 테스트 결과가 없습니다.</p>
+      </template>
     </div>
 
     <!-- 찜한 상품 -->
-    <div v-if="user.liked_products?.length" class="section">
+    <div class="section">
       <h4>찜한 상품</h4>
-      <ul>
-        <li v-for="product in user.liked_products" :key="product.id">
-          {{ product.name }} - {{ product.bank }} /
-          {{ product.interest_rate }} ~ {{ product.special_rate }}% /
-          {{ product.term }}개월
-        </li>
-      </ul>
+      <template v-if="user.liked_products?.length">
+        <ul>
+          <li v-for="product in user.liked_products" :key="product.id">
+            {{ product.name }} - {{ product.bank }} /
+            {{ product.interest_rate }} ~ {{ product.special_rate }}% /
+            {{ product.term }}개월
+          </li>
+        </ul>
+      </template>
+      <template v-else>
+        <p>찜한 상품이 없습니다.</p>
+      </template>
     </div>
   </div>
 </template>
@@ -57,35 +70,79 @@ import { useAccountStore } from '@/stores/users.js'
 import { useRouter } from 'vue-router'
 
 const accountStore = useAccountStore()
+
 const token = accountStore.token  // token은 ref
 const router = useRouter()
 
 const user = ref({
-  nickname: '',
+  user_id: '',
   userid: '',
+  nickname: '',
+  name: '',
+  email: '',
+  birth_year: '',
+  birth_month: '',
+  birth_day: '',
+  region_city: '',
+  region_district: '',
   followers: [],
   following: [],
-  my_posts: [],
-  test_result: null,
-  liked_products: []
+  // my_posts: [],
+  // test_result: null,
+  // liked_products: [],
 })
 
-console.log('📌 저장된 토큰:', token.value)
-
 onMounted(async () => {
+  const raw = localStorage.getItem('account')           // ✅ 저장된 값 가져오기
+  const parsed = raw ? JSON.parse(raw) : null           // ✅ JSON 파싱
+  const localToken = parsed?.token                      // ✅ 선언!!! 이 줄이 빠졌었음 ❗
+
+
+
+  if (!localToken) {
+    alert('⚠️ 로그인 정보가 없습니다. 다시 로그인해주세요.')
+    return
+  }
+
   try {
     const res = await axios.get('http://127.0.0.1:8000/api/v1/users/mypage/', {
       headers: {
-        Authorization: `Token ${token.value}`,  // ✅ .value 추가
+        Authorization: `Token ${localToken}`            // ✅ 여기서 사용
       }
     })
-    console.log('✅ 마이페이지 API 응답:', res.data)
     user.value = res.data
   } catch (err) {
     console.error('❌ 마이페이지 로딩 실패:', err)
-    alert('마이페이지 정보를 불러오는 데 실패했습니다.')
   }
 })
+
+// onMounted(async () => {
+//   const raw = localStorage.getItem('account')      // 저장된 값 가져오기
+//   const parsed = raw ? JSON.parse(raw) : null      // JSON 파싱
+
+//   console.log('✅ 로컬스토리지 토큰:', localToken)
+
+//   if (!localToken) {
+//     alert('⚠️ 로그인 정보가 없습니다. 다시 로그인해주세요.')
+//     return
+//   }
+
+//   console.log('✅ 로컬스토리지에 저장된 전체 account:', parsed)
+//   console.log('✅ 로컬스토리지 토큰:', parsed?.token)
+
+//   try {
+//     const res = await axios.get('http://127.0.0.1:8000/api/v1/users/mypage/', {
+//       headers: {
+//         Authorization: Token ${token.value},  // ✅ .value 추가
+//       }
+//     })
+//     console.log('✅ 마이페이지 API 응답:', res.data)
+//     user.value = res.data
+//   } catch (err) {
+//     console.error('❌ 마이페이지 로딩 실패:', err)
+//     alert('마이페이지 정보를 불러오는 데 실패했습니다.')
+//   }
+// })
 
 const goToEdit = () => {
   router.push({ name: 'useredit' })

@@ -16,7 +16,7 @@
             </div>
         </div>
         <div class="carousel">
-            <div class="slides" :style="{ transform: `translateX(-${currentIndex * 100}%)` }">
+            <div class="slides" :style="{ transform: `translateX(-${currentIndex * 100} %)` }">
                 <div class="slide" v-for="(slide, index) in slideContents" :key="index">
                     <div class="card">
                         <div>

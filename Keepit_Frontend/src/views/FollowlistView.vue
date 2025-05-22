@@ -6,7 +6,9 @@
       <ul>
         <li v-if="following.length === 0">팔로잉한 사용자가 없습니다.</li>
         <li v-for="user in following" :key="user.id">
-          {{ user.nickname }}
+          <a @click="goToUserPage(user.userid)" style="cursor:pointer; color: #145c2b; text-decoration: underline;">
+            {{ user.nickname }} ({{ user.userid }})
+          </a>
         </li>
       </ul>
     </div>
@@ -16,7 +18,9 @@
       <ul>
         <li v-if="followers.length === 0">팔로워가 없습니다.</li>
         <li v-for="user in followers" :key="user.id">
-          {{ user.nickname }}
+          <a @click="goToUserPage(user.userid)" style="cursor:pointer; color: #145c2b; text-decoration: underline;">
+            {{ user.nickname }} ({{ user.userid }})
+          </a>
         </li>
       </ul>
     </div>
@@ -27,22 +31,28 @@
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import { useAccountStore } from '@/stores/users.js'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const accountStore = useAccountStore()
 const { token } = accountStore
 
 const followers = ref([])
 const following = ref([])
 
+const goToUserPage = (userid) => {
+  router.push({ name: 'userpage', params: { userid } })
+}
+
 onMounted(async () => {
   try {
-    const res = await axios.get('/api/v1/users/follow/', {
+    const res = await axios.get('http://127.0.0.1:8000/api/v1/users/follow-info/', {
       headers: {
         Authorization: `Token ${token}`,
       }
     })
-    followers.value = res.data.followers
-    following.value = res.data.following
+    followers.value = res.data.data.followers
+    following.value = res.data.data.following
   } catch (err) {
     console.error('❌ 팔로우 정보 불러오기 실패:', err)
     alert('팔로우 정보를 불러오는 데 실패했습니다.')

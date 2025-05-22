@@ -1,5 +1,6 @@
 <template>
   <div class="mypage-container">
+    <!-- 프로필 섹션 -->
     <div class="profile-top">
       <div class="left">
         <div class="profile-image">
@@ -12,46 +13,82 @@
 
       <div class="right">
         <div class="stats-box">
-          <div class="stat"><span>팔로우</span><strong>{{ user.following.length }}</strong></div>
-          <div class="stat"><span>팔로워</span><strong>{{ user.followers.length }}</strong></div>
-          <div class="stat"><span>찜한 상품</span><strong>{{ likedProducts.length }}</strong></div>
+          <div class="stat" @click="goToFollow">
+            <span>팔로우</span>
+            <strong>{{ user.following?.length ?? 0 }}</strong>
+          </div>
+          <div class="stat" @click="goToFollow">
+            <span>팔로워</span>
+            <strong>{{ user.followers?.length ?? 0 }}</strong>
+          </div>
+          <div class="stat">
+            <span>내가 쓴 글</span>
+            <strong>{{ user.my_posts?.length ?? 0 }}</strong>
+          </div>
         </div>
         <div class="buttons">
-          <button @click="toggleFollow">{{ isFollowing ? '언팔로우' : '팔로우' }}</button>
+          <button @click="toggleFollow" :class="{ 'followed': isFollowing, 'unfollowed': !isFollowing }">
+            {{ isFollowing ? '언팔로우' : '팔로우' }}
+          </button>
         </div>
       </div>
     </div>
 
+    <!-- 성향 테스트 결과 -->
     <div class="section">
       <h4>성향 테스트 결과</h4>
-      <p><strong>{{ user.test_result?.type }}</strong></p>
-      <p>{{ user.test_result?.description }}</p>
+      <template v-if="user.test_result">
+        <p><strong>{{ user.test_result.type }}</strong></p>
+        <p>{{ user.test_result.description }}</p>
+      </template>
+      <template v-else>
+        <p>성향 테스트 결과가 없습니다.</p>
+      </template>
     </div>
 
-    <div class="section" v-if="likedProducts.length">
-      <h4>찜한 상품 목록</h4>
-      <ul>
-        <li v-for="product in likedProducts" :key="product.id">
-          {{ product.name }} ({{ product.bank }}) - {{ product.interest_rate }}% ~ {{ product.special_rate }}%
-        </li>
-      </ul>
+    <!-- 찜한 상품 -->
+    <div class="section">
+      <h4>찜한 상품</h4>
+      <template v-if="user.liked_products?.length">
+        <ul>
+          <li v-for="product in user.liked_products" :key="product.id">
+            {{ product.name }} - {{ product.bank }} /
+            {{ product.interest_rate }} ~ {{ product.special_rate }}% /
+            {{ product.term }}개월
+          </li>
+        </ul>
+      </template>
+      <template v-else>
+        <p>찜한 상품이 없습니다.</p>
+      </template>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { ref, onMounted, watchEffect } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios'
 import { useAccountStore } from '@/stores/users.js'
 
 const accountStore = useAccountStore()
 const { token, userId } = accountStore
 const route = useRoute()
+const router = useRouter()
+
+watchEffect(() => {
+  const targetUserid = route.params.userid
+  const myUserid = accountStore.user_id
+
+  if (myUserid && String(targetUserid) === String(myUserid)) {
+    router.push({ name: 'mypage' })
+  }
+})
 
 const user = ref({
   nickname: '',
   userid: '',
+  user_id: '',
   followers: [],
   following: [],
   test_result: {},
@@ -60,37 +97,53 @@ const likedProducts = ref([])
 const isFollowing = ref(false)
 
 onMounted(async () => {
-  const targetUserId = route.params.userId
+  const targetUserid = route.params.userid
+
+  if (String(targetUserid) === accountStore.userid) {
+    router.push({ name: 'mypage' })
+    return
+  }
+
   try {
-    const res = await axios.get(`/api/v1/users/${targetUserId}/`, {
+    const res = await axios.get(`http://127.0.0.1:8000/api/v1/users/${targetUserid}/`, {
       headers: { Authorization: `Token ${token}` }
     })
-    user.value = res.data.data
-    likedProducts.value = res.data.data.liked_products || []
-    isFollowing.value = res.data.data.is_following  // 백에서 알려주는 경우
+    user.value = res.data
+    likedProducts.value = res.data.liked_products || []
+    isFollowing.value = res.data.is_following
   } catch (err) {
     console.error('❌ 사용자 정보 조회 실패', err)
+    alert('존재하지 않는 유저입니다.')
+    window.history.back()
   }
 })
 
 const toggleFollow = async () => {
-  const targetUserId = route.params.userId
+  const targetUserPk = user.value.user_id
+
   try {
+    let res
     if (isFollowing.value) {
-      await axios.delete(`/api/v1/users/${targetUserId}/follow/`, {
+      res = await axios.delete(`http://127.0.0.1:8000/api/v1/users/${targetUserPk}/follow/`, {
         headers: { Authorization: `Token ${token}` },
       })
-      isFollowing.value = false
     } else {
-      await axios.post(`/api/v1/users/${targetUserId}/follow/`, {}, {
+      res = await axios.post(`http://127.0.0.1:8000/api/v1/users/${targetUserPk}/follow/`, {}, {
         headers: { Authorization: `Token ${token}` },
       })
-      isFollowing.value = true
     }
+
+    // ✅ 응답 기반으로 바로 상태 업데이트
+    isFollowing.value = res.data.data.is_following
+    user.value.followers = res.data.data.followers
+    user.value.following = res.data.data.following
+
   } catch (err) {
     console.error('❌ 팔로우 토글 실패', err)
   }
 }
+
+
 </script>
 
 <style scoped>
@@ -192,5 +245,17 @@ const toggleFollow = async () => {
   margin-top: 2rem;
   border-top: 1px solid #ccc;
   padding-top: 1rem;
+}
+
+.buttons button.unfollowed {
+  background-color: #145c2b;
+  color: white;
+  border: 2px solid #145c2b;
+}
+
+.buttons button.followed {
+  background-color: white;
+  color: #145c2b;
+  border: 2px solid #145c2b;
 }
 </style>
