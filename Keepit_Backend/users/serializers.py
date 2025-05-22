@@ -1,7 +1,7 @@
 # users/serializers.py
 
 from rest_framework import serializers
-from .models import User
+from .models import User, Follow
 from regions.models import RegionCity, RegionDistrict
 
 class UserCreateSerializer(serializers.ModelSerializer):
@@ -102,3 +102,11 @@ class UserLoginSerializer(serializers.Serializer):
 
         data['user'] = user
         return data
+    
+
+class FollowSerializer(serializers.ModelSerializer):
+    to_user_id = serializers.IntegerField(write_only=True)
+
+    class Meta:
+        model = Follow
+        fields = ('id', 'to_user_id')
