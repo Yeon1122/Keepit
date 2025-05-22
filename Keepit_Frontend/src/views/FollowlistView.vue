@@ -1,0 +1,87 @@
+<template>
+  <div class="follow-page">
+    <h2>팔로우 / 팔로워 목록</h2>
+    <div class="follow-section">
+      <h3>팔로잉</h3>
+      <ul>
+        <li v-if="following.length === 0">팔로잉한 사용자가 없습니다.</li>
+        <li v-for="user in following" :key="user.id">
+          {{ user.nickname }}
+        </li>
+      </ul>
+    </div>
+
+    <div class="follow-section">
+      <h3>팔로워</h3>
+      <ul>
+        <li v-if="followers.length === 0">팔로워가 없습니다.</li>
+        <li v-for="user in followers" :key="user.id">
+          {{ user.nickname }}
+        </li>
+      </ul>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref, onMounted } from 'vue'
+import axios from 'axios'
+import { useAccountStore } from '@/stores/users.js'
+
+const accountStore = useAccountStore()
+const { token } = accountStore
+
+const followers = ref([])
+const following = ref([])
+
+onMounted(async () => {
+  try {
+    const res = await axios.get('/api/v1/users/follow/', {
+      headers: {
+        Authorization: `Token ${token}`,
+      }
+    })
+    followers.value = res.data.followers
+    following.value = res.data.following
+  } catch (err) {
+    console.error('❌ 팔로우 정보 불러오기 실패:', err)
+    alert('팔로우 정보를 불러오는 데 실패했습니다.')
+  }
+})
+</script>
+
+<style scoped>
+.follow-page {
+  max-width: 600px;
+  margin: auto;
+  padding: 2rem;
+  font-family: 'Pretendard', sans-serif;
+}
+
+.follow-section {
+  margin-bottom: 2rem;
+}
+
+h2 {
+  color: #145c2b;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+h3 {
+  color: #222;
+  margin-bottom: 0.8rem;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 0.3rem;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #eee;
+}
+</style>

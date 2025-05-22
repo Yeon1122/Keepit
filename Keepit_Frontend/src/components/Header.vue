@@ -49,8 +49,8 @@
 
         <div class="btns" v-else>
             <!-- 로그인 시 -->
-            <button class="login btn-1">마이페이지</button>
-            <button class="get-started btn-2">로그아웃</button>
+            <button class="login btn-1" @click="goToMypage">마이페이지</button>
+            <button class="get-started btn-2" @click="handleLogout">로그아웃</button>
         </div>
     </header>
 </template>
@@ -76,8 +76,15 @@ const goToLogin = () => {
     // console.log('move to signup')
 }
 
-// ✅ 로그인 여부 상태 (예시로 false로 초기화)
-const isLoggedIn = ref(false)
+const goToMypage = () => {
+    router.push({ name: 'mypage' })
+}
+
+const handleLogout = () => {
+  accountStore.logOut()
+  router.push({ name: 'home' })
+}
+
 </script>
 
 <style scoped>
