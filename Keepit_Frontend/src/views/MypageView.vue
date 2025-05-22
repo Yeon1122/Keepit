@@ -13,9 +13,15 @@
 
       <div class="right">
         <div class="stats-box">
-          <div class="stat" @click="goToFollow"><span>팔로우</span><strong>{{ user.following.length }}</strong></div>
-          <div class="stat" @click="goToFollow"><span>팔로워</span><strong>{{ user.followers.length }}</strong></div>
-          <div class="stat"><span>내가 쓴 글</span><strong>{{ user.my_posts.length }}</strong></div>
+          <div class="stat" @click="goToFollow">
+            <span>팔로우</span><strong>{{ user.following.length }}</strong>
+          </div>
+          <div class="stat" @click="goToFollow">
+            <span>팔로워</span><strong>{{ user.followers.length }}</strong>
+          </div>
+          <div class="stat">
+            <span>내가 쓴 글</span><strong>{{ user.my_posts.length }}</strong>
+          </div>
         </div>
         <div class="buttons">
           <button @click="goToEdit">내 정보 수정</button>
@@ -35,7 +41,9 @@
       <h4>찜한 상품</h4>
       <ul>
         <li v-for="product in user.liked_products" :key="product.id">
-          {{ product.name }} - {{ product.bank }} / {{ product.interest_rate }} ~ {{ product.special_rate }}% / {{ product.term }}개월
+          {{ product.name }} - {{ product.bank }} /
+          {{ product.interest_rate }} ~ {{ product.special_rate }}% /
+          {{ product.term }}개월
         </li>
       </ul>
     </div>
@@ -49,7 +57,7 @@ import { useAccountStore } from '@/stores/users.js'
 import { useRouter } from 'vue-router'
 
 const accountStore = useAccountStore()
-const { token } = accountStore
+const token = accountStore.token  // token은 ref
 const router = useRouter()
 
 const user = ref({
@@ -62,14 +70,17 @@ const user = ref({
   liked_products: []
 })
 
+console.log('📌 저장된 토큰:', token.value)
+
 onMounted(async () => {
   try {
-    const res = await axios.get('/api/v1/users/mypage/', {
+    const res = await axios.get('http://127.0.0.1:8000/api/v1/users/mypage/', {
       headers: {
-        Authorization: `Token ${token}`,
+        Authorization: `Token ${token.value}`,  // ✅ .value 추가
       }
     })
-    user.value = res.data.data
+    console.log('✅ 마이페이지 API 응답:', res.data)
+    user.value = res.data
   } catch (err) {
     console.error('❌ 마이페이지 로딩 실패:', err)
     alert('마이페이지 정보를 불러오는 데 실패했습니다.')
@@ -84,7 +95,6 @@ const goToFollow = () => {
   router.push({ name: 'followlist' })
 }
 </script>
-
 
 <style scoped>
 .mypage-container {
@@ -105,7 +115,7 @@ const goToFollow = () => {
 
 .left {
   display: flex;
-  flex-direction: column; /* ⬅ 변경: 이미지 아래에 텍스트 */
+  flex-direction: column;
   align-items: center;
   text-align: center;
   gap: 0.8rem;
@@ -152,7 +162,7 @@ const goToFollow = () => {
   padding: 0.8rem 1.2rem;
   text-align: center;
   min-width: 100px;
-  box-shadow: 0 0 3px rgba(0,0,0,0.05);
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.05);
 }
 
 .stat span {

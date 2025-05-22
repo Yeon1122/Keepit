@@ -49,8 +49,8 @@
 
         <div class="btns" v-else>
             <!-- 로그인 시 -->
-             <button class="get-started btn-1" @click="handleLogout">로그아웃</button>
-            <button class="login btn-2" @click="goToMypage">마이페이지</button>
+             <button class="get-started btn-1" @click="handleLogout">Logout</button>
+            <button class="login btn-2" @click="goToMypage">My Page</button>
         </div>
     </header>
 </template>
