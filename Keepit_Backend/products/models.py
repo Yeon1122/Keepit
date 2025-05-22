@@ -40,14 +40,31 @@ class Product(models.Model):
     weighted_avg_price = models.FloatField(blank=True, null=True)
 
     high_52w = models.FloatField(blank=True, null=True)
-    high_52w_date = models.DateField()
+    high_52w_date = models.DateField(blank=True, null=True)
     low_52w = models.FloatField(blank=True, null=True)
-    low_52w_date = models.DateField()
+    low_52w_date = models.DateField(blank=True, null=True)
+
+    per = models.FloatField(blank=True, null=True)
+    pbr = models.FloatField(blank=True, null=True)
+    eps = models.FloatField(blank=True, null=True)
+    bps = models.FloatField(blank=True, null=True)
+
+    market_cap = models.FloatField(blank=True, null=True)
+    listed_shares = models.IntegerField(blank=True, null=True)
+    settlement_month = models.CharField(max_length=10, blank=True, null=True)
+
+    per_value = models.FloatField(blank=True, null=True)
+    trade_volume = models.IntegerField(blank=True, null=True)
+    trade_value = models.FloatField(blank=True, null=True)
+    foreign_ownership = models.FloatField(blank=True, null=True)
+
+    short_selling_allowed = models.BooleanField(blank=True, null=True)
+    short_selling_volume = models.IntegerField(blank=True, null=True)
 
 
     # ETF만을 위한 필드
-    index = models.CharField(max_length=100, blank=True, null=True)  # 추종지수
     nav = models.FloatField(blank=True, null=True)  # 순자산가치
+    nav_change = models.FloatField(blank=True, null=True)
 
     def __str__(self):
         return f"[{self.get_product_type_display()}] {self.name}"
