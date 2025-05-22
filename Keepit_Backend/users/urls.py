@@ -1,14 +1,20 @@
 # users/urls.py
 
 from django.urls import path
-from .views import SignUpView, CustomAuthToken, MyPageView, MyPagePutView, CheckUserIdView, CheckNicknameView
+from .views import (
+    SignUpView, CustomAuthToken, MyPageView, 
+    CheckUserIdView, CheckNicknameView, LogoutView,
+    FollowToggleView, FollowListView)
 
 
 urlpatterns = [
     path('signup/', SignUpView.as_view(), name='signup'),
     path('login/', CustomAuthToken.as_view(), name='token_login'),
+    path('logout/', LogoutView.as_view(), name='logout'),
     path('mypage/', MyPageView.as_view()),
-    path('mypage/update/', MyPagePutView.as_view(), name='mypage_put_update'),
+    path('follow-info/', FollowListView.as_view(), name='follow_info'),
+    path('<int:user_id>/follow/', FollowToggleView.as_view(), name='follow_toggle'),
+    
     path('check-id/', CheckUserIdView.as_view(), name='check_userid'),
     path('check-nickname/', CheckNicknameView.as_view(), name='check_nickname'),
 ]
