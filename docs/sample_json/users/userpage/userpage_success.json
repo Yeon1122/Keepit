@@ -1,0 +1,20 @@
+{
+  "user_id": 3,
+  "nickname": "킹왕짱하연",
+  "is_following": true,
+  "follower_count": 5,
+  "following_count": 2,
+  "post_count": 12,
+  "favorite_products": [
+    {
+      "product_id": 7,
+      "name": "하나 예금 6개월",
+      "category": "예금"
+    },
+    {
+      "product_id": 11,
+      "name": "삼성전자",
+      "category": "주식"
+    }
+  ]
+}

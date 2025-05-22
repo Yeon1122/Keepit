@@ -1,0 +1,7 @@
+{
+  "method": "GET",
+  "endpoint": "/api/v1/users/<user_id>/",
+  "headers": {
+    "Authorization": "Token <your_token>"
+  }
+}
