@@ -27,7 +27,15 @@ class CustomAuthToken(APIView):
             return Response({
                 'token': token.key,
                 'userid': user.userid,
-                "is_authenticated": True
+                "is_authenticated": True,
+                "nickname": user.nickname,
+                "email": user.email,
+                "name": user.name,
+                "birth_year": user.birth_year if user.birth_year else None,
+                "birth_month": user.birth_month if user.birth_month else None,
+                "birth_day": user.birth_day if user.birth_day else None,
+                "region_city": user.region_city.name if user.region_city else None,
+                "region_district": user.region_district.name if user.region_district else None,
                 })
         return Response({
             'is_authenticated': False,
