@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'tests',      # 금융 성향 결과 테스트, 결과 조회
     'regions',    # 지도 지역 설정
     'rest_framework',
+    'rest_framework.authtoken',
     'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -59,9 +60,10 @@ MIDDLEWARE = [
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
+        'rest_framework.authentication.TokenAuthentication',
+    )
 }
+
 
 ROOT_URLCONF = 'keepit.urls'
 

@@ -83,3 +83,22 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 
         instance.save()
         return instance
+    
+class UserLoginSerializer(serializers.Serializer):
+    userid = serializers.CharField()
+    password = serializers.CharField()
+
+    def validate(self, data):
+        userid = data.get('userid')
+        password = data.get('password')
+
+        try:
+            user = User.objects.get(userid=userid)
+        except User.DoesNotExist:
+            raise serializers.ValidationError("존재하지 않는 아이디입니다.")
+
+        if not user.check_password(password):
+            raise serializers.ValidationError("비밀번호가 일치하지 않습니다.")
+
+        data['user'] = user
+        return data

@@ -4,8 +4,10 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .models import User
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated
-from .serializers import UserCreateSerializer, UserUpdateSerializer
+from .serializers import UserCreateSerializer, UserUpdateSerializer, UserLoginSerializer
 
 class SignUpView(APIView):
     def post(self, request):
@@ -15,11 +17,27 @@ class SignUpView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class CustomAuthToken(APIView):
+    def post(self, request):
+        serializer = UserLoginSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.validated_data['user']
+            token, created = Token.objects.get_or_create(user=user)
+            return Response({
+                'token': token.key,
+                'userid': user.userid,
+                "is_authenticated": True
+                })
+        return Response({
+            'is_authenticated': False,
+            'errors': serializer.errors
+            }, status=400)
+    
 class MyPageView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        user = request.user  # JWT 토큰으로부터 인증된 사용자
+        user = request.user
         return Response({
             "userid": user.userid,
             "nickname": user.nickname,
