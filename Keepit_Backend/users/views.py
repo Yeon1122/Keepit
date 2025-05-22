@@ -3,7 +3,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import UserCreateSerializer
+from .serializers import UserCreateSerializer, UserUpdateSerializer
 from rest_framework.permissions import IsAuthenticated
 
 class SignUpView(APIView):
@@ -30,3 +30,14 @@ class MyPageView(APIView):
             "region_city": user.region_city.name if user.region_city else None,
             "region_district": user.region_district.name if user.region_district else None,
         })
+    
+class MyPagePutView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request):
+        user = request.user
+        serializer = UserUpdateSerializer(user, data=request.data) 
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=400)
