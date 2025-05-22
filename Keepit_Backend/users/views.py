@@ -3,8 +3,9 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import UserCreateSerializer, UserUpdateSerializer
+from .models import User
 from rest_framework.permissions import IsAuthenticated
+from .serializers import UserCreateSerializer, UserUpdateSerializer
 
 class SignUpView(APIView):
     def post(self, request):
@@ -41,3 +42,23 @@ class MyPagePutView(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=400)
+    
+# userid 중복확인
+class CheckUserIdView(APIView):
+    def get(self, request):
+        userid = request.query_params.get("value")
+        if not userid:
+            return Response({"error": "값이 필요합니다."}, status=400)
+
+        exists = User.objects.filter(userid=userid).exists()
+        return Response({"is_available": not exists})
+
+# nickname 중복확인
+class CheckNicknameView(APIView):
+    def get(self, request):
+        nickname = request.query_params.get("value")
+        if not nickname:
+            return Response({"error": "값이 필요합니다."}, status=400)
+
+        exists = User.objects.filter(nickname=nickname).exists()
+        return Response({"is_available": not exists})
