@@ -2,7 +2,7 @@
 
 from django.urls import path
 from .views import (
-    SignUpView, CustomAuthToken, MyPageView, 
+    SignUpView, CustomAuthToken, MyPageView, UserDetailView,
     CheckUserIdView, CheckNicknameView, LogoutView,
     FollowToggleView, FollowListView)
 
@@ -11,7 +11,10 @@ urlpatterns = [
     path('signup/', SignUpView.as_view(), name='signup'),
     path('login/', CustomAuthToken.as_view(), name='token_login'),
     path('logout/', LogoutView.as_view(), name='logout'),
+    
     path('mypage/', MyPageView.as_view()),
+    path('<int:user_id>/', UserDetailView.as_view(), name='user_detail'),
+
     path('follow-info/', FollowListView.as_view(), name='follow_info'),
     path('<int:user_id>/follow/', FollowToggleView.as_view(), name='follow_toggle'),
     
