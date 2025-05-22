@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { defineStore } from 'pinia'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
@@ -12,6 +12,19 @@ export const useAccountStore = defineStore('account', () => {
   const isAuthenticated = ref(false)
 
   const ACCOUNT_API_URL = 'http://127.0.0.1:8000/api/v1/users'
+
+   const applyTokenToAxios = () => {
+    if (token.value) {
+      axios.defaults.headers.common['Authorization'] = `Token ${token.value}`
+    } else {
+      delete axios.defaults.headers.common['Authorization']
+    }
+  }
+
+  // ✅ token이 변할 때마다 axios에 적용
+  watch(token, () => {
+    applyTokenToAxios()
+  }, { immediate: true })
 
   // ✅ 회원가입
   const signUp = async (payload) => {
@@ -58,6 +71,8 @@ export const useAccountStore = defineStore('account', () => {
       alert('로그인 실패! 아이디/비밀번호를 확인하세요.')
     }
   }
+
+  
 
   // ✅ 로그아웃
   const logOut = async () => {
