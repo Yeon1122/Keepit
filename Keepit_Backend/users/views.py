@@ -19,6 +19,7 @@ class SignUpView(APIView):
 
 class CustomAuthToken(APIView):
     def post(self, request):
+        print("🪵 로그인 요청 데이터:", request.data)
         serializer = UserLoginSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.validated_data['user']
@@ -30,7 +31,8 @@ class CustomAuthToken(APIView):
                 })
         return Response({
             'is_authenticated': False,
-            'errors': serializer.errors
+            'errors': serializer.errors,
+            'received_data': request.data 
             }, status=400)
 
 # 마이페이지 조회

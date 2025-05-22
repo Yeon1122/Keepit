@@ -34,15 +34,6 @@
             </select>
         </div>
         <br>
-        <label>소득 범위</label>
-        <select v-model="form.incomeRange">
-            <option disabled value="">선택하세요</option>
-            <option>2000만원 이하</option>
-            <option>2000만원~4000만원</option>
-            <option>4000만원~6000만원</option>
-            <option>6000만원 이상</option>
-        </select>
-        <br>
         <label>지역(시/도)</label>
         <select v-model="form.regionCity" @change="updateDistricts">
             <option disabled value="">선택하세요</option>
@@ -82,7 +73,6 @@ const form = ref({
     birthYear: '',
     birthMonth: '',
     birthDay: '',
-    incomeRange: '',
     regionCity: '',
     regionDistrict: '',
 })
@@ -125,13 +115,16 @@ const validateForm = () => {
     return true
 }
 
+const ACCOUNT_API_URL = 'http://127.0.0.1:8000/api/v1/users' 
+
 // 회원가입 함수
 const onSignUp = () => {
     if (!validateForm()) return
 
-    const requestData = { ...form.value }
-    console.log('회원가입 요청 데이터:', requestData)
-    // accountStore.signUp({ ...form.value })
+    // const requestData = { ...form.value }
+    // console.log('회원가입 요청 데이터:', requestData)
+    console.log("signup url:", `${ACCOUNT_API_URL}/signup/`)
+    accountStore.signUp({ ...form.value })
 }
 </script>
 

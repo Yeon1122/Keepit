@@ -49,17 +49,20 @@
 
         <div class="btns" v-else>
             <!-- 로그인 시 -->
-            <button class="login btn-1" @click="goToMypage">마이페이지</button>
-            <button class="get-started btn-2" @click="handleLogout">로그아웃</button>
+             <button class="get-started btn-1" @click="handleLogout">로그아웃</button>
+            <button class="login btn-2" @click="goToMypage">마이페이지</button>
         </div>
     </header>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useAccountStore } from '@/stores/users.js'
 
 const router = useRouter()
+const accountStore = useAccountStore()
+const isLoggedIn = computed(() => accountStore.isAuthenticated)
 
 const goHome = () => {
     router.push({ name: 'home' })

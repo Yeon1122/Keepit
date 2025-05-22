@@ -11,15 +11,14 @@ export const useAccountStore = defineStore('account', () => {
   const userId = ref(null)
   const isAuthenticated = ref(false)
 
-  const ACCOUNT_API_URL = 'http://127.0.0.1:8000/accounts'
+  const ACCOUNT_API_URL = 'http://127.0.0.1:8000/api/v1/users'
 
   // ✅ 회원가입
   const signUp = async (payload) => {
     try {
       const res = await axios.post(`${ACCOUNT_API_URL}/signup/`, {
-        username: payload.userid,
-        password1: payload.password,
-        password2: payload.password,
+        userid: payload.userid,
+        password: payload.password,
         name: payload.name,
         nickname: payload.nickname,
         email: payload.email,
@@ -41,14 +40,14 @@ export const useAccountStore = defineStore('account', () => {
   }
 
   // ✅ 로그인
-  const logIn = async (username, password) => {
+  const logIn = async (payload) => {
     try {
       const res = await axios.post(`${ACCOUNT_API_URL}/login/`, {
-        username,
-        password,
+        userid: payload.userid,
+        password: payload.password,
       })
 
-      token.value = res.data.token  // 일반 인증 토큰
+      token.value = res.data.token
       userId.value = res.data.user_id
       isAuthenticated.value = true
 

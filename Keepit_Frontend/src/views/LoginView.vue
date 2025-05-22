@@ -35,13 +35,13 @@ const onLogin = () => {
   if (!validateForm()) return
 
   const loginPayload = {
-    username: form.value.userid,
+    userid: form.value.userid,
     password: form.value.password
   }
 
-  const requestData = { ...form.value }
-    console.log('회원가입 요청 데이터:', requestData)
-//   accountStore.logIn(loginPayload)
+  // const requestData = { ...form.value }
+  //   console.log('회원가입 요청 데이터:', requestData)
+  accountStore.logIn(loginPayload)
 }
 </script>
 
