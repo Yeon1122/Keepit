@@ -26,6 +26,7 @@ class CustomAuthToken(APIView):
             token, created = Token.objects.get_or_create(user=user)
             return Response({
                 'token': token.key,
+                'user_id': user.id,
                 'userid': user.userid,
                 "is_authenticated": True,
                 "nickname": user.nickname,
@@ -60,6 +61,8 @@ class MyPageView(APIView):
             "birth_day": user.birth_day if user.birth_day else None,
             "region_city": user.region_city.name if user.region_city else None,
             "region_district": user.region_district.name if user.region_district else None,
+            "followers": list(user.followers.values_list('id', flat=True)),
+            "following": list(user.following.values_list('id', flat=True)),        
         })
     
     def put(self, request):
@@ -89,38 +92,48 @@ class MyPageView(APIView):
 class UserDetailView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self, request, user_id):
+    def get(self, request, userid):
         try:
-            target_user = User.objects.get(id=user_id)
+            target_user = User.objects.get(userid=userid)
         except User.DoesNotExist:
             return Response({"message": "해당 유저가 존재하지 않습니다."}, status=404)
 
         is_following = Follow.objects.filter(from_user=request.user, to_user=target_user).exists()
 
-        follower_count = Follow.objects.filter(to_user=target_user).count()
-        following_count = Follow.objects.filter(from_user=target_user).count()
-        # post_count = Post.objects.filter(user=target_user).count()
+        # followers / following
+        followers = list(Follow.objects.filter(to_user=target_user).values("from_user__id", "from_user__nickname"))
+        following = list(Follow.objects.filter(from_user=target_user).values("to_user__id", "to_user__nickname"))
 
-        # favorites = Favorite.objects.filter(user=target_user).select_related('product')
-        # favorite_products = [
-        #     {
-        #         "product_id": fav.product.id,
-        #         "category": fav.product.category if hasattr(fav.product, 'category') else None
-        #         "name": fav.product.name,
-        #     }
-        #     for fav in favorites
-        # ]
+        # # 내 글 (Post 모델이 있다면)
+        # my_posts = list(Post.objects.filter(user=target_user).values("id", "title", "created_at"))
+
+        # # 찜한 상품 (Favorite 모델이 있다면)
+        # liked_products = list(Favorite.objects.filter(user=target_user).select_related('product').values(
+        #     "product__id", "product__name", "product__bank", "product__interest_rate", "product__special_rate", "product__term"
+        # ))
+
+        my_posts = []
+        liked_products = []
+        test_result = None
+
+        # 성향 테스트 결과 (nullable 가능성 고려)
+        # test_result = {
+        #     "type": target_user.test_result.type,
+        #     "description": target_user.test_result.description,
+        # } if target_user.test_result else None
 
         return Response({
             "user_id": target_user.id,
+            "userid": target_user.userid,
             "nickname": target_user.nickname,
+            "email": target_user.email,
+            "followers": followers,
+            "following": following,
+            "my_posts": my_posts,
+            "liked_products": liked_products,
+            "test_result": test_result,
             "is_following": is_following,
-
-            # "follower_count": follower_count,
-            # "following_count": following_count,
-            # "post_count": post_count,
-            # "favorite_products": favorite_products
-        }) 
+        })
     
 # userid 중복확인
 class CheckUserIdView(APIView):
@@ -154,67 +167,56 @@ class LogoutView(APIView):
         except Token.DoesNotExist:
             return Response({"detail": "이미 로그아웃 상태입니다."}, status=400)
         
-
-# follow
+#팔로우
 class FollowToggleView(APIView):
     permission_classes = [IsAuthenticated]
 
-    # 팔로우
     def post(self, request, user_id):
         from_user = request.user
         try:
             to_user = User.objects.get(id=user_id)
         except User.DoesNotExist:
-            return Response({
-                "message": "존재하지 않는 사용자입니다.",
-                "status": 404,
-                "data": None
-            }, status=404)
+            return Response({"message": "존재하지 않는 사용자입니다.", "status": 404}, status=404)
 
         if from_user == to_user:
-            return Response({
-                "message": "자기 자신은 팔로우할 수 없습니다.",
-                "status": 400,
-                "data": None
-            }, status=400)
+            return Response({"message": "자기 자신은 팔로우할 수 없습니다.", "status": 400}, status=400)
 
         follow, created = Follow.objects.get_or_create(from_user=from_user, to_user=to_user)
         if not created:
-            return Response({
-                "message": "이미 팔로우한 사용자입니다.",
-                "status": 400,
-                "data": None
-            }, status=400)
+            return Response({"message": "이미 팔로우한 사용자입니다.", "status": 400}, status=400)
 
         return Response({
             "message": "해당 유저를 팔로우했습니다.",
             "status": 200,
             "data": {
-                "follower_id": from_user.id,
-                "following_id": to_user.id
+                "is_following": True,
+                "followers": list(to_user.followers.values_list('id', flat=True)),
+                "following": list(to_user.following.values_list('id', flat=True)),
             }
-        }, status=200)
-    
-    # 언팔로우
+        })
+
     def delete(self, request, user_id):
         from_user = request.user
         try:
-            follow = Follow.objects.get(from_user=from_user, to_user_id=user_id)
+            to_user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return Response({"message": "존재하지 않는 사용자입니다.", "status": 404}, status=404)
+
+        try:
+            follow = Follow.objects.get(from_user=from_user, to_user=to_user)
             follow.delete()
+
             return Response({
                 "message": "팔로우를 취소했습니다.",
                 "status": 200,
                 "data": {
-                    "follower_id": from_user.id,
-                    "following_id": int(user_id)
+                    "is_following": False,
+                    "followers": list(to_user.followers.values_list('id', flat=True)),
+                    "following": list(to_user.following.values_list('id', flat=True)),
                 }
             })
         except Follow.DoesNotExist:
-            return Response({
-                "message": "팔로우하지 않은 사용자입니다.",
-                "status": 400,
-                "data": None
-            }, status=400)
+            return Response({"message": "팔로우하지 않은 사용자입니다.", "status": 400}, status=400)
 
 
 
@@ -228,7 +230,8 @@ class FollowListView(APIView):
         following_data = [
             {
                 "user_id": follow.to_user.id,
-                "nickname": follow.to_user.nickname
+                "nickname": follow.to_user.nickname,
+                "userid": follow.to_user.userid
             }
             for follow in user.following.select_related('to_user')
         ]
@@ -236,7 +239,8 @@ class FollowListView(APIView):
         follower_data = [
             {
                 "user_id": follow.from_user.id,
-                "nickname": follow.from_user.nickname
+                "nickname": follow.from_user.nickname,
+                "userid": follow.to_user.userid
             }
             for follow in user.followers.select_related('from_user')
         ]

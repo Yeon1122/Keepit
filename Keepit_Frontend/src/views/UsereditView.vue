@@ -83,7 +83,7 @@ const onDelete = async () => {
   if (!confirm('정말로 탈퇴하시겠습니까? 😥')) return
 
   try {
-    await axios.delete('/api/v1/users/mypage/', {
+    await axios.delete('http://127.0.0.1:8000/api/v1/users/mypage/', {
       headers: {
         Authorization: `Token ${token}`
       }
@@ -99,19 +99,20 @@ const onDelete = async () => {
 
 onMounted(async () => {
   try {
-    const res = await axios.get('/api/v1/users/mypage/', {
+    const res = await axios.get('http://127.0.0.1:8000/api/v1/users/mypage/', {
       headers: {
         Authorization: `Token ${token}`
       }
     })
-    const user = res.data.data
+
+    const user = res.data
     form.value = {
       name: user.name,
       nickname: user.nickname,
       email: user.email,
-      birthYear: parseInt(user.birth.split('-')[0]),
-      birthMonth: parseInt(user.birth.split('-')[1]),
-      birthDay: parseInt(user.birth.split('-')[2]),
+      birthYear: user.birth_year,
+      birthMonth: user.birth_month,
+      birthDay: user.birth_day,
       regionCity: user.region_city,
       regionDistrict: user.region_district
     }
@@ -122,13 +123,13 @@ onMounted(async () => {
 
 const onUpdate = async () => {
   try {
-    const res = await axios.put('/api/v1/users/mypage/', form.value, {
+    const res = await axios.put('http://127.0.0.1:8000/api/v1/users/mypage/', form.value, {
       headers: {
         Authorization: `Token ${token}`
       }
     })
     alert('✅ 사용자 정보가 수정되었습니다.')
-    router.push({ name: 'MypageView' })
+    router.push({ name: 'mypage' })
   } catch (err) {
     console.error('❌ 사용자 정보 수정 실패:', err.response?.data || err.message)
     alert('수정에 실패했습니다.')
@@ -200,7 +201,9 @@ button[type='submit']:hover {
   cursor: pointer;
   text-decoration: underline;
 }
+
 .delete-account:hover {
-  color: #d9534f; /* 빨간색으로 강조 */
+  color: #d9534f;
+  /* 빨간색으로 강조 */
 }
 </style>

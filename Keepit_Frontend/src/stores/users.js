@@ -8,12 +8,13 @@ export const useAccountStore = defineStore('account', () => {
 
   // 상태 변수
   const token = ref('')
+  const user_id = ref('')
   const userId = ref(null)
   const isAuthenticated = ref(false)
 
   const ACCOUNT_API_URL = 'http://127.0.0.1:8000/api/v1/users'
 
-   const applyTokenToAxios = () => {
+  const applyTokenToAxios = () => {
     if (token.value) {
       axios.defaults.headers.common['Authorization'] = `Token ${token.value}`
     } else {
@@ -60,8 +61,9 @@ export const useAccountStore = defineStore('account', () => {
         password: payload.password,
       })
 
+      user_id.value = res.data.user_id
       token.value = res.data.token
-      userId.value = res.data.user_id
+      userId.value = payload.userid
       isAuthenticated.value = true
 
       console.log('✅ 로그인 성공')
@@ -72,12 +74,12 @@ export const useAccountStore = defineStore('account', () => {
     }
   }
 
-  
+
 
   // ✅ 로그아웃
   const logOut = async () => {
     try {
-      await axios.delete('/api/v1/users/logout/', {
+      await axios.delete(`${ACCOUNT_API_URL}/logout/`, {
         headers: {
           Authorization: `Token ${token.value}`
         }
@@ -89,13 +91,16 @@ export const useAccountStore = defineStore('account', () => {
 
     // 프론트 상태 초기화
     token.value = ''
+    user_id.value = null
     userId.value = null
     isAuthenticated.value = false
+    delete axios.defaults.headers.common['Authorization']
     router.push({ name: 'home' })
   }
 
   return {
     token,
+    user_id,
     userId,
     isAuthenticated,
     signUp,

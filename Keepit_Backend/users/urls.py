@@ -13,11 +13,14 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(), name='logout'),
     
     path('mypage/', MyPageView.as_view()),
-    path('<int:user_id>/', UserDetailView.as_view(), name='user_detail'),
+    
 
     path('follow-info/', FollowListView.as_view(), name='follow_info'),
     path('<int:user_id>/follow/', FollowToggleView.as_view(), name='follow_toggle'),
     
     path('check-id/', CheckUserIdView.as_view(), name='check_userid'),
     path('check-nickname/', CheckNicknameView.as_view(), name='check_nickname'),
-]
+    
+    path('<str:userid>/', UserDetailView.as_view(), name='user_detail'),
+    
+    ]
