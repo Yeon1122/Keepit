@@ -1,7 +1,7 @@
 <template>
     <header class="header">
         <div class="logo-box" @click="goHome" style="cursor: pointer;">
-            <img src="@/assets/images/logo_2.png" alt="Keepit Logo" class="logo">
+            <img src="@/assets/images/logo_Keepit.png" alt="Keepit Logo" class="logo">
         </div>
 
         <nav class="navbar">
@@ -26,7 +26,7 @@
                 </div>
                 <div class="dropdown-group">
                     <ul>
-                        <li><a href="#">정기 예금/적금</a></li>
+                        <li><router-link :to="{ name: 'savings' }">정기 예금/적금</router-link></li>
                         <li><a href="#">현물</a></li>
                         <li><a href="#">주식/ETF</a></li>
                     </ul>
