@@ -43,7 +43,7 @@
 
         <div class="btns" v-if="!isLoggedIn">
             <!-- 비로그인 시 -->
-            <button class="login btn-1">Login</button>
+            <button class="login btn-1" @click="goToLogin">Login</button>
             <button class="get-started btn-2" @click="goToSignup">Get Started</button>
         </div>
 
@@ -68,6 +68,11 @@ const goHome = () => {
 
 const goToSignup = () => {
     router.push({ name: 'signup' })
+    // console.log('move to signup')
+}
+
+const goToLogin = () => {
+    router.push({ name: 'login' })
     // console.log('move to signup')
 }
 
