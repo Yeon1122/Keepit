@@ -65,7 +65,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { useAccountStore } from '@/stores/accounts.js'
+import { useAccountStore } from '@/stores/users.js'
 import mapData from '@/assets/data/mapInfo.json'
 import birthData from '@/assets/data/birthDropdown.json'
 
