@@ -32,13 +32,15 @@ class CustomAuthToken(APIView):
             'is_authenticated': False,
             'errors': serializer.errors
             }, status=400)
-    
+
+# 마이페이지 조회
 class MyPageView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
         user = request.user
         return Response({
+            "user_id": user.id,
             "userid": user.userid,
             "nickname": user.nickname,
             "email": user.email,
@@ -56,6 +58,7 @@ class MyPageView(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response({
+                "user_id": user.id,
                 "userid": user.userid,
                 "nickname": user.nickname,
                 "email": user.email,
@@ -69,14 +72,45 @@ class MyPageView(APIView):
         return Response(serializer.errors, status=400)
     
     def delete(self, request):
-        user = request.user
+        request.user.delete()
+        return Response({"message": "회원 탈퇴 완료"}, status=204)
+
+# 다른 유저 프로필 조회
+class UserDetailView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, user_id):
         try:
-            Token.objects.get(user=user).delete()
-        except Token.DoesNotExist:
-            pass
-        user.delete()
-        return Response({"detail": "회원 탈퇴 완료"}, status=status.HTTP_204_NO_CONTENT)
-   
+            target_user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return Response({"message": "해당 유저가 존재하지 않습니다."}, status=404)
+
+        is_following = Follow.objects.filter(from_user=request.user, to_user=target_user).exists()
+
+        follower_count = Follow.objects.filter(to_user=target_user).count()
+        following_count = Follow.objects.filter(from_user=target_user).count()
+        # post_count = Post.objects.filter(user=target_user).count()
+
+        # favorites = Favorite.objects.filter(user=target_user).select_related('product')
+        # favorite_products = [
+        #     {
+        #         "product_id": fav.product.id,
+        #         "category": fav.product.category if hasattr(fav.product, 'category') else None
+        #         "name": fav.product.name,
+        #     }
+        #     for fav in favorites
+        # ]
+
+        return Response({
+            "user_id": target_user.id,
+            "nickname": target_user.nickname,
+            "is_following": is_following,
+
+            # "follower_count": follower_count,
+            # "following_count": following_count,
+            # "post_count": post_count,
+            # "favorite_products": favorite_products
+        }) 
     
 # userid 중복확인
 class CheckUserIdView(APIView):
