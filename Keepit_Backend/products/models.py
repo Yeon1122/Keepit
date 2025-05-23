@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth import get_user_model
 
 PRODUCT_TYPES = (
     ('deposit', '정기예금'),
@@ -68,3 +69,11 @@ class Product(models.Model):
 
     def __str__(self):
         return f"[{self.get_product_type_display()}] {self.name}"
+    
+
+User = get_user_model()
+class Favorite(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    type = models.CharField(max_length=10)  # 'deposit', 'saving', 'stock', 'etf'
+    identifier = models.CharField(max_length=50)  # 예: stock_code 또는 예금명+회사명
+    added_at = models.DateTimeField(auto_now_add=True)
