@@ -27,8 +27,8 @@
                 <div class="dropdown-group">
                     <ul>
                         <li><router-link :to="{ name: 'savings' }">정기 예금/적금</router-link></li>
-                        <li><a href="#">현물</a></li>
-                        <li><a href="#">주식/ETF</a></li>
+                        <li><router-link :to="{ name:'goods' }">현물</router-link></li>
+                        <li><router-link :to="{ name: 'stocks' }">주식/ETF</router-link></li>
                     </ul>
                 </div>
                 <div class="dropdown-group">

@@ -7,6 +7,9 @@ import MypageView from '@/views/MypageView.vue'
 import UsereditView from '@/views/UsereditView.vue'
 import FollowlistView from '@/views/FollowlistView.vue'
 import OtheruserpageView from '@/views/OtheruserpageView.vue'
+import StocksView from '@/views/StocksView.vue'
+import StockdetailView from '@/views/StockdetailView.vue'
+import GoodsView from '@/views/GoodsView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -50,7 +53,22 @@ const router = createRouter({
       path: '/users/:userid',
       name: 'userpage',
       component: OtheruserpageView,
-    }
+    },
+    {
+      path: '/products/stocketf',
+      name: 'stocks',
+      component: StocksView,
+    },
+    {
+      path: '/products/stocks/:stock_code',
+      name: 'stockdetail',
+      component: StockdetailView,
+    },
+    {
+      path: '/products/goods',
+      name: 'goods',
+      component: GoodsView,
+    },
   ],
 })
 
