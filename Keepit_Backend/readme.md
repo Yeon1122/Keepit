@@ -10,7 +10,6 @@
 
 3. 마이그레이션
     ```bash
-    python manage.py makemigrations
     python manage.py migrate
     ```
 
