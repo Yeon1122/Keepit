@@ -44,5 +44,5 @@ class ETFSerializer(serializers.ModelSerializer):
             'id','type', 
             'name', 'company', 'link', 
             'stock_code', 'market_type', 
-            'nav', 'nav_change'
+            #'nav', 'nav_change'
         ]

@@ -5,6 +5,7 @@ from .serializers import SavingsSerializer, StockSerializer, ETFSerializer
 
 import os
 import requests
+from django.http import JsonResponse
 from dotenv import load_dotenv
 
 from rest_framework.decorators import api_view, permission_classes
@@ -38,14 +39,26 @@ class ETFListAPIView(generics.ListAPIView):
     def get_queryset(self):
         return Product.objects.filter(type='etf')
 
+# 금, 은 시세 불러오기
+GOLDAPI_KEY = os.getenv("GOLD_API_KEY")
+def metal_prices(request):
+    headers = {
+        'x-access-token': GOLDAPI_KEY,
+        'Content-Type': 'application/json'
+    }
 
-# from .serializers import ProductSerializer  
+    gold_res = requests.get('https://www.goldapi.io/api/XAU/USD', headers=headers)
+    silver_res = requests.get('https://www.goldapi.io/api/XAG/USD', headers=headers)
 
-# class GoodsListAPIView(generics.ListAPIView):
-#     serializer_class = ProductSerializer
-
-#     def get_queryset(self):
-#         return Product.objects.filter(type='goods')
+    if gold_res.status_code == 200 and silver_res.status_code == 200:
+        return JsonResponse({
+            'gold': gold_res.json(),
+            'silver': silver_res.json()
+        })
+    else:
+        return JsonResponse({'error': '금/은 시세 조회 실패'}, status=500)
+    
+'''-------------------------------------------------------------------------------------------------'''
 
 def safe_float(val):
     try:
