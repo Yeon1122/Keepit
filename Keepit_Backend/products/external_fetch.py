@@ -1,6 +1,7 @@
 import os
 import requests
 from dotenv import load_dotenv
+import requests
 
 load_dotenv()
 API_KEY = os.getenv("FSS_API_KEY")
@@ -163,6 +164,6 @@ def fetch_etf_by_code(etf_code):
         "market_cap": output.get("hts_avls"),
         "trade_volume": output.get("acml_vol"),
         "trade_value": output.get("acml_tr_pbmn"),
-        "nav": output.get("nav"),  # 순자산가치
-        "nav_change": output.get("nav_chg_rt"),
+        # "nav": output.get("nav"),  # 순자산가치
+        # "nav_change": output.get("nav_chg_rt"),
     }
