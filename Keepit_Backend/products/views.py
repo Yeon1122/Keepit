@@ -1,7 +1,7 @@
 # products/views.py
-from rest_framework import generics
+from rest_framework import generics, status
 from .models import Product
-from .serializers import SavingsSerializer, StockSerializer, ETFSerializer
+from .serializers import SavingsSerializer, StockSerializer, ETFSerializer, ProductCompareSerializer
 
 import os
 import requests
@@ -13,9 +13,10 @@ from rest_framework.response import Response
 
 from rest_framework.permissions import IsAuthenticated
 from .models import Favorite
-from .external_fetch import fetch_products, fetch_stock_by_code, fetch_stock_detail_by_code, fetch_etf_by_code
+from .external_fetch import fetch_products, fetch_stock_by_code, fetch_stock_detail_by_code, fetch_etf_by_code, fetch_product_details_by_name
 from products.utils.stock_code_loader import load_top_stock_codes, load_stock_name_map, load_top_etf_codes, load_etf_name_map
-from .external_fetch import fetch_products
+from .external_fetch import fetch_products, fetch_product_details_by_name
+from .utils.savings_detail_cal import filter_one_option_per_product, calc_saving_final_amount, calc_deposit_final_amount
 
 class SavingsListAPIView(generics.ListAPIView):
     serializer_class = SavingsSerializer
@@ -216,6 +217,84 @@ def user_favorites(request):
                 result.append(item)
 
     return Response(result)
+
+# 예금, 적금 상세 비교
+@api_view(['POST'])
+def compare_deposits(request):
+    return compare_products_by_name(request, 'deposit')
+
+@api_view(['POST'])
+def compare_savings(request):
+    return compare_products_by_name(request, 'saving')
+
+def compare_products_by_name(request, product_type):
+    product_names = request.data.get('product_names')
+    monthly_amount = request.data.get('monthly_amount')
+    months = request.data.get('months')
+
+    if not product_names or len(product_names) != 2:
+        return Response({'error': '상품 이름 2개를 선택해야 합니다.'}, status=400)
+
+    # 👉 외부 API 또는 크롤링 함수 호출해서 상품 정보 가져오기
+    product_data_list = fetch_product_details_by_name(product_names, product_type)
+    
+    if len(product_data_list) != 2:
+        return Response({'error': '해당 상품 정보를 찾을 수 없습니다.'}, status=404)
+
+    # 👉 이자 계산 후 응답 구성
+    result = []
+    for product in product_data_list:
+        name = product['name']
+        interest_rate = float(product['interest_rate'])
+        term = int(product['term'])
+
+        if product_type == 'deposit':
+            total_amount = monthly_amount * months
+            expected = calc_deposit_final_amount(total_amount, months, interest_rate)
+        else:
+            expected = calc_saving_final_amount(monthly_amount, months, interest_rate)
+
+        result.append({
+            "name": name,
+            "interest_rate": interest_rate,
+            "term": term,
+            "expected_amount": expected
+        })
+
+    return Response({'products': result})
+
+
+def compare_products_by_name(request, product_type):
+    product_names = request.data.get('product_names')
+    monthly_amount = int(request.data.get('monthly_amount', 0))
+    months = int(request.data.get('months', 0))
+
+    if not product_names or len(product_names) != 2:
+        return Response({'error': '상품 이름 2개를 선택해야 합니다.'}, status=400)
+
+    all_matched = fetch_product_details_by_name(product_names, product_type)
+
+    # ✅ 여기서 중복 제거 + 원하는 기간 선택!
+    matched = filter_one_option_per_product(all_matched, months)
+
+    if len(matched) != 2:
+        return Response({'error': '해당 상품 정보를 찾을 수 없습니다.'}, status=404)
+
+    # 계산 결과 붙이기
+    result = []
+    for product in matched:
+        if product_type == 'saving':
+            expected = calc_saving_final_amount(monthly_amount, months, product['interest_rate'])
+        else:
+            total_amount = monthly_amount * months
+            expected = calc_deposit_final_amount(total_amount, months, product['interest_rate'])
+
+        result.append({
+            **product,
+            "expected_amount": expected
+        })
+
+    return Response({'products': result})
 
 '''
 
