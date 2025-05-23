@@ -45,7 +45,6 @@ export const useAccountStore = defineStore('account', () => {
       })
 
       alert('✅ 회원가입이 완료되었습니다.')
-      console.log('회원가입 응답:', res.data)
       router.push({ name: 'login' })  // 또는 회원가입 후 자동 로그인 시 home
     } catch (err) {
       console.error('❌ 회원가입 실패:', err.response?.data || err.message)
@@ -107,6 +106,9 @@ export const useAccountStore = defineStore('account', () => {
     logIn,
     logOut,
   }
-}, { persist: true })
+},
+{ persist: sessionStorage }
+// { persist: true } 
+)
 
 
