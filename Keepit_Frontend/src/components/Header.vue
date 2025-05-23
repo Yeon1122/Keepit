@@ -20,20 +20,20 @@
                     </ul>
                     <ul>
                         <li class="middle">상품 비교</li>
-                        <li><a href="#">정기 예금</a></li>
-                        <li><a href="#">적금</a></li>
+                        <li><router-link :to="{ name: 'compare', query: { type: 'deposit' } }">정기 예금</router-link></li>
+                        <li><router-link :to="{ name: 'compare', query: { type: 'saving' } }">적금</router-link></li>
                     </ul>
                 </div>
                 <div class="dropdown-group">
                     <ul>
                         <li><router-link :to="{ name: 'savings' }">정기 예금/적금</router-link></li>
-                        <li><router-link :to="{ name:'goods' }">현물</router-link></li>
+                        <li><router-link :to="{ name: 'goods' }">현물</router-link></li>
                         <li><router-link :to="{ name: 'stocks' }">주식/ETF</router-link></li>
                     </ul>
                 </div>
                 <div class="dropdown-group">
                     <ul>
-                        <li><a href="#">자유 게시판</a></li>
+                        <li><router-link :to="{ name: 'freecommunity' }">자유 게시판</router-link></li>
                         <li><a href="#">질문 게시판</a></li>
                         <li><a href="#">뉴스</a></li>
                     </ul>
@@ -49,7 +49,7 @@
 
         <div class="btns" v-else>
             <!-- 로그인 시 -->
-             <button class="get-started btn-1" @click="handleLogout">Logout</button>
+            <button class="get-started btn-1" @click="handleLogout">Logout</button>
             <button class="login btn-2" @click="goToMypage">My Page</button>
         </div>
     </header>
@@ -84,8 +84,8 @@ const goToMypage = () => {
 }
 
 const handleLogout = () => {
-  accountStore.logOut()
-  router.push({ name: 'home' })
+    accountStore.logOut()
+    router.push({ name: 'home' })
 }
 
 </script>

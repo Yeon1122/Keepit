@@ -10,6 +10,10 @@ import OtheruserpageView from '@/views/OtheruserpageView.vue'
 import StocksView from '@/views/StocksView.vue'
 import StockdetailView from '@/views/StockdetailView.vue'
 import GoodsView from '@/views/GoodsView.vue'
+import SavingscompareView from '@/views/SavingscompareView.vue'
+import FreecommunityView from '@/views/FreecommunityView.vue'
+import FreepostcreateView from '@/views/FreepostcreateView.vue'
+import FreepostdetailView from '@/views/FreepostdetailView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -69,6 +73,26 @@ const router = createRouter({
       name: 'goods',
       component: GoodsView,
     },
+    {
+      path: '/savings/compare',
+      name: 'compare',
+      component: SavingscompareView,
+    },
+    {
+      path: '/community/free',
+      name: 'freecommunity',
+      component: FreecommunityView,
+    },
+    {
+      path: '/community/free/create',
+      name: 'freepostcreate',
+      component: FreepostcreateView,
+    },
+    {
+      path: '/community/free/:id',
+      name: 'freepostdetail',
+      component: FreepostdetailView,
+    }
   ],
 })
 

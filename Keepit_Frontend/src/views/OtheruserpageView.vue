@@ -76,14 +76,14 @@ const { token, userId } = accountStore
 const route = useRoute()
 const router = useRouter()
 
-watchEffect(() => {
-  const targetUserid = route.params.userid
-  const myUserid = accountStore.user_id
+// watchEffect(() => {
+//   const targetUserid = route.params.userid
+//   const myUserid = accountStore.user_id
 
-  if (myUserid && String(targetUserid) === String(myUserid)) {
-    router.push({ name: 'mypage' })
-  }
-})
+//   if (myUserid && String(targetUserid) === String(myUserid)) {
+//     router.push({ name: 'mypage' })
+//   }
+// })
 
 const user = ref({
   nickname: '',
@@ -99,7 +99,8 @@ const isFollowing = ref(false)
 onMounted(async () => {
   const targetUserid = route.params.userid
 
-  if (String(targetUserid) === accountStore.userid) {
+
+  if (String(targetUserid) === accountStore.userId) {
     router.push({ name: 'mypage' })
     return
   }
