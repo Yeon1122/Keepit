@@ -6,14 +6,8 @@
       <!-- ✅ 왼쪽 버튼 + 오른쪽 드롭다운 정렬 -->
       <div class="filter-bar">
         <div class="btn-group">
-          <button
-            :class="{ active: selectedType === '정기예금' }"
-            @click="filterByType('정기예금')"
-          >정기예금</button>
-          <button
-            :class="{ active: selectedType === '적금' }"
-            @click="filterByType('적금')"
-          >적금</button>
+          <button :class="{ active: selectedType === '정기예금' }" @click="filterByType('정기예금')">정기예금</button>
+          <button :class="{ active: selectedType === '적금' }" @click="filterByType('적금')">적금</button>
         </div>
 
         <select v-model="sortOption" @change="sortProducts">
@@ -24,21 +18,11 @@
     </div>
 
     <div class="saving-container">
-      <SavingCard
-        v-for="product in paginatedProducts"
-        :key="product.id"
-        :product="product"
-        class="saving-card"
-      />
+      <SavingCard v-for="product in paginatedProducts" :key="product.id" :product="product" class="saving-card" />
     </div>
 
     <div class="pagination">
-      <button
-        v-for="page in totalPages"
-        :key="page"
-        @click="goToPage(page)"
-        :class="{ active: page === currentPage }"
-      >
+      <button v-for="page in totalPages" :key="page" @click="goToPage(page)" :class="{ active: page === currentPage }">
         {{ page }}
       </button>
     </div>
@@ -60,6 +44,16 @@ const sortOption = ref('interest')
 const currentPage = ref(1)
 const itemsPerPage = 8
 
+// onMounted(async () => {
+//   try {
+//     const res = await axios.get('http://127.0.0.1:8000/api/v1/products/savings/')
+//     console.log("💡 응답 데이터:", res.data)
+//     allProducts.value = res.data.data || []  // 백엔드 응답 구조에 따라 조정
+//     filterByType(selectedType.value)   // ✅ 초기 필터 적용
+//   } catch (err) {
+//     console.error('❌ 상품 데이터를 불러오는 데 실패했습니다.', err)
+//   }
+// })
 
 // ✅ 상품 필터링 + 정렬
 const filterByType = (type) => {
@@ -112,15 +106,7 @@ const paginatedProducts = computed(() => {
 const goToPage = (page) => {
   currentPage.value = page
 }
-// onMounted(async () => {
-//   try {
-//     const res = await axios.get('http://127.0.0.1:8000/api/v1/products/savings/')
-//     allProducts.value = res.data.data  // 백엔드 응답 구조에 따라 조정
-//     filterByType(selectedType.value)   // ✅ 초기 필터 적용
-//   } catch (err) {
-//     console.error('❌ 상품 데이터를 불러오는 데 실패했습니다.', err)
-//   }
-// })
+
 
 onMounted(() => {
   allProducts.value = [
@@ -342,17 +328,23 @@ button.active {
 
 .saving-container {
   display: flex;
-  flex-wrap: wrap;              /* ✅ 줄바꿈 허용 */
-  justify-content: center;      /* ✅ 가운데 정렬 */
-  gap: 2rem;                    /* ✅ 카드 사이 간격 */
+  flex-wrap: wrap;
+  /* ✅ 줄바꿈 허용 */
+  justify-content: center;
+  /* ✅ 가운데 정렬 */
+  gap: 2rem;
+  /* ✅ 카드 사이 간격 */
   padding: 2rem;
-  max-width: 1200px;            /* ✅ 전체 최대 너비 제한 */
-  margin: 0 auto;               /* ✅ 가운데 정렬 */
+  max-width: 1200px;
+  /* ✅ 전체 최대 너비 제한 */
+  margin: 0 auto;
+  /* ✅ 가운데 정렬 */
 }
 
 /* SavingCard.vue의 루트 div 또는 카드 스타일 */
 .saving-card {
-  flex: 1 1 300px;              /* ✅ 기본 너비 300px, 줄어들고 늘어남 허용 */
+  flex: 1 1 300px;
+  /* ✅ 기본 너비 300px, 줄어들고 늘어남 허용 */
   max-width: 300px;
 }
 

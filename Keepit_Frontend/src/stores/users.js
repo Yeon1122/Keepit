@@ -107,8 +107,7 @@ export const useAccountStore = defineStore('account', () => {
     logOut,
   }
 },
-{ persist: sessionStorage }
-// { persist: true } 
+  { persist: true }
 )
 
 
