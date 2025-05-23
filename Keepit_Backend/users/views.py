@@ -7,7 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
 from .models import User, Follow
 from .serializers import UserCreateSerializer, UserUpdateSerializer, UserLoginSerializer
-
+from django.shortcuts import get_object_or_404
 
 class SignUpView(APIView):
     def post(self, request):
@@ -221,11 +221,45 @@ class FollowToggleView(APIView):
 
 
 
+# class FollowListView(APIView):
+#     permission_classes = [IsAuthenticated]
+
+#     def get(self, request):
+#         user = request.user
+
+#         following_data = [
+#             {
+#                 "user_id": follow.to_user.id,
+#                 "nickname": follow.to_user.nickname,
+#                 "userid": follow.to_user.userid
+#             }
+#             for follow in user.following.select_related('to_user')
+#         ]
+
+#         follower_data = [
+#             {
+#                 "user_id": follow.from_user.id,
+#                 "nickname": follow.from_user.nickname,
+#                 "userid": follow.to_user.userid
+#             }
+#             for follow in user.followers.select_related('from_user')
+#         ]
+
+#         return Response({
+#             "message": "팔로우 정보를 불러왔습니다.",
+#             "status": 200,
+#             "data": {
+#                 "following": following_data,
+#                 "followers": follower_data
+#             }
+#         })
+    
+
 class FollowListView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self, request):
-        user = request.user
+    def get(self, request, userid):  # ✅ 여기!
+        target_user = get_object_or_404(User, userid=userid)
 
         following_data = [
             {
@@ -233,20 +267,20 @@ class FollowListView(APIView):
                 "nickname": follow.to_user.nickname,
                 "userid": follow.to_user.userid
             }
-            for follow in user.following.select_related('to_user')
+            for follow in target_user.following.select_related('to_user')
         ]
 
         follower_data = [
             {
                 "user_id": follow.from_user.id,
                 "nickname": follow.from_user.nickname,
-                "userid": follow.to_user.userid
+                "userid": follow.from_user.userid
             }
-            for follow in user.followers.select_related('from_user')
+            for follow in target_user.followers.select_related('from_user')
         ]
 
         return Response({
-            "message": "팔로우 정보를 불러왔습니다.",
+            "message": f"{target_user.nickname}의 팔로우 정보를 불러왔습니다.",
             "status": 200,
             "data": {
                 "following": following_data,

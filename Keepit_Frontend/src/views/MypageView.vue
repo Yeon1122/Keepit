@@ -149,7 +149,7 @@ const goToEdit = () => {
 }
 
 const goToFollow = () => {
-  router.push({ name: 'followlist' })
+  router.push({ name: 'followlist', params: { userid: accountStore.userId } })
 }
 </script>
 

@@ -143,6 +143,10 @@ const toggleFollow = async () => {
   }
 }
 
+const goToFollow = () => {
+  const targetUserid = route.params.userid
+  router.push({ name: 'followlist', params: { userid: targetUserid } })
+}
 
 </script>
 

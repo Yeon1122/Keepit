@@ -15,7 +15,7 @@ urlpatterns = [
     path('mypage/', MyPageView.as_view()),
     
 
-    path('follow-info/', FollowListView.as_view(), name='follow_info'),
+    path('follow-info/<str:userid>/', FollowListView.as_view(), name='follow_info'),
     path('<int:user_id>/follow/', FollowToggleView.as_view(), name='follow_toggle'),
     
     path('check-id/', CheckUserIdView.as_view(), name='check_userid'),

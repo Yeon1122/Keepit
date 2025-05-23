@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+import '@fortawesome/fontawesome-free/css/all.min.css'
 import piniaPersistedstate from 'pinia-plugin-persistedstate' // ✅ 설치 후 정상 인식
 
 import App from './App.vue'
