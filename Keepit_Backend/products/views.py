@@ -12,7 +12,9 @@ from rest_framework.response import Response
 
 from rest_framework.permissions import IsAuthenticated
 from .models import Favorite
-from .external_fetch import fetch_products, fetch_stock_by_code
+from .external_fetch import fetch_products, fetch_stock_by_code, fetch_stock_detail_by_code, fetch_etf_by_code
+from products.utils.stock_code_loader import load_top_stock_codes, load_stock_name_map, load_top_etf_codes, load_etf_name_map
+from .external_fetch import fetch_products
 
 class SavingsListAPIView(generics.ListAPIView):
     serializer_class = SavingsSerializer
@@ -126,10 +128,63 @@ def live_saving_products(request):
     data = fetch_products('saving')
     return Response(data)
 
+@api_view(['GET'])
+def stock_list(request):
+    codes = load_top_stock_codes()
+    name_map = load_stock_name_map()
+
+    result = []
+    for code in codes:
+        data = fetch_stock_by_code(code)
+        if data:
+            data['name'] = name_map.get(code, None)
+            result.append(data)
+
+    return Response(result)
+
+@api_view(['GET'])
+def etf_list(request):
+    codes = load_top_etf_codes()
+    name_map = load_etf_name_map()
+    
+    result = []
+    for code in codes:
+        data = fetch_etf_by_code(code)
+        if data and data.get("current_price") is not None:
+            data["name"] = name_map.get(code, None)
+            result.append(data)
+            
+    return Response(result)
+
+@api_view(['GET'])
+# @permission_classes([IsAuthenticated])
+def stock_detail(request, stock_code):
+    data = fetch_stock_detail_by_code(stock_code)
+    return Response(data)
+
+@api_view(['POST', 'DELETE'])
+@permission_classes([IsAuthenticated])
+def toggle_favorite(request, type, identifier):
+    user = request.user
+
+    if type not in ['stock', 'deposit', 'saving', 'etf','goods']:
+        return Response({'error': '유효하지 않은 상품 유형입니다.'}, status=400)
+
+    if request.method == 'POST':
+        Favorite.objects.get_or_create(user=user, type=type, identifier=identifier)
+        return Response({'message': '찜 등록 완료'})
+
+    elif request.method == 'DELETE':
+        fav = Favorite.objects.filter(user=user, type=type, identifier=identifier).first()
+        if fav:
+            fav.delete()
+            return Response({'message': '찜 해제 완료'})
+        return Response({'error': '해당 찜이 존재하지 않습니다.'}, status=404)
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def my_favorites(request):
+def user_favorites(request):
     favorites = Favorite.objects.filter(user=request.user)
     result = []
 
@@ -137,17 +192,18 @@ def my_favorites(request):
         if fav.type == 'stock':
             stock_info = fetch_stock_by_code(fav.identifier)
             if stock_info:
-                result.append({**stock_info, 'type': 'stock'})
+                stock_info['type'] = 'stock'
+                result.append(stock_info)
 
         elif fav.type in ['deposit', 'saving']:
             products = fetch_products(fav.type)
             item = next((p for p in products if p['name'] + p['company'] == fav.identifier), None)
             if item:
-                result.append({**item, 'type': fav.type})
-
-        # TODO: etf, goods도 같은 방식으로 확장
+                item['type'] = fav.type
+                result.append(item)
 
     return Response(result)
+
 '''
 
 @api_view(['GET'])
