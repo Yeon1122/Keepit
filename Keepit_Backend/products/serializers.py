@@ -17,7 +17,7 @@ class StockSerializer(serializers.ModelSerializer):
         fields = [
             'id','type', 
             'name', 'company', 'link', 
-            'current_price', 'price_change',
+            'stock_code','current_price', 'price_change',
             'trade_volume', 'trade_value', 'market_cap'
         ]
 

@@ -6,8 +6,12 @@ from . import views
 urlpatterns = [
     path('savings/', views.live_saving_products, name='live_saving_products'),
     path('deposits/', views.live_deposit_products, name='live_deposit_products'),
-    # path('stocks/', StockListAPIView.as_view(), name='stock-list'),
-    # path('etf/', ETFListAPIView.as_view(), name='etf-list'),
+    path('stocks/', views.stock_list, name='stock-list'),
+    path('etfs/', views.etf_list, name='etf-list'),
+    path('stocks/<str:stock_code>/', views.stock_detail, name='stock-detail'),
+    # path('favorites/', views.my_favorites, name='my-favorites'), -> users로 이동!
+     path('<str:type>/<str:identifier>/favorite/', views.toggle_favorite, name='toggle-favorite'),
+
     # path('goods/', GoodsListAPIView.as_view(), name='goods-list'),
     # path('fetch-all-products/', views.fetch_all_deposit_saving, name='fetch-all-products'),
     # path('savings/', views.savings_list, name='savings-list'),

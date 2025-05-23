@@ -3,14 +3,13 @@
   "status": 200,
   "data": [
     {
-      "id": 1,
-      "type": "정기기예금",
-      "name": "국민 튼튼예금",
-      "company": "국민은행",
-      "interest_rate": 3.2,
-      "special_rate": 3.8,
-      "term": 12,
-      "target": "만 19세 이상 개인"
+      "name": "WON플러스예금",
+      "company": "우리은행",
+      "link": "",
+      "interest_rate": 2.7,
+      "special_rate": 2.7,
+      "term": 1,
+      "target": "실명의 개인"
     },
     {
       "id": 2,
