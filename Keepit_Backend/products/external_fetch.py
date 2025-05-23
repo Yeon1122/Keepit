@@ -167,3 +167,67 @@ def fetch_etf_by_code(etf_code):
         # "nav": output.get("nav"),  # 순자산가치
         # "nav_change": output.get("nav_chg_rt"),
     }
+
+
+# 예금 적금 찜한 상품 비교
+def fetch_product_details_by_name(product_names, product_type):
+    """
+    상품 이름 리스트와 상품 타입(deposit/saving)을 받아,
+    해당 이름의 상품 상세정보를 외부 API로부터 가져온다.
+    """
+
+    API_URLS = (
+        'https://finlife.fss.or.kr/finlifeapi/depositProductsSearch.json'
+        if product_type == "deposit"
+        else "https://finlife.fss.or.kr/finlifeapi/savingProductsSearch.json"
+    )
+
+    params = {
+        "auth": API_KEY,
+        "topFinGrpNo": "020000",   # 은행
+        "pageNo": 1
+    }
+
+    response = requests.get(API_URLS, params=params)
+    if response.status_code != 200:
+        return []
+
+    result = response.json().get("result", {})
+    base_list = result.get("baseList", [])
+    option_list = result.get("optionList", [])
+
+    product_meta = {
+        p["fin_prdt_cd"]: {
+            "name": p.get("fin_prdt_nm", "").strip(),
+            "company": p.get("kor_co_nm", "").strip(),
+            "target": p.get("join_member", "").strip()
+        }
+        for p in base_list
+    }
+
+    matched_products = []
+    for p in option_list:
+        code = p.get("fin_prdt_cd")
+        meta = product_meta.get(code)
+        if not meta:
+            continue
+
+        name = meta["name"]
+        for keyword in product_names:
+            if keyword in name or name in keyword:
+                matched_products.append({
+                    "name": name,
+                    "company": meta["company"],
+                    "target": meta["target"],
+                    "interest_rate": float(p.get("intr_rate", 0)),
+                    "special_rate": float(p.get("intr_rate2", 0)),
+                    "term": int(p.get("save_trm", 12)),
+                })
+                break
+    
+    # print(f"✅ 매칭된 상품 수: {len(matched_products)}")
+    # for m in matched_products:
+    #     print(f" - {m['name']} (이율: {m['interest_rate']}%, 기간: {m['term']}개월)")
+
+
+    return matched_products
