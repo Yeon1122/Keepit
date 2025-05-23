@@ -42,7 +42,7 @@ const router = createRouter({
       component: UsereditView,
     },
     {
-      path: '/users/follow',
+      path: '/users/follow/:userid',
       name: 'followlist',
       component: FollowlistView,
     },

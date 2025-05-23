@@ -31,8 +31,10 @@
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import { useAccountStore } from '@/stores/users.js'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
+
+const route = useRoute()
 const router = useRouter()
 const accountStore = useAccountStore()
 const { token } = accountStore
@@ -44,11 +46,28 @@ const goToUserPage = (userid) => {
   router.push({ name: 'userpage', params: { userid } })
 }
 
+// onMounted(async () => {
+//   try {
+//     const res = await axios.get('http://127.0.0.1:8000/api/v1/users/follow-info/', {
+//       headers: {
+//         Authorization: `Token ${token}`,
+//       }
+//     })
+//     followers.value = res.data.data.followers
+//     following.value = res.data.data.following
+//   } catch (err) {
+//     console.error('❌ 팔로우 정보 불러오기 실패:', err)
+//     alert('팔로우 정보를 불러오는 데 실패했습니다.')
+//   }
+// })
 onMounted(async () => {
+  const userid = route.params.userid
+  const url = `http://127.0.0.1:8000/api/v1/users/follow-info/${userid}/`
+
   try {
-    const res = await axios.get('http://127.0.0.1:8000/api/v1/users/follow-info/', {
+    const res = await axios.get(url, {
       headers: {
-        Authorization: `Token ${token}`,
+        Authorization: `Token ${token}`
       }
     })
     followers.value = res.data.data.followers
@@ -58,6 +77,7 @@ onMounted(async () => {
     alert('팔로우 정보를 불러오는 데 실패했습니다.')
   }
 })
+
 </script>
 
 <style scoped>
