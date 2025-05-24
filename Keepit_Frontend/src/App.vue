@@ -17,6 +17,8 @@
             <Footer />
           </div>
         </footer>
+
+        <FloatingButton />
       </div>
     </div>
   </div>
@@ -25,9 +27,103 @@
 <script setup>
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
+import FloatingButton from '@/components/FloatingButton.vue'
 </script>
 
 <style>
+/* Pretendard 폰트 import */
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
+
+/* 마루부리 폰트 import */
+@font-face {
+  font-family: 'MaruBuri';
+  font-weight: 400;
+  src: url('https://cdn.jsdelivr.net/gh/webfontworld/naver/MaruBuri-Regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'MaruBuri';
+  font-weight: 600;
+  src: url('https://cdn.jsdelivr.net/gh/webfontworld/naver/MaruBuri-SemiBold.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'MaruBuri';
+  font-weight: 700;
+  src: url('https://cdn.jsdelivr.net/gh/webfontworld/naver/MaruBuri-Bold.woff2') format('woff2');
+}
+
+/* 전역 스타일 */
+:root {
+  /* 색상 변수 */
+  --primary-color: #145c2b;
+  --primary-dark: #0d4420;
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --background-light: #f8f9fa;
+  --border-color: #dddddd;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'MaruBuri', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  line-height: 1.6;
+  color: var(--text-primary);
+  background-color: var(--background-light);
+}
+
+h1, h2, h3, h4, h5, h6, button {
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: var(--text-primary);
+}
+
+/* 숫자, 금액 표시에 Pretendard 적용 */
+.number {
+  font-family: 'Pretendard', sans-serif;
+  font-feature-settings: "tnum";
+  font-variant-numeric: tabular-nums;
+}
+
+/* 버튼 기본 스타일 */
+button {
+  font-family: 'Pretendard', sans-serif;
+  cursor: pointer;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+button.primary {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+button.primary:hover {
+  background-color: var(--primary-dark);
+}
+
+/* 입력 필드 기본 스타일 */
+input, select, textarea {
+  font-family: 'Pretendard', sans-serif;
+  padding: 0.8rem;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
 .page-background {
   background-color: #f5f5f5;
   min-height: 100vh;

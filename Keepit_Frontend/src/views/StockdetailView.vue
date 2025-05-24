@@ -4,8 +4,21 @@
       <button class="close-btn" @click="close">&times;</button>
       <template v-if="stock">
         <div class="header">
-          <h2>{{ stock.name }}</h2>
-          <p>{{ stock.stock_code }} / {{ stock.market_type }}</p>
+          <div class="title-section">
+            <div class="title-with-heart">
+              <HeartButton
+                v-if="isAuthenticated"
+                :initial-is-hearted="isHearted"
+                :initial-count="heartCount"
+                @update:hearted="handleHeart"
+              />
+              <div v-else class="heart-count">
+                찜 {{ heartCount }}개
+              </div>
+              <h2>{{ stock.name }}</h2>
+            </div>
+            <span class="code">{{ stock.stock_code }} / {{ stock.market_type }}</span>
+          </div>
         </div>
         <div class="section">
           <p><strong>현재가:</strong> {{ formatNumber(stock.current_price) }}원 ({{ formatChange(stock.price_change) }})</p>
@@ -40,14 +53,21 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import NewsCard from '@/components/NewsCard.vue'
+import { useAccountStore } from '@/stores/users'
+import HeartButton from '@/components/HeartButton.vue'
 
 const route = useRoute()
 const router = useRouter()
 const stock = ref(null)
 const newsList = ref([])
+const accountStore = useAccountStore()
+const isAuthenticated = computed(() => accountStore.isAuthenticated)
+
+const isHearted = ref(false)
+const heartCount = ref(0)
 
 const close = () => {
   router.back()
@@ -92,6 +112,10 @@ onMounted(() => {
 
 const formatNumber = (val) => val == null ? '-' : Number(val).toLocaleString()
 const formatChange = (val) => val > 0 ? `+${val}` : val < 0 ? `${val}` : '0'
+
+const handleHeart = async (value) => {
+  // 찜하기 처리 로직
+}
 </script>
 
 <style scoped>
@@ -127,20 +151,32 @@ const formatChange = (val) => val > 0 ? `+${val}` : val < 0 ? `${val}` : '0'
   background: none;
   font-size: 1.5rem;
   cursor: pointer;
+  color: #333;
 }
 
 .header {
   margin-bottom: 1rem;
+  color: #333;
 }
 
 .section {
   margin-bottom: 1.2rem;
+  color: #333;
+}
+
+.section p {
+  color: #333;
+}
+
+.section strong {
+  color: #333;
 }
 
 .warning {
   background: #fff3cd;
   padding: 0.8rem;
   border-radius: 5px;
+  color: #856404;
 }
 
 .empty {
@@ -148,5 +184,32 @@ const formatChange = (val) => val > 0 ? `+${val}` : val < 0 ? `${val}` : '0'
   padding: 2rem 0;
   color: #999;
   font-size: 1.1rem;
+}
+
+.title-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.title-section h2 {
+  color: #333;
+  margin: 0;
+}
+
+.title-with-heart {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.heart-count {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.code {
+  color: #666;
+  font-size: 0.9rem;
 }
 </style>

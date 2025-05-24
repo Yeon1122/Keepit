@@ -1,190 +1,20 @@
-<!-- <template>
-    <div>
-        <div class="middle-1">
-            <div class="left">
-                <div class="picture">
-                    <img src="@/assets/images/Momo_test.png">
-                </div>
-            </div>
-            <div class="right">
-                <div>
-                    <p class="subtitle">내 손 안의 금융비서</p>
-                    <p class="title">킵잇</p>
-                    <p class="explain">간단한 테스트로 나에게 맞는 투자 성향과 금융 상품을 추천해드려요. 나에게 꼭 맞는 금융 루틴, 지금 바로 시작해보세요!</p>
-                    <button class="go-to-test">투자 스타일 알아보기</button>
-                </div>
-            </div>
-        </div>
-        <div class="carousel">
-            <div class="slides" :style="{ transform: `translateX(-${currentIndex * 100} %)` }">
-                <div class="slide" v-for="(slide, index) in slideContents" :key="index">
-                    <div class="card">
-                        <div>
-                            <p>{{ slide[0] }}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-</template>
-
-<script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
-
-// 각각 하나의 슬라이드를 구성할 3행짜리 콘텐츠
-const slideContents = [
-    ['정기 예금/적금'],
-    ['현물'],
-    ['주식/ETF'],
-]
-
-const currentIndex = ref(0)
-let interval = null
-
-onMounted(() => {
-    interval = setInterval(() => {
-        currentIndex.value = (currentIndex.value + 1) % slideContents.length
-    }, 3000)
-})
-
-onUnmounted(() => {
-    clearInterval(interval)
-})
-</script>
-
-<style scoped>
-.middle-1 {
-    background-color: #f5f5f5;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding-top: 0rem;
-    padding-bottom: 2rem;
-    padding-left: 2rem;
-    padding-right: 2rem;
-
-    max-width: 900px;
-    margin: 0 auto;
-    box-sizing: border-box;
-}
-
-.middle-1>div {
-    flex: 1;
-}
-
-.left {
-    display: flex;
-    justify-content: center;
-    /* 수평 가운데 정렬 */
-    align-items: flex-end;
-    /* 수직 가운데 정렬 */
-}
-
-.right {
-    display: flex;
-    justify-content: center;
-    /* 수평 가운데 정렬 */
-    align-items: flex-start;
-}
-
-.picture img {
-    width: 300px;
-    max-width: 100%;
-    height: auto;
-    transform: translateY(25px);
-}
-
-.subtitle {
-    font-size: 1.25rem;
-    color: #1d4a2d;
-}
-
-.title {
-    margin-top: 0;
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #1d4a2d;
-    /* 진한 초록 */
-    margin-bottom: 0.1rem;
-}
-
-.explain {
-    font-size: 1rem;
-    line-height: 1.6;
-    color: #333;
-    margin-bottom: 0.75rem;
-}
-
-.go-to-test {
-    background-color: #145c2b;
-    color: white;
-    border: none;
-    padding: 0.8rem 1.5rem;
-    font-size: 1rem;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.go-to-test:hover {
-    background-color: #1d4a2d;
-}
-
-.carousel {
-    overflow: hidden;
-    width: 100%;
-    max-width: 900px;
-    margin: 0 auto;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.slides {
-    display: flex;
-    transition: transform 0.5s ease-in-out;
-}
-
-.slide {
-    min-width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.card {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-    height: 300px;
-    width: 100%;
-    background-color: #145c2b;
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #ffffff;
-}
-
-.card div {
-    padding: 1rem;
-}
-</style> -->
-
 <template>
-  <div>
+  <div class="home">
     <div class="middle-1">
       <div class="left">
         <div class="picture">
-          <img src="@/assets/images/Momo_test.png">
+          <img src="@/assets/images/Momo_test.png" alt="Keepit 캐릭터">
         </div>
       </div>
       <div class="right">
-        <div>
+        <div class="content">
           <p class="subtitle">내 손 안의 금융비서</p>
-          <p class="title">킵잇</p>
+          <h1 class="title">킵잇</h1>
           <p class="explain">간단한 테스트로 나에게 맞는 투자 성향과 금융 상품을 추천해드려요. 나에게 꼭 맞는 금융 루틴, 지금 바로 시작해보세요!</p>
-          <button class="go-to-test">투자 스타일 알아보기</button>
+          <button class="go-to-test" @click="goToTest">
+            투자 스타일 알아보기
+            <span class="arrow">→</span>
+          </button>
         </div>
       </div>
     </div>
@@ -198,8 +28,13 @@ onUnmounted(() => {
           @click="handleSlideClick"
         >
           <div class="card">
-            <div>
-              <p>{{ slide[0] }}</p>
+            <div class="card-content">
+              <span class="card-icon">
+                {{ getIcon(index) }}
+              </span>
+              <h2>{{ slide[0] }}</h2>
+              <p class="card-description">{{ getDescription(index) }}</p>
+              <button class="card-button">자세히 보기</button>
             </div>
           </div>
         </div>
@@ -212,6 +47,7 @@ onUnmounted(() => {
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const slideContents = [
   ['정기 예금/적금'],
   ['현물'],
@@ -221,9 +57,10 @@ const slideContents = [
 const currentIndex = ref(0)
 let interval = null
 
-const router = useRouter()
+const goToTest = () => {
+  router.push({ name: 'investmenttest' })
+}
 
-// ✅ 클릭 시 라우팅
 const handleSlideClick = () => {
   const routeMap = {
     0: { name: 'savings' },    // 정기 예금/적금
@@ -234,10 +71,28 @@ const handleSlideClick = () => {
   if (route) router.push(route)
 }
 
+const setSlide = (index) => {
+  currentIndex.value = index
+}
+
+const getIcon = (index) => {
+  const icons = ['💰', '💎', '📈']
+  return icons[index]
+}
+
+const getDescription = (index) => {
+  const descriptions = [
+    '안정적인 수익을 원하는 분들을 위한 예금과 적금 상품을 만나보세요',
+    '실물 자산에 투자하고 싶은 분들을 위한 현물 상품을 확인해보세요',
+    '주식시장에서 수익을 추구하는 분들을 위한 다양한 상품이 준비되어 있어요'
+  ]
+  return descriptions[index]
+}
+
 onMounted(() => {
   interval = setInterval(() => {
     currentIndex.value = (currentIndex.value + 1) % slideContents.length
-  }, 2000)
+  }, 4000)
 })
 
 onUnmounted(() => {
@@ -246,15 +101,21 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+.home {
+  min-height: 100vh;
+  background-color: #ffffff;
+}
+
 .middle-1 {
-  background-color: #f5f5f5;
+  background: linear-gradient(to right, #f8f9fa 0%, #ffffff 100%);
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0 2rem 2rem;
-  max-width: 900px;
+  padding: 4rem 2rem;
+  max-width: 1200px;
   margin: 0 auto;
-  box-sizing: border-box;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
 }
 
 .middle-1 > div {
@@ -274,54 +135,81 @@ onUnmounted(() => {
 }
 
 .picture img {
-  width: 300px;
+  width: 400px;
   max-width: 100%;
   height: auto;
   transform: translateY(25px);
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.1));
+}
+
+.content {
+  max-width: 480px;
+  padding: 2rem;
 }
 
 .subtitle {
   font-size: 1.25rem;
-  color: #1d4a2d;
+  color: #145c2b;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
 }
 
 .title {
-  margin-top: 0;
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: #1d4a2d;
-  margin-bottom: 0.1rem;
+  margin: 0;
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: #145c2b;
+  margin-bottom: 1rem;
+  line-height: 1.2;
 }
 
 .explain {
-  font-size: 1rem;
-  line-height: 1.6;
-  color: #333;
-  margin-bottom: 0.75rem;
+  font-size: 0.8rem;
+  line-height: 1.7;
+  color: #4a5568;
+  margin-bottom: 2rem;
+  word-break: keep-all;
+  white-space: pre-line;
+  max-width: 400px;
 }
 
 .go-to-test {
   background-color: #145c2b;
   color: white;
   border: none;
-  padding: 0.8rem 1.5rem;
-  font-size: 1rem;
-  border-radius: 4px;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.arrow {
+  color: white;
+  transition: transform 0.3s ease;
 }
 
 .go-to-test:hover {
-  background-color: #1d4a2d;
+  background-color: #1a7436;
+  transform: translateY(-2px);
 }
 
+.go-to-test:hover .arrow {
+  transform: translateX(5px);
+}
+
+/* 캐러셀 스타일 */
 .carousel {
   overflow: hidden;
   width: 100%;
-  max-width: 900px;
-  margin: 0 auto;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  max-width: 1200px;
+  margin: 4rem auto;
+  border-radius: 16px;
+  position: relative;
 }
 
 .slides {
@@ -334,23 +222,99 @@ onUnmounted(() => {
   display: flex;
   justify-content: center;
   align-items: center;
-  cursor: pointer;
 }
 
 .card {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
-  height: 300px;
   width: 100%;
-  background-color: #145c2b;
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #ffffff;
+  background: linear-gradient(135deg, #145c2b 0%, #1a7436 100%);
+  padding: 3rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(20, 92, 43, 0.2);
 }
 
-.card div {
-  padding: 1rem;
+.card-content {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.card-content * {
+  color: white;
+}
+
+.card-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.card h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.card-description {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  opacity: 0.9;
+}
+
+.card-button {
+  background-color: white;
+  color: #145c2b;
+  border: none;
+  padding: 0.8rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.card-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.carousel-indicators {
+  display: none;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 968px) {
+  .middle-1 {
+    flex-direction: column;
+    padding: 2rem;
+  }
+
+  .picture img {
+    width: 300px;
+    transform: translateY(0);
+  }
+
+  .content {
+    text-align: center;
+    padding: 1rem;
+  }
+
+  .explain {
+    margin: 0 auto;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+
+  .title {
+    font-size: 2.5rem;
+  }
+
+  .card {
+    padding: 2rem;
+  }
+
+  .card h2 {
+    font-size: 2rem;
+  }
 }
 </style>

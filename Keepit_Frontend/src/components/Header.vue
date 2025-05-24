@@ -1,56 +1,73 @@
 <template>
     <header class="header">
-        <div class="logo-box" @click="goHome" style="cursor: pointer;">
-            <img src="@/assets/images/logo_Keepit.png" alt="Keepit Logo" class="logo">
-        </div>
-
-        <nav class="navbar">
-            <ul class="nav-menu">
-                <li><a href="#">금융비서</a></li>
-                <li><a href="#">상품안내</a></li>
-                <li><a href="#">커뮤니티</a></li>
-            </ul>
-
-            <div class="dropdown-container">
-                <div class="dropdown-group">
-                    <ul>
-                        <li class="middle">투자 성향 분석</li>
-                        <li><a href="#">투자 스타일 알아보기</a></li>
-                        <li><a href="#">투자 성향 결과</a></li>
-                    </ul>
-                    <ul>
-                        <li class="middle">상품 비교</li>
-                        <li><router-link :to="{ name: 'compare', query: { type: 'deposit' } }">정기 예금</router-link></li>
-                        <li><router-link :to="{ name: 'compare', query: { type: 'saving' } }">적금</router-link></li>
-                    </ul>
-                </div>
-                <div class="dropdown-group">
-                    <ul>
-                        <li><router-link :to="{ name: 'savings' }">정기 예금/적금</router-link></li>
-                        <li><router-link :to="{ name: 'goods' }">현물</router-link></li>
-                        <li><router-link :to="{ name: 'stocks' }">주식/ETF</router-link></li>
-                    </ul>
-                </div>
-                <div class="dropdown-group">
-                    <ul>
-                        <li><router-link :to="{ name: 'freecommunity' }">자유 게시판</router-link></li>
-                        <li><a href="#">질문 게시판</a></li>
-                        <li><a href="#">뉴스</a></li>
-                    </ul>
-                </div>
+        <div class="header-content">
+            <div class="logo-box" @click="goHome">
+                <img src="@/assets/images/logo_Keepit.png" alt="Keepit Logo" class="logo">
             </div>
-        </nav>
 
-        <div class="btns" v-if="!isLoggedIn">
-            <!-- 비로그인 시 -->
-            <button class="login btn-1" @click="goToLogin">Login</button>
-            <button class="get-started btn-2" @click="goToSignup">Get Started</button>
-        </div>
+            <nav class="navbar" @mouseleave="hideDropdown">
+                <ul class="nav-menu" @mouseenter="showDropdown">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">금융비서</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">상품안내</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">커뮤니티</a>
+                    </li>
+                </ul>
 
-        <div class="btns" v-else>
-            <!-- 로그인 시 -->
-            <button class="get-started btn-1" @click="handleLogout">Logout</button>
-            <button class="login btn-2" @click="goToMypage">My Page</button>
+                <!-- 통합 드롭다운 메뉴 -->
+                <div class="mega-dropdown" v-show="isDropdownVisible" :class="{ 'show': isDropdownVisible }">
+                    <div class="mega-content">
+                        <!-- 금융비서 섹션 -->
+                        <div class="mega-section">
+                            <div class="section-group">
+                                <div class="section-title">투자 성향 분석</div>
+                                <ul class="dropdown-menu">
+                                    <li><router-link :to="{ name: 'investmenttest' }">투자 스타일 알아보기</router-link></li>
+                                    <li><router-link :to="{ name: 'testresult' }">투자 성향 결과</router-link></li>
+                                </ul>
+                            </div>
+                            <div class="section-group">
+                                <div class="section-title">상품 비교</div>
+                                <ul class="dropdown-menu">
+                                    <li><router-link :to="{ name: 'compare', query: { type: 'deposit' } }">정기 예금</router-link></li>
+                                    <li><router-link :to="{ name: 'compare', query: { type: 'saving' } }">적금</router-link></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- 상품안내 섹션 -->
+                        <div class="mega-section">
+                            <ul class="dropdown-menu">
+                                <li><router-link :to="{ name: 'savings' }">정기 예금/적금</router-link></li>
+                                <li><router-link :to="{ name: 'goods' }">현물</router-link></li>
+                                <li><router-link :to="{ name: 'stocks' }">주식/ETF</router-link></li>
+                            </ul>
+                        </div>
+
+                        <!-- 커뮤니티 섹션 -->
+                        <div class="mega-section">
+                            <ul class="dropdown-menu">
+                                <li><router-link :to="{ name: 'freecommunity' }">자유 게시판</router-link></li>
+                                <li><router-link :to="{ name: 'questioncommunity' }">질문 게시판</router-link></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="auth-buttons" v-if="!isLoggedIn">
+                <button class="btn-login" @click="goToLogin">로그인</button>
+                <button class="btn-signup" @click="goToSignup">회원가입</button>
+            </div>
+
+            <div class="auth-buttons" v-else>
+                <button class="btn-logout" @click="handleLogout">로그아웃</button>
+                <button class="btn-mypage" @click="goToMypage">마이페이지</button>
+            </div>
         </div>
     </header>
 </template>
@@ -64,175 +81,206 @@ const router = useRouter()
 const accountStore = useAccountStore()
 const isLoggedIn = computed(() => accountStore.isAuthenticated)
 
-const goHome = () => {
-    router.push({ name: 'home' })
-    // console.log('move to home')
+// 드롭다운 메뉴 상태 관리
+const isDropdownVisible = ref(false)
+
+const showDropdown = () => {
+    isDropdownVisible.value = true
 }
 
-const goToSignup = () => {
-    router.push({ name: 'signup' })
-    // console.log('move to signup')
+const hideDropdown = () => {
+    isDropdownVisible.value = false
 }
 
-const goToLogin = () => {
-    router.push({ name: 'login' })
-    // console.log('move to signup')
-}
-
-const goToMypage = () => {
-    router.push({ name: 'mypage' })
-}
-
+const goHome = () => router.push({ name: 'home' })
+const goToSignup = () => router.push({ name: 'signup' })
+const goToLogin = () => router.push({ name: 'login' })
+const goToMypage = () => router.push({ name: 'mypage' })
 const handleLogout = () => {
     accountStore.logOut()
     router.push({ name: 'home' })
 }
-
 </script>
 
 <style scoped>
 .header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: white;
-    border-bottom: 1px solid #ccc;
-    position: relative;
+  background-color: white;
+  border-bottom: 1px solid #eee;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  padding: 0.5rem 0;
+}
+
+.header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
 }
 
 .logo-box {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+  cursor: pointer;
 }
 
 .logo {
-    width: 100px;
-    height: auto;
+  width: 120px;
+  height: auto;
 }
 
+/* 네비게이션 메뉴 */
 .navbar {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-right: 2rem;
+  flex: 1;
+  margin: 0 2rem;
+  display: flex;
+  justify-content: center;
+  position: relative;
 }
 
 .nav-menu {
-    list-style: none;
-    display: flex;
-    gap: 0;
-    /* ✅ gap 제거 */
-    padding: 0;
-    margin: 0;
+  list-style: none;
+  display: flex;
+  gap: 5rem;
+  margin: 0;
+  padding: 0;
+  justify-content: center;
 }
 
-.nav-menu li {
-    margin-right: 0;
-    margin: 0px;
-    /* 기본 초기화 */
+.nav-item {
+  position: relative;
 }
 
-/* 개별 간격 지정 */
-.nav-menu li:nth-child(1) {
-    margin-left: 35px;
-    margin-right: 100px;
-    /* 금융비서 → 상품안내 */
+.nav-link {
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 500;
+  font-size: 1.05rem;
+  color: #333;
+  text-decoration: none;
+  padding: 0.8rem 0;
+  transition: color 0.2s;
+  white-space: nowrap;
 }
 
-.nav-menu li:nth-child(2) {
-    margin-right: 100px;
-    /* 상품안내 → 커뮤니티 */
+.nav-link:hover {
+  color: var(--primary-color);
 }
 
-.middle {
-    font-weight: bold;
-    font-size: 1rem;
-    color: #000;
+/* ✅ 드롭다운 메뉴 */
+.mega-dropdown {
+  position: absolute;
+  top: calc(100% + 1px);
+  left: 0; /* 왼쪽 정렬 */
+  transform: translateY(-10px); /* X축 제거 */
+  width: max-content;
+  background: white;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s;
+  z-index: 1000;
+  border-top: 1px solid #eee;
 }
 
-.nav-menu li a {
-    font-weight: bold;
-    color: #333;
-    text-decoration: none;
-    font-size: 1rem;
+.mega-dropdown.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
 }
 
-.dropdown-group:nth-child(1) {
-    margin-left: 5px;
-    margin-right: 2rem;
+.mega-content {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 2rem 1rem;
+  gap: 1rem;  /* ✨ 필요하면 더 조정 가능 */
 }
 
-.dropdown-group:nth-child(2) {
-    margin-right: 4.2rem;
+.mega-section {
+  display: flex;
+  flex-direction: column;
+  min-width: 160px;  /* ✨ 열 너비 */
 }
 
-/* 드롭다운 전체 박스 */
-.dropdown-container {
-    display: none;
-    /* 기본은 숨김 */
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background-color: white;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    padding: 2rem 2rem;
-    width: 100%;
-    justify-content: flex-start;
-    gap: 0;
-    z-index: 10;
+.section-group {
+  margin-bottom: 1rem;
 }
 
-.navbar:hover .dropdown-container {
-    display: flex;
-    /* navbar에 hover 시 나타남 */
+.section-title {
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--primary-color);
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.8rem;
+  border-bottom: 2px solid var(--primary-color);
 }
 
-.dropdown-group ul {
-    list-style: none;
-    padding: 0;
-    font-size: 0.9rem;
+.dropdown-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
-.dropdown-group li {
-    margin: 1rem 0;
+.dropdown-menu li {
+  margin: 0.6rem 0;
 }
 
-.dropdown-group a {
-    color: #555;
-    /* 링크 색상 회색 */
-    text-decoration: none;
+.dropdown-menu a {
+  font-family: 'MaruBuri', sans-serif;
+  font-size: 0.95rem;
+  color: #666;
+  text-decoration: none;
+  transition: color 0.2s;
 }
 
-.dropdown-group a:hover {
-    color: #222;
-    text-decoration: underline;
+.dropdown-menu a:hover {
+  color: var(--primary-color);
 }
 
-.btns {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
+/* 인증 버튼 */
+.auth-buttons {
+  display: flex;
+  gap: 1rem;
 }
 
-.btn-1 {
-    background: white;
-    border: 1px solid #145c2b;
-    color: #145c2b;
-    padding: 0.4rem 1rem;
-    font-weight: bold;
-    border-radius: 6px;
-    cursor: pointer;
+/* 로그인/로그아웃 버튼 스타일 */
+.btn-login,
+.btn-logout {
+  padding: 0.5rem 1.2rem;
+  border: 2px solid #145c2b;
+  border-radius: 8px;
+  background-color: white;
+  color: #145c2b;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.btn-2 {
-    background: #145c2b;
-    border: none;
-    color: white;
-    padding: 0.4rem 1rem;
-    font-weight: bold;
-    border-radius: 6px;
-    cursor: pointer;
+.btn-login:hover,
+.btn-logout:hover {
+  background-color: #f8f8f8;
+}
+
+/* 회원가입/마이페이지 버튼 스타일 */
+.btn-signup,
+.btn-mypage {
+  padding: 0.5rem 1.2rem;
+  border: 2px solid #145c2b;
+  border-radius: 8px;
+  background-color: #145c2b;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-signup:hover,
+.btn-mypage:hover {
+  background-color: #0d3d1d;
+  border-color: #0d3d1d;
 }
 </style>

@@ -1,13 +1,11 @@
 <template>
   <div class="etf-card">
     <div class="left">
-      <button class="heart-button"
-              :class="{ active: isLiked, hovered: !isLiked && isHovered }"
-              @mouseenter="isHovered = true"
-              @mouseleave="isHovered = false"
-              @click.stop="toggleFavorite">
-        <i :class="[isLiked ? 'fas' : 'far', 'fa-heart']"></i>
-      </button>
+      <HeartButton
+        v-if="showHeart"
+        :initial-is-hearted="isLiked"
+        @update:hearted="toggleLike"
+      />
       <div class="etf-info">
         <div class="name">{{ data.name }}</div>
         <div class="sector">{{ data.sector }}</div>
@@ -58,9 +56,17 @@
 import { ref } from 'vue'
 import { useAccountStore } from '@/stores/users.js'
 import axios from 'axios'
+import HeartButton from '@/components/HeartButton.vue'
 
 const props = defineProps({
-  data: Object
+  data: {
+    type: Object,
+    required: true
+  },
+  showHeart: {
+    type: Boolean,
+    default: false
+  }
 })
 
 const accountStore = useAccountStore()
@@ -69,7 +75,7 @@ const token = accountStore.token
 const isLiked = ref(false)
 const isHovered = ref(false)
 
-const toggleFavorite = async () => {
+const toggleLike = async () => {
   if (!token) {
     alert('로그인이 필요합니다.')
     return
@@ -139,6 +145,7 @@ const formatChange = (val) => {
 .name {
   font-weight: 600;
   font-size: 1.1rem;
+  color: #333;
 }
 
 .sector {
@@ -157,6 +164,7 @@ const formatChange = (val) => {
 .current-price {
   font-weight: bold;
   font-size: 1rem;
+  color: #333;
 }
 
 .price-change {
@@ -175,6 +183,7 @@ const formatChange = (val) => {
 .nav {
   font-weight: bold;
   font-size: 1rem;
+  color: #333;
 }
 
 .heart-button {
@@ -207,6 +216,6 @@ const formatChange = (val) => {
 }
 
 .black {
-  color: #000;
+  color: #333;
 }
 </style>
