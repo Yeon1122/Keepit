@@ -14,6 +14,7 @@ import SavingscompareView from '@/views/SavingscompareView.vue'
 import FreecommunityView from '@/views/FreecommunityView.vue'
 import FreepostcreateView from '@/views/FreepostcreateView.vue'
 import FreepostdetailView from '@/views/FreepostdetailView.vue'
+import FreeposteditView from '@/views/FreeposteditView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -92,7 +93,13 @@ const router = createRouter({
       path: '/community/free/:id',
       name: 'freepostdetail',
       component: FreepostdetailView,
-    }
+    },
+    {
+      path: '/posts/free/:id/edit',
+      name: 'freepostedit',
+      component: FreeposteditView,
+    },
+
   ],
 })
 
