@@ -1,3 +1,9 @@
 from django.contrib import admin
+from .models import TestResult
 
-# Register your models here.
+@admin.register(TestResult)
+class TestResultAdmin(admin.ModelAdmin):
+    list_display = ['user', 'risk_type', 'total_score', 'created_at']
+    list_filter = ['risk_type', 'created_at']
+    search_fields = ['user__userid', 'risk_type']
+    readonly_fields = ['total_score', 'risk_type']

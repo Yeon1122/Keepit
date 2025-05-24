@@ -8,6 +8,10 @@ from rest_framework.authtoken.models import Token
 from .models import User, Follow
 from .serializers import UserCreateSerializer, UserUpdateSerializer, UserLoginSerializer
 from django.shortcuts import get_object_or_404
+from django.contrib import admin
+from django.contrib.auth import get_user_model
+from community.models import Post
+from django.db.models import Count
 
 class SignUpView(APIView):
     def post(self, request):
@@ -50,6 +54,30 @@ class MyPageView(APIView):
 
     def get(self, request):
         user = request.user
+        
+        # 게시글 통계
+        posts = Post.objects.filter(author=user)
+        total_posts = posts.count()
+        
+        # 게시판 별 게시글 수
+        posts_by_type = posts.values('board_type').annotate(count=Count('id'))
+        posts_count = {
+            'free': 0,
+            'question': 0
+        }
+        for item in posts_by_type:
+            posts_count[item['board_type']] = item['count']
+        
+        # 최근 게시글 목록 (최대 5개)
+        recent_posts = posts.select_related('author').prefetch_related('likes').order_by('-created_at')[:5]
+        recent_posts_data = [{
+            'id': post.id,
+            'board_type': post.get_board_type_display(),  # 한글 표시 ('자유게시판' 또는 '질문게시판')
+            'title': post.title,
+            'likes_count': post.likes.count(),
+            'created_at': post.created_at
+        } for post in recent_posts]
+
         return Response({
             "user_id": user.id,
             "userid": user.userid,
@@ -62,7 +90,14 @@ class MyPageView(APIView):
             "region_city": user.region_city.name if user.region_city else None,
             "region_district": user.region_district.name if user.region_district else None,
             "followers": list(user.followers.values_list('id', flat=True)),
-            "following": list(user.following.values_list('id', flat=True)),        
+            "following": list(user.following.values_list('id', flat=True)),
+            # 게시글 정보 추가
+            "posts_summary": {
+                "total_posts": total_posts,
+                "free_posts": posts_count['free'],
+                "question_posts": posts_count['question']
+            },
+            "recent_posts": recent_posts_data
         })
     
     def put(self, request):
@@ -104,23 +139,28 @@ class UserDetailView(APIView):
         followers = list(Follow.objects.filter(to_user=target_user).values("from_user__id", "from_user__nickname"))
         following = list(Follow.objects.filter(from_user=target_user).values("to_user__id", "to_user__nickname"))
 
-        # # 내 글 (Post 모델이 있다면)
-        # my_posts = list(Post.objects.filter(user=target_user).values("id", "title", "created_at"))
-
-        # # 찜한 상품 (Favorite 모델이 있다면)
-        # liked_products = list(Favorite.objects.filter(user=target_user).select_related('product').values(
-        #     "product__id", "product__name", "product__bank", "product__interest_rate", "product__special_rate", "product__term"
-        # ))
-
-        my_posts = []
-        liked_products = []
-        test_result = None
-
-        # 성향 테스트 결과 (nullable 가능성 고려)
-        # test_result = {
-        #     "type": target_user.test_result.type,
-        #     "description": target_user.test_result.description,
-        # } if target_user.test_result else None
+        # 게시글 통계
+        posts = Post.objects.filter(author=target_user)
+        total_posts = posts.count()
+        
+        # 게시판 별 게시글 수
+        posts_by_type = posts.values('board_type').annotate(count=Count('id'))
+        posts_count = {
+            'free': 0,
+            'question': 0
+        }
+        for item in posts_by_type:
+            posts_count[item['board_type']] = item['count']
+        
+        # 최근 게시글 목록 (최대 5개)
+        recent_posts = posts.select_related('author').prefetch_related('likes').order_by('-created_at')[:5]
+        recent_posts_data = [{
+            'id': post.id,
+            'board_type': post.get_board_type_display(),
+            'title': post.title,
+            'likes_count': post.likes.count(),
+            'created_at': post.created_at
+        } for post in recent_posts]
 
         return Response({
             "user_id": target_user.id,
@@ -129,10 +169,14 @@ class UserDetailView(APIView):
             "email": target_user.email,
             "followers": followers,
             "following": following,
-            "my_posts": my_posts,
-            "liked_products": liked_products,
-            "test_result": test_result,
             "is_following": is_following,
+            # 게시글 정보 추가
+            "posts_summary": {
+                "total_posts": total_posts,
+                "free_posts": posts_count['free'],
+                "question_posts": posts_count['question']
+            },
+            "recent_posts": recent_posts_data
         })
     
 # userid 중복확인

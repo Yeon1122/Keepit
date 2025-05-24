@@ -1,16 +1,23 @@
 from django.shortcuts import render
 from rest_framework import viewsets, status, permissions
-from rest_framework.decorators import action
+from rest_framework.decorators import api_view, permission_classes, action
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from .models import Post, Comment
 from .serializers import PostSerializer, CommentSerializer
+from django.db.models import Count
 
 # Create your views here.
 
 class PostViewSet(viewsets.ModelViewSet):
     serializer_class = PostSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    
+    def get_permissions(self):
+        if self.action == 'list':  # 목록 조회
+            permission_classes = [permissions.AllowAny]
+        else:  # 상세 조회, 생성, 수정, 삭제, 좋아요 등 다른 모든 동작
+            permission_classes = [permissions.IsAuthenticated]
+        return [permission() for permission in permission_classes]
 
     def get_queryset(self):
         board_type = self.kwargs.get('board_type')
@@ -41,7 +48,7 @@ class PostViewSet(viewsets.ModelViewSet):
 
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated]  # 댓글은 모든 동작에 로그인 필요
 
     def get_queryset(self):
         return Comment.objects.filter(post_id=self.kwargs.get('post_pk'))
@@ -61,3 +68,27 @@ class CommentViewSet(viewsets.ModelViewSet):
         else:
             comment.likes.add(user)
             return Response({'status': 'liked'})
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def get_my_posts(request):
+    """사용자가 작성한 게시글 목록을 반환합니다."""
+    posts = Post.objects.filter(author=request.user).select_related('author').prefetch_related('likes', 'comments')
+    
+    # 게시판 별 게시글 수 계산
+    posts_by_type = posts.values('board_type').annotate(count=Count('id'))
+    posts_count = {
+        'free': 0,
+        'question': 0
+    }
+    for item in posts_by_type:
+        posts_count[item['board_type']] = item['count']
+    
+    # 게시글 목록 직렬화
+    serializer = PostSerializer(posts, many=True)
+    
+    return Response({
+        'total_posts': posts.count(),
+        'posts_count': posts_count,
+        'posts': serializer.data
+    })
