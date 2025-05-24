@@ -1,83 +1,63 @@
 <template>
-    <div class="edit-page">
-        <router-link :to="{ name: 'freecommunity' }" class="back-link">&gt; 자유 게시판</router-link>
-        <h2>게시글 수정</h2>
-        <form @submit.prevent="submitEdit" class="edit-form">
+    <div class="create-page">
+        <router-link :to="{ name: 'questioncommunity' }" class="back-link">&gt; 질문 게시판</router-link>
+        <h2>질문하기</h2>
+        <form @submit.prevent="submitPost" class="create-form">
             <div class="form-group">
                 <label for="title">제목</label>
-                <input id="title" v-model="title" type="text" placeholder="제목을 입력하세요" required />
+                <input id="title" v-model="title" type="text" placeholder="질문의 제목을 입력하세요" required />
             </div>
 
             <div class="form-group">
                 <label for="content">내용</label>
-                <textarea id="content" v-model="content" rows="12" placeholder="내용을 입력하세요" required></textarea>
+                <textarea id="content" v-model="content" rows="12" placeholder="질문 내용을 자세히 입력하세요" required></textarea>
             </div>
 
             <div class="button-group">
                 <button type="button" class="btn-cancel" @click="$router.go(-1)">취소</button>
-                <button type="submit" class="btn-submit">수정 완료</button>
+                <button type="submit" class="btn-submit">등록</button>
             </div>
         </form>
     </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import axios from 'axios'
 
-const route = useRoute()
 const router = useRouter()
-const postId = route.params.id
-
 const title = ref('')
 const content = ref('')
 
-onMounted(async () => {
-    // const res = await axios.get(`http://localhost:8000/api/v1/posts/free/${postId}/`)
-    // title.value = res.data.title
-    // content.value = res.data.content
-
-    // 더미 데이터
-    if (postId === '1') {
-        title.value = '주식 투자 초보자를 위한 팁'
-        content.value = `주식 투자를 처음 시작하시는 분들을 위한 몇 가지 조언을 공유드립니다.
-
-1. 분산 투자의 중요성
-- 한 종목에 올인하지 마세요
-- 다양한 업종에 투자하세요
-
-2. 장기 투자의 힘
-- 단타보다는 장기 투자를 추천
-- 복리의 효과를 믿으세요
-
-3. 투자금 관리
-- 여유자금으로만 투자하기
-- 적절한 투자 비중 유지하기`
-    } else {
-        title.value = '기존 게시글 제목'
-        content.value = '기존 게시글 내용입니다.'
-    }
-})
-
-const submitEdit = async () => {
+const submitPost = async () => {
     if (!title.value.trim() || !content.value.trim()) {
         alert('제목과 내용을 모두 입력하세요.')
         return
     }
 
-    // await axios.put(`http://localhost:8000/api/v1/posts/free/${postId}/`, {
-    //   title: title.value,
-    //   content: content.value
-    // })
+    try {
+        // const response = await axios.post('/api/v1/posts/question/', {
+        //     title: title.value,
+        //     content: content.value
+        // })
 
-    alert('게시글이 수정되었습니다.')
-    router.push({ name: 'freepostdetail', params: { id: postId } })
+        // 더미 데이터
+        const dummyId = Date.now()
+        alert('질문이 등록되었습니다.')
+        router.push({
+            name: 'questiondetail',
+            params: { id: dummyId }
+        })
+    } catch (err) {
+        console.error('질문 등록 실패:', err)
+        alert('질문 등록 중 오류가 발생했습니다.')
+    }
 }
 </script>
 
 <style scoped>
-.edit-page {
+.create-page {
     max-width: 800px;
     margin: 2rem auto;
     padding: 0 1.5rem;
@@ -103,7 +83,7 @@ h2 {
     font-weight: 600;
 }
 
-.edit-form {
+.create-form {
     background: white;
     padding: 2rem;
     border-radius: 16px;
@@ -187,4 +167,4 @@ textarea {
     transform: translateY(-1px);
     box-shadow: 0 2px 8px rgba(20, 92, 43, 0.2);
 }
-</style>
+</style> 

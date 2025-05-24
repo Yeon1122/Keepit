@@ -27,7 +27,11 @@
           </div>
         </div>
         <div class="buttons">
-          <button @click="toggleFollow" :class="{ 'followed': isFollowing, 'unfollowed': !isFollowing }">
+          <button 
+            v-if="isAuthenticated && !isOwnProfile" 
+            @click="toggleFollow" 
+            :class="{ 'followed': isFollowing, 'unfollowed': !isFollowing }"
+          >
             {{ isFollowing ? '언팔로우' : '팔로우' }}
           </button>
         </div>
@@ -62,19 +66,75 @@
         <p>찜한 상품이 없습니다.</p>
       </template>
     </div>
+
+    <!-- 작성한 글 -->
+    <div class="section">
+      <h4>작성한 글</h4>
+      
+      <!-- 자유 게시판 -->
+      <div class="posts-section" v-if="freePosts.length">
+        <h5>자유 게시판</h5>
+        <ul class="posts-list">
+          <li v-for="post in freePosts.slice(0, 3)" :key="post.id" @click="goToPost('free', post.id)">
+            <div class="post-title">{{ post.title }}</div>
+            <div class="post-info">
+              <span class="post-date">{{ formatDate(post.created_at) }}</span>
+              <LikeButton
+                :initial-is-liked="post.is_liked"
+                :initial-count="post.likes"
+                :show-count="true"
+              />
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- 질문 게시판 -->
+      <div class="posts-section" v-if="questionPosts.length">
+        <h5>질문 게시판</h5>
+        <ul class="posts-list">
+          <li v-for="post in questionPosts.slice(0, 3)" :key="post.id" @click="goToPost('question', post.id)">
+            <div class="post-title">
+              {{ post.title }}
+              <span class="solved-badge" v-if="post.is_solved">해결됨</span>
+            </div>
+            <div class="post-info">
+              <span class="post-date">{{ formatDate(post.created_at) }}</span>
+              <LikeButton
+                :initial-is-liked="post.is_liked"
+                :initial-count="post.likes"
+                :show-count="true"
+              />
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div v-if="!freePosts.length && !questionPosts.length" class="no-posts">
+        작성한 글이 없습니다.
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, watchEffect } from 'vue'
+import { ref, onMounted, watchEffect, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios'
 import { useAccountStore } from '@/stores/users.js'
+import LikeButton from '@/components/LikeButton.vue'
 
 const accountStore = useAccountStore()
 const { token, userId } = accountStore
 const route = useRoute()
 const router = useRouter()
+
+const isAuthenticated = computed(() => accountStore.isAuthenticated)
+const currentUserId = computed(() => accountStore.user_id)
+
+const isOwnProfile = computed(() => {
+    return user.value && currentUserId.value === user.value.user_id
+})
 
 // watchEffect(() => {
 //   const targetUserid = route.params.userid
@@ -95,10 +155,11 @@ const user = ref({
 })
 const likedProducts = ref([])
 const isFollowing = ref(false)
+const freePosts = ref([])
+const questionPosts = ref([])
 
 onMounted(async () => {
   const targetUserid = route.params.userid
-
 
   if (String(targetUserid) === accountStore.userId) {
     router.push({ name: 'mypage' })
@@ -106,12 +167,18 @@ onMounted(async () => {
   }
 
   try {
-    const res = await axios.get(`http://127.0.0.1:8000/api/v1/users/${targetUserid}/`, {
+    const res = await axios.get(`http://localhost:8000/api/v1/users/${targetUserid}/`, {
       headers: { Authorization: `Token ${token}` }
     })
+
     user.value = res.data
     likedProducts.value = res.data.liked_products || []
     isFollowing.value = res.data.is_following
+
+    if (Array.isArray(res.data.posts)) {
+      freePosts.value = res.data.posts.filter(post => post.type === 'free' || post.board_type === 'free')
+      questionPosts.value = res.data.posts.filter(post => post.type === 'question' || post.board_type === 'question')
+    }
   } catch (err) {
     console.error('❌ 사용자 정보 조회 실패', err)
     alert('존재하지 않는 유저입니다.')
@@ -125,11 +192,11 @@ const toggleFollow = async () => {
   try {
     let res
     if (isFollowing.value) {
-      res = await axios.delete(`http://127.0.0.1:8000/api/v1/users/${targetUserPk}/follow/`, {
+      res = await axios.delete(`http://localhost:8000/api/v1/users/${targetUserPk}/follow/`, {
         headers: { Authorization: `Token ${token}` },
       })
     } else {
-      res = await axios.post(`http://127.0.0.1:8000/api/v1/users/${targetUserPk}/follow/`, {}, {
+      res = await axios.post(`http://localhost:8000/api/v1/users/${targetUserPk}/follow/`, {}, {
         headers: { Authorization: `Token ${token}` },
       })
     }
@@ -147,6 +214,17 @@ const toggleFollow = async () => {
 const goToFollow = () => {
   const targetUserid = route.params.userid
   router.push({ name: 'followlist', params: { userid: targetUserid } })
+}
+
+const formatDate = (dateString) => {
+  if (!dateString) return ''
+  const date = new Date(dateString)
+  return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`
+}
+
+const goToPost = (type, postId) => {
+  const routeName = type === 'free' ? 'freepostdetail' : 'questiondetail'
+  router.push({ name: routeName, params: { id: postId } })
 }
 
 </script>
@@ -262,5 +340,78 @@ const goToFollow = () => {
   background-color: white;
   color: #145c2b;
   border: 2px solid #145c2b;
+}
+
+.posts-section {
+  margin-bottom: 2rem;
+}
+
+.posts-section h5 {
+  font-size: 1.1rem;
+  color: #444;
+  margin-bottom: 1rem;
+}
+
+.posts-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.posts-list li {
+  background: white;
+  border: 1px solid #eee;
+  border-radius: 6px;
+  padding: 1rem;
+  margin-bottom: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.posts-list li:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.post-title {
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.post-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.solved-badge {
+  background: #145c2b;
+  color: white;
+  font-size: 0.8rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+}
+
+.no-posts {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+  background: #f9f9f9;
+  border-radius: 8px;
+}
+
+.post-meta,
+.comment-meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.5rem;
+  color: #666;
+  font-size: 0.9rem;
 }
 </style>

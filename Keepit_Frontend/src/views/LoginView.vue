@@ -1,20 +1,31 @@
 <template>
-  <form @submit.prevent="onLogin">
-    <label>아이디:</label>
-    <input type="text" v-model="form.userid" />
+  <div class="login-container">
+    <form @submit.prevent="onLogin">
+      <h2>로그인</h2>
+      
+      <div v-if="route.query.message" class="alert alert-warning">
+        {{ route.query.message }}
+      </div>
 
-    <label>비밀번호:</label>
-    <input type="password" v-model="form.password" />
+      <label>아이디:</label>
+      <input type="text" v-model="form.userid" />
 
-    <button type="submit">로그인</button>
-  </form>
+      <label>비밀번호:</label>
+      <input type="password" v-model="form.password" />
+
+      <button type="submit">로그인</button>
+    </form>
+  </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
-import { useAccountStore } from '@/stores/users.js'
+import { useAccountStore } from '@/stores/users'
+import { useRoute, useRouter } from 'vue-router'
 
 const accountStore = useAccountStore()
+const route = useRoute()
+const router = useRouter()
 
 const form = ref({
   userid: '',
@@ -31,7 +42,7 @@ const validateForm = () => {
 }
 
 // 로그인 함수
-const onLogin = () => {
+const onLogin = async () => {
   if (!validateForm()) return
 
   const loginPayload = {
@@ -41,11 +52,26 @@ const onLogin = () => {
 
   // const requestData = { ...form.value }
   //   console.log('회원가입 요청 데이터:', requestData)
-  accountStore.logIn(loginPayload)
+  try {
+    await accountStore.logIn(loginPayload)
+    // 리다이렉트 URL이 있으면 해당 페이지로, 없으면 홈으로 이동
+    const redirectPath = route.query.redirect || { name: 'home' }
+    router.push(redirectPath)
+  } catch (error) {
+    console.error('로그인 처리 중 오류:', error)
+  }
 }
 </script>
 
 <style scoped>
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+  padding: 1rem;
+}
+
 form {
   background-color: white;
   color: black;
@@ -53,9 +79,27 @@ form {
   border-radius: 8px;
   width: 100%;
   max-width: 400px;
-  margin: auto;
   font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: var(--primary-color);
+}
+
+.alert {
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.alert-warning {
+  background-color: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeeba;
 }
 
 label {

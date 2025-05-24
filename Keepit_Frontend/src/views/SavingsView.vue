@@ -33,16 +33,20 @@
 import { ref, onMounted, computed } from 'vue'
 import SavingCard from '@/components/SavingCard.vue'
 import axios from 'axios'
+import { useAccountStore } from '@/stores/users'
+import HeartButton from '@/components/HeartButton.vue'
 
 const allProducts = ref([])
 const products = ref([])
-
 
 const selectedType = ref('정기예금')
 const sortOption = ref('interest')
 
 const currentPage = ref(1)
 const itemsPerPage = 8
+
+const accountStore = useAccountStore()
+const isAuthenticated = computed(() => accountStore.isAuthenticated)
 
 // onMounted(async () => {
 //   try {
@@ -373,5 +377,13 @@ button.active {
   background-color: #145c2b;
   color: white;
   border-color: #145c2b;
+}
+
+.heart-count {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 </style>

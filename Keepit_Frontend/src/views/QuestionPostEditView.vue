@@ -1,16 +1,16 @@
 <template>
     <div class="edit-page">
-        <router-link :to="{ name: 'freecommunity' }" class="back-link">&gt; 자유 게시판</router-link>
-        <h2>게시글 수정</h2>
+        <router-link :to="{ name: 'questioncommunity' }" class="back-link">&gt; 질문 게시판</router-link>
+        <h2>질문 수정</h2>
         <form @submit.prevent="submitEdit" class="edit-form">
             <div class="form-group">
                 <label for="title">제목</label>
-                <input id="title" v-model="title" type="text" placeholder="제목을 입력하세요" required />
+                <input id="title" v-model="title" type="text" placeholder="질문의 제목을 입력하세요" required />
             </div>
 
             <div class="form-group">
                 <label for="content">내용</label>
-                <textarea id="content" v-model="content" rows="12" placeholder="내용을 입력하세요" required></textarea>
+                <textarea id="content" v-model="content" rows="12" placeholder="질문 내용을 자세히 입력하세요" required></textarea>
             </div>
 
             <div class="button-group">
@@ -34,29 +34,21 @@ const title = ref('')
 const content = ref('')
 
 onMounted(async () => {
-    // const res = await axios.get(`http://localhost:8000/api/v1/posts/free/${postId}/`)
-    // title.value = res.data.title
-    // content.value = res.data.content
+    try {
+        // const res = await axios.get(`/api/v1/posts/question/${postId}/`)
+        // title.value = res.data.title
+        // content.value = res.data.content
 
-    // 더미 데이터
-    if (postId === '1') {
-        title.value = '주식 투자 초보자를 위한 팁'
-        content.value = `주식 투자를 처음 시작하시는 분들을 위한 몇 가지 조언을 공유드립니다.
-
-1. 분산 투자의 중요성
-- 한 종목에 올인하지 마세요
-- 다양한 업종에 투자하세요
-
-2. 장기 투자의 힘
-- 단타보다는 장기 투자를 추천
-- 복리의 효과를 믿으세요
-
-3. 투자금 관리
-- 여유자금으로만 투자하기
-- 적절한 투자 비중 유지하기`
-    } else {
-        title.value = '기존 게시글 제목'
-        content.value = '기존 게시글 내용입니다.'
+        // 더미 데이터
+        if (postId === '1') {
+            title.value = '주식투자 초보자인데 ETF 추천해주세요'
+            content.value = '안정적인 ETF 위주로 추천 부탁드립니다. 월 100만원 정도 투자할 예정입니다.'
+        } else {
+            title.value = '기존 질문 제목'
+            content.value = '기존 질문 내용입니다.'
+        }
+    } catch (err) {
+        console.error('질문 조회 실패:', err)
     }
 })
 
@@ -66,13 +58,18 @@ const submitEdit = async () => {
         return
     }
 
-    // await axios.put(`http://localhost:8000/api/v1/posts/free/${postId}/`, {
-    //   title: title.value,
-    //   content: content.value
-    // })
+    try {
+        // await axios.put(`/api/v1/posts/question/${postId}/`, {
+        //     title: title.value,
+        //     content: content.value
+        // })
 
-    alert('게시글이 수정되었습니다.')
-    router.push({ name: 'freepostdetail', params: { id: postId } })
+        alert('질문이 수정되었습니다.')
+        router.push({ name: 'questiondetail', params: { id: postId } })
+    } catch (err) {
+        console.error('질문 수정 실패:', err)
+        alert('질문 수정 중 오류가 발생했습니다.')
+    }
 }
 </script>
 
@@ -187,4 +184,4 @@ textarea {
     transform: translateY(-1px);
     box-shadow: 0 2px 8px rgba(20, 92, 43, 0.2);
 }
-</style>
+</style> 

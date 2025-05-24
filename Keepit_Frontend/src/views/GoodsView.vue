@@ -14,15 +14,11 @@
     <div v-for="item in goods" :key="item.id" class="data-row">
       <!-- ❤️ 찜 버튼 -->
       <div class="left-col">
-        <button
-          class="heart-button"
-          :class="{ active: likedItems.includes(item.id), hovered: hoveredItem === item.id }"
-          @mouseenter="hoveredItem = item.id"
-          @mouseleave="hoveredItem = null"
-          @click="toggleFavorite(item.id)"
-        >
-          <i :class="[likedItems.includes(item.id) ? 'fas' : 'far', 'fa-heart']"></i>
-        </button>
+        <HeartButton
+          v-if="isAuthenticated"
+          :initial-is-hearted="likedItems.includes(item.id)"
+          @update:hearted="(value) => handleLike(item.id, value)"
+        />
       </div>
       <div class="name-col">{{ item.name }}</div>
       <div class="price-col">{{ formatPrice(item.current_price) }}원</div>
@@ -32,6 +28,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import HeartButton from '@/components/HeartButton.vue'
 
 const allData = ref([])
 const goods = ref([])
@@ -154,5 +151,28 @@ h3 {
 .heart-button.hovered {
   background-color: #e272c0;
   color: white;
+}
+
+.item-image {
+  position: relative;
+  width: 100%;
+  padding-bottom: 100%;
+  overflow: hidden;
+}
+
+.item-image img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.heart-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1;
 }
 </style>

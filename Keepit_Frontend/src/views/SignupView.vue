@@ -94,6 +94,38 @@ const updateDistricts = () => {
     form.value.regionDistrict = ''
 }
 
+// 윤년 체크 함수
+const isLeapYear = (year) => {
+    return (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0)
+}
+
+// 날짜 유효성 검사 함수
+const isValidDate = (year, month, day) => {
+    // 숫자로 변환
+    year = Number(year)
+    month = Number(month)
+    day = Number(day)
+
+    // 기본 유효성 검사
+    if (year < 1900 || year > new Date().getFullYear()) return false
+    if (month < 1 || month > 12) return false
+    if (day < 1) return false
+
+    // 월별 일수 체크
+    const monthDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+    if (isLeapYear(year)) {
+        monthDays[1] = 29 // 윤년이면 2월은 29일
+    }
+
+    return day <= monthDays[month - 1]
+}
+
+// 이메일 유효성 검사 함수
+const isValidEmail = (email) => {
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/
+    return emailRegex.test(email)
+}
+
 // 유효성 검사
 const validateForm = () => {
     if (!form.value.userid || !form.value.password) {
@@ -106,6 +138,22 @@ const validateForm = () => {
     }
     if (form.value.password !== form.value.confirmPassword) {
         alert('비밀번호와 비밀번호 확인이 일치하지 않습니다!')
+        return false
+    }
+    if (!form.value.name || !form.value.nickname || !form.value.email) {
+        alert('이름, 닉네임, 이메일은 필수 입력사항입니다!')
+        return false
+    }
+    if (!isValidEmail(form.value.email)) {
+        alert('올바른 이메일 형식이 아닙니다!')
+        return false
+    }
+    if (!form.value.birthYear || !form.value.birthMonth || !form.value.birthDay) {
+        alert('생년월일을 선택해주세요!')
+        return false
+    }
+    if (!isValidDate(form.value.birthYear, form.value.birthMonth, form.value.birthDay)) {
+        alert('올바르지 않은 생년월일입니다!')
         return false
     }
     if (!form.value.regionCity || !form.value.regionDistrict) {
@@ -121,10 +169,9 @@ const ACCOUNT_API_URL = 'http://127.0.0.1:8000/api/v1/users'
 const onSignUp = () => {
     if (!validateForm()) return
 
-    // const requestData = { ...form.value }
-    // console.log('회원가입 요청 데이터:', requestData)
-    console.log("signup url:", `${ACCOUNT_API_URL}/signup/`)
-    accountStore.signUp({ ...form.value })
+    const requestData = { ...form.value }
+    console.log('회원가입 폼 데이터:', requestData)
+    accountStore.signUp(requestData)
 }
 </script>
 
@@ -156,6 +203,7 @@ select {
     font-size: 0.95rem;
     background-color: #f9f9f9;
     box-sizing: border-box;
+    margin-bottom: 0.5rem;
 }
 
 .birth-select {

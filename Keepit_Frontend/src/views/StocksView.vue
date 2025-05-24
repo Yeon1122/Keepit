@@ -37,7 +37,7 @@
         <div class="header-row">
           <div class="left">
             <div class="info">
-              <div class="heart-space"></div>
+              <div v-if="isAuthenticated" class="heart-space"></div>
               <span>종목</span>
             </div>
           </div>
@@ -52,6 +52,7 @@
             v-for="item in filteredStockData"
             :key="item.id"
             :data="item"
+            :show-heart="isAuthenticated"
             @click="goToDetail(item.stock_code)"
           />
         </div>
@@ -61,7 +62,7 @@
         <div class="header-row">
           <div class="left">
             <div class="info">
-              <div class="heart-space"></div>
+              <div v-if="isAuthenticated" class="heart-space"></div>
               <span>종목 · 업종</span>
             </div>
           </div>
@@ -74,6 +75,7 @@
             v-for="etf in etfData"
             :key="etf.id"
             :data="etf"
+            :show-heart="isAuthenticated"
           />
         </div>
       </div>
@@ -87,11 +89,14 @@ import { useRouter } from 'vue-router'
 import axios from 'axios'
 import StockCard from '@/components/StockCard.vue'
 import EtfCard from '@/components/EtfCard.vue'
+import { useAccountStore } from '@/stores/users'
 
 const selectedTab = ref('stock')
 const stockData = ref([])
 const etfData = ref([])
 const router = useRouter()
+const accountStore = useAccountStore()
+const isAuthenticated = computed(() => accountStore.isAuthenticated)
 
 const searchKeyword = ref('') // 🔧 추가됨
 const isFocused = ref(false)
@@ -251,7 +256,6 @@ button.active {
   align-items: center;
   justify-content: space-between;
   background-color: #145c2b;
-  color: white;
   padding: 0.8rem 1.5rem;
   border-radius: 12px;
   margin-bottom: 1rem;
@@ -260,6 +264,10 @@ button.active {
   max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
+}
+
+.header-row * {
+  color: white;
 }
 
 .header-row > .left {
@@ -278,7 +286,6 @@ button.active {
   height: 32px;
   border-radius: 50%;
 }
-
 
 .stock-content .price-block {
   flex: 1.5;

@@ -1,66 +1,50 @@
 <template>
   <div class="stock-card">
     <div class="left">
-      <button class="heart-button"
-              :class="{ active: isLiked, hovered: !isLiked && isHovered }"
-              @mouseenter="isHovered = true"
-              @mouseleave="isHovered = false"
-              @click="toggleFavorite">
-        <i :class="[isLiked ? 'fas' : 'far', 'fa-heart']"></i>
-      </button>
-      <div class="info">
-        <div class="name">{{ data.name }}</div>
-      </div>
+      <HeartButton
+        v-if="showHeart"
+        :initial-is-hearted="isLiked"
+        @update:hearted="toggleLike"
+      />
+      <div class="name">{{ props.data.name }}</div>
     </div>
-
     <div class="price-block">
-      <div
-        class="current-price"
-        :class="{
-          red: data.current_price > data.base_price,
-          blue: data.current_price < data.base_price,
-          black: data.current_price === data.base_price
-        }"
-      >
-        {{ formatNumber(data.current_price) }}
-      </div>
-      <div class="base-price">
-        Start <span class="base-price-value">{{ formatNumber(data.base_price) }}</span>
+      <div class="current-price">{{ formatNumber(props.data.current_price) }}원</div>
+      <div class="price-change" :class="{ 'up': props.data.price_change > 0, 'down': props.data.price_change < 0 }">
+        {{ formatNumber(Math.abs(props.data.price_change)) }}원
+        ({{ props.data.price_change > 0 ? '▲' : props.data.price_change < 0 ? '▼' : '-' }})
       </div>
     </div>
-
     <div class="volume-block">
-      <div class="current-volume">{{ formatNumber(data.trade_volume) }}</div>
-      <div class="current-total-value">{{ formatCompact(data.trade_value) }}</div>
+      <div>{{ formatNumber(props.data.trade_volume) }}주</div>
+      <div>{{ formatCompact(props.data.trade_value) }}</div>
     </div>
-
     <div class="marketcap-block">
-      <div class="current-cap">{{ formatMarketCap(data.market_cap) }}</div>
+      {{ formatMarketCap(props.data.market_cap) }}
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import HeartButton from '@/components/HeartButton.vue'
 import axios from 'axios'
-import { useAccountStore } from '@/stores/users.js'
 
 const props = defineProps({
   data: {
     type: Object,
     required: true
+  },
+  showHeart: {
+    type: Boolean,
+    default: false
   }
 })
 
-const accountStore = useAccountStore()
 const isLiked = ref(false)
+const isHovered = ref(false)
 
-const toggleFavorite = async () => {
-  if (!accountStore.token) {
-    alert('로그인 후 이용해주세요')
-    return
-  }
-
+const toggleLike = async () => {
   try {
     if (isLiked.value) {
       await axios.delete(`http://127.0.0.1:8000/api/v1/products/${props.data.id}/unfavorite/`)
@@ -144,6 +128,7 @@ const formatMarketCap = (val) => {
 .name {
   font-weight: 600;
   font-size: 1rem;
+  color: #333;
 }
 
 .price-block{
@@ -174,36 +159,18 @@ const formatMarketCap = (val) => {
 
 .current-price {
   font-weight: bold;
-  font-size: 1rem;
+  color: #333;
 }
 
-.base-price {
-  font-size: 0.8rem;
-  color: #888;
+.price-change {
+  color: #333;
 }
 
-.base-price-value {
-  font-size: 0.8rem;
-  color: #888;
-}
-
-.current-volume,
-.current-total-value,
-.current-cap {
-  font-weight: bold;
-  font-size: 0.9rem;
-  color: #555; /* 회색과 검정 중간톤 */
-}
-
-.red {
+.up {
   color: #e64545;
 }
 
-.blue {
+.down {
   color: #14449c;
-}
-
-.black {
-  color: #000;
 }
 </style>

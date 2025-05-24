@@ -133,10 +133,12 @@ const toggleFavorite = async () => {
   font-size: 1.1rem;
   font-weight: bold;
   margin: 0.5rem 0;
+  color: #333;
 }
 
 .rate {
   margin: 0.4rem 0;
+  color: #333;
 }
 
 .base {
@@ -153,6 +155,7 @@ const toggleFavorite = async () => {
 .target {
   font-size: 0.85rem;
   margin: 0.25rem 0;
+  color: #333;
 }
 
 .icon-box {
@@ -172,35 +175,46 @@ const toggleFavorite = async () => {
   align-items: center;
   justify-content: center;
   background-color: white;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
   cursor: pointer;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 .icon-button.search {
   border-color: #145c2b;
   color: #145c2b;
 }
+
 .icon-button.search:hover,
 .icon-button.search:focus {
   background-color: #145c2b;
   color: white;
+  transform: scale(1.05);
 }
 
 .icon-button.heart {
-  border-color: #e272c0;
+  border: 2px solid #e272c0;
   background-color: white;
+}
+
+.icon-button.heart i {
   color: #e272c0;
+  transition: all 0.2s ease;
 }
 
 /* 찜 된 상태 */
-.icon-button.heart.active {
-  background-color: #e272c0;
-  color: white;
+.icon-button.heart.active i {
+  color: #e272c0;
 }
 
-/* 마우스 호버 중 (찜 안 되어있고, 마우스 올라감) */
-.icon-button.heart.hovered {
+/* 마우스 호버 중 */
+.icon-button.heart:hover {
+  border-color: white;
   background-color: #e272c0;
+}
+
+.icon-button.heart:hover i {
   color: white;
 }
 </style>
