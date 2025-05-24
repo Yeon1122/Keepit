@@ -25,8 +25,10 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
+import { useAccountStore } from '@/stores/users'
 
 const router = useRouter()
+const accountStore = useAccountStore()
 const title = ref('')
 const content = ref('')
 
@@ -37,22 +39,32 @@ const submitPost = async () => {
     }
 
     try {
-        // const response = await axios.post('/api/v1/posts/question/', {
-        //     title: title.value,
-        //     content: content.value
-        // })
-
-        // 더미 데이터
-        const dummyId = Date.now()
+        const response = await axios.post('http://127.0.0.1:8000/api/v1/community/question/', 
+            {
+                title: title.value,
+                content: content.value
+            },
+            {
+                headers: {
+                    Authorization: `Token ${accountStore.token}`,
+                    'Content-Type': 'application/json'
+                }
+            }
+        )
         alert('질문이 등록되었습니다.')
         router.push({
             name: 'questiondetail',
-            params: { id: dummyId }
+            params: { id: response.data.id }
         })
     } catch (err) {
         console.error('질문 등록 실패:', err)
-        alert('질문 등록 중 오류가 발생했습니다.')
-    }
+        if (err.response?.status === 401) {
+            alert('로그인이 필요합니다.')
+            router.push({ name: 'login' })
+        } else {
+            alert('질문 등록 중 오류가 발생했습니다.')
+        }
+    } 
 }
 </script>
 

@@ -25,9 +25,11 @@
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios'
+import { useAccountStore } from '@/stores/users'
 
 const route = useRoute()
 const router = useRouter()
+const accountStore = useAccountStore()
 const postId = route.params.id
 
 const title = ref('')
@@ -35,20 +37,30 @@ const content = ref('')
 
 onMounted(async () => {
     try {
-        // const res = await axios.get(`/api/v1/posts/question/${postId}/`)
-        // title.value = res.data.title
-        // content.value = res.data.content
-
-        // 더미 데이터
-        if (postId === '1') {
-            title.value = '주식투자 초보자인데 ETF 추천해주세요'
-            content.value = '안정적인 ETF 위주로 추천 부탁드립니다. 월 100만원 정도 투자할 예정입니다.'
-        } else {
-            title.value = '기존 질문 제목'
-            content.value = '기존 질문 내용입니다.'
+        const response = await axios.get(`http://127.0.0.1:8000/api/v1/community/question/${postId}/`, {
+            headers: {
+                Authorization: `Token ${accountStore.token}`
+            }
+        })
+        
+        // 작성자 확인
+        if (response.data.author_id !== accountStore.userId) {
+            alert('자신의 게시글만 수정할 수 있습니다.')
+            router.push({ name: 'questiondetail', params: { id: postId } })
+            return
         }
+        
+        title.value = response.data.title
+        content.value = response.data.content
     } catch (err) {
-        console.error('질문 조회 실패:', err)
+        console.error('게시글 조회 실패:', err)
+        if (err.response?.status === 401) {
+            alert('로그인이 필요합니다.')
+            router.push({ name: 'login' })
+        } else {
+            alert('게시글을 불러오는데 실패했습니다.')
+            router.push({ name: 'questioncommunity' })
+        }
     }
 })
 
@@ -59,16 +71,32 @@ const submitEdit = async () => {
     }
 
     try {
-        // await axios.put(`/api/v1/posts/question/${postId}/`, {
-        //     title: title.value,
-        //     content: content.value
-        // })
-
-        alert('질문이 수정되었습니다.')
+        await axios.put(
+            `http://127.0.0.1:8000/api/v1/community/question/${postId}/`,
+            {
+                title: title.value,
+                content: content.value
+            },
+            {
+                headers: {
+                    Authorization: `Token ${accountStore.token}`,
+                    'Content-Type': 'application/json'
+                }
+            }
+        )
+        alert('게시글이 수정되었습니다.')
         router.push({ name: 'questiondetail', params: { id: postId } })
     } catch (err) {
-        console.error('질문 수정 실패:', err)
-        alert('질문 수정 중 오류가 발생했습니다.')
+        console.error('게시글 수정 실패:', err)
+        if (err.response?.status === 401) {
+            alert('로그인이 필요합니다.')
+            router.push({ name: 'login' })
+        } else if (err.response?.status === 403) {
+            alert('자신의 게시글만 수정할 수 있습니다.')
+            router.push({ name: 'questiondetail', params: { id: postId } })
+        } else {
+            alert('게시글 수정 중 오류가 발생했습니다.')
+        }
     }
 }
 </script>

@@ -66,8 +66,9 @@ const router = createRouter({
     },
     {
       path: '/users/follow/:userid',
-      name: 'followlist',
+      name: 'follow',
       component: FollowListView,
+      meta: { requiresAuth: true }
     },
     {
       path: '/users/:userid',
@@ -158,7 +159,7 @@ const router = createRouter({
 const authRequiredPages = [
   'mypage',
   'useredit',
-  'followlist',
+  'follow',
   'myposts',
   'investmenttest',
   'testresult',
@@ -173,17 +174,23 @@ const authRequiredPages = [
 const guestOnlyPages = ['login', 'signup']
 
 router.beforeEach((to, from, next) => {
-  const isAuthenticated = !!sessionStorage.getItem('token')
+  // localStorage의 account 정보에서 인증 상태 확인
+  const accountData = JSON.parse(localStorage.getItem('account') || '{}')
+  const isAuthenticated = !!accountData.token && accountData.isAuthenticated
 
   // 인증이 필요한 페이지에 접근하려는 경우
   if (authRequiredPages.includes(to.name) && !isAuthenticated) {
     alert('로그인이 필요한 서비스입니다.')
-    next({ name: 'login', query: { redirect: to.fullPath } })
+    next({
+      name: 'login',
+      query: { redirect: to.fullPath }
+    })
     return
   }
 
   // 이미 로그인한 사용자가 로그인/회원가입 페이지에 접근하려는 경우
   if (guestOnlyPages.includes(to.name) && isAuthenticated) {
+    alert('이미 로그인되어 있습니다.')
     next({ name: 'home' })
     return
   }

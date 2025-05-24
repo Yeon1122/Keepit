@@ -6,11 +6,14 @@ import axios from 'axios'
 export const useAccountStore = defineStore('account', () => {
   const router = useRouter()
 
-  // 상태 변수들을 세션 스토리지에서 초기화
-  const token = ref(sessionStorage.getItem('token') || '')
-  const user_id = ref(sessionStorage.getItem('user_id') || '')
-  const userId = ref(sessionStorage.getItem('userId') || null)
-  const isAuthenticated = ref(!!sessionStorage.getItem('token'))
+  // localStorage에서 account 정보 가져오기
+  const accountData = JSON.parse(localStorage.getItem('account') || '{}')
+
+  // 상태 변수들을 account 데이터에서 초기화
+  const token = ref(accountData.token || '')
+  const user_id = ref(accountData.user_id || '')
+  const userId = ref(accountData.userId || '')
+  const isAuthenticated = ref(accountData.isAuthenticated || false)
 
   const ACCOUNT_API_URL = 'http://127.0.0.1:8000/api/v1/users'
 
@@ -46,9 +49,9 @@ export const useAccountStore = defineStore('account', () => {
   // axios 요청 인터셉터 추가
   axios.interceptors.request.use(
     (config) => {
-      const token = sessionStorage.getItem('token')
-      if (token) {
-        config.headers.Authorization = `Token ${token}`
+      const accountData = JSON.parse(localStorage.getItem('account') || '{}')
+      if (accountData.token) {
+        config.headers.Authorization = `Token ${accountData.token}`
       }
       return config
     },
@@ -56,41 +59,6 @@ export const useAccountStore = defineStore('account', () => {
       return Promise.reject(error)
     }
   )
-
-  const applyTokenToAxios = () => {
-    if (token.value) {
-      axios.defaults.headers.common['Authorization'] = `Token ${token.value}`
-      // 토큰을 세션 스토리지에 저장
-      sessionStorage.setItem('token', token.value)
-    } else {
-      delete axios.defaults.headers.common['Authorization']
-      // 토큰 제거
-      sessionStorage.removeItem('token')
-    }
-  }
-
-  // token이 변할 때마다 axios에 적용
-  watch(token, () => {
-    applyTokenToAxios()
-  }, { immediate: true })
-
-  // user_id 변경 감시
-  watch(user_id, (newValue) => {
-    if (newValue) {
-      sessionStorage.setItem('user_id', newValue)
-    } else {
-      sessionStorage.removeItem('user_id')
-    }
-  })
-
-  // userId 변경 감시
-  watch(userId, (newValue) => {
-    if (newValue) {
-      sessionStorage.setItem('userId', newValue)
-    } else {
-      sessionStorage.removeItem('userId')
-    }
-  })
 
   // 회원가입
   const signUp = async (payload) => {
@@ -113,14 +81,33 @@ export const useAccountStore = defineStore('account', () => {
 
       const res = await axios.post(`${ACCOUNT_API_URL}/signup/`, requestData)
 
-      alert('✅ 회원가입이 완료되었습니다.')
-      router.push({ name: 'login' })
+      // 회원가입 성공시에만 로그인 페이지로 이동
+      if (res.data) {
+        alert('✅ 회원가입이 완료되었습니다.')
+        router.push({ name: 'login' })
+        return true
+      }
+      return false
     } catch (err) {
       console.error('❌ 회원가입 실패:', err.response?.data || err.message)
+
+      // 서버 응답에서 구체적인 에러 메시지 확인
       if (err.response?.data) {
-        console.log('서버 응답 데이터:', err.response.data)
+        const errorData = err.response.data
+        if (errorData.userid) {
+          alert('이미 사용 중인 아이디입니다. 다른 아이디를 선택해주세요.')
+        } else if (errorData.email) {
+          alert('이미 등록된 이메일입니다. 다른 이메일을 사용해주세요.')
+        } else if (errorData.nickname) {
+          alert('이미 사용 중인 닉네임입니다. 다른 닉네임을 선택해주세요.')
+        } else {
+          alert('회원가입에 실패했습니다. 입력하신 정보를 다시 확인해주세요.')
+        }
+        console.log('서버 응답 데이터:', errorData)
+      } else {
+        alert('회원가입에 실패했습니다. 잠시 후 다시 시도해주세요.')
       }
-      alert('회원가입에 실패했습니다. 입력하신 정보를 다시 확인해주세요.')
+      return false
     }
   }
 
@@ -132,10 +119,25 @@ export const useAccountStore = defineStore('account', () => {
         password: payload.password,
       })
 
-      user_id.value = res.data.user_id
+      // 필수 정보만 저장
+      const essentialData = {
+        token: res.data.token,
+        user_id: res.data.user_id,
+        userId: payload.userid,
+        isAuthenticated: true
+      }
+
+      // store의 상태 업데이트
       token.value = res.data.token
+      user_id.value = res.data.user_id
       userId.value = payload.userid
       isAuthenticated.value = true
+
+      // localStorage에 저장
+      localStorage.setItem('account', JSON.stringify(essentialData))
+
+      // axios 헤더 설정
+      axios.defaults.headers.common['Authorization'] = `Token ${res.data.token}`
 
       console.log('✅ 로그인 성공')
       router.push({ name: 'home' })
@@ -159,18 +161,22 @@ export const useAccountStore = defineStore('account', () => {
     } catch (error) {
       console.error('❌ 서버 로그아웃 실패:', error.response?.data || error.message)
     } finally {
-      // 상태 및 스토리지 초기화
+      // 상태 초기화
       token.value = ''
-      user_id.value = null
-      userId.value = null
+      user_id.value = ''
+      userId.value = ''
       isAuthenticated.value = false
 
-      // 세션 스토리지 클리어
-      sessionStorage.clear()
+      // localStorage에서 모든 인증 관련 데이터 제거
+      localStorage.removeItem('account')
+      localStorage.removeItem('token')
+      localStorage.removeItem('user_id')
+      localStorage.removeItem('userId')
 
       // axios 헤더 제거
       delete axios.defaults.headers.common['Authorization']
 
+      // 홈으로 이동
       router.push({ name: 'home' })
     }
   }
@@ -182,7 +188,7 @@ export const useAccountStore = defineStore('account', () => {
     isAuthenticated,
     signUp,
     logIn,
-    logOut,
+    logOut
   }
 })
 
