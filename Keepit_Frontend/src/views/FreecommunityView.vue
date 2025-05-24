@@ -5,7 +5,7 @@
             <button v-if="isAuthenticated" class="write-btn" @click="goToWrite">글쓰기</button>
         </div>
 
-        <div v-if="paginatedPosts.length">
+        <div v-if="posts.length > 0">
             <div v-for="(post, index) in paginatedPosts" :key="post.id" class="post-card">
                 <router-link :to="{ name: 'freepostdetail', params: { id: post.id } }" class="post-link">
                     <div class="card-row">
@@ -19,16 +19,20 @@
                     </div>
                 </router-link>
             </div>
+
+            <!-- ✅ 페이지네이션 -->
+            <div v-if="totalPages > 1" class="pagination">
+                <button v-for="page in totalPages" :key="page" @click="currentPage = page"
+                    :class="{ active: currentPage === page }">
+                    {{ page }}
+                </button>
+            </div>
         </div>
 
-        <div v-else class="no-posts">게시글이 없습니다.</div>
-
-        <!-- ✅ 페이지네이션 -->
-        <div v-if="totalPages > 1" class="pagination">
-            <button v-for="page in totalPages" :key="page" @click="currentPage = page"
-                :class="{ active: currentPage === page }">
-                {{ page }}
-            </button>
+        <div v-else class="no-posts">
+            <p>아직 작성된 게시글이 없습니다.</p>
+            <p v-if="isAuthenticated" class="write-prompt">첫 게시글을 작성해보세요!</p>
+            <p v-else class="login-prompt">게시글을 작성하려면 로그인이 필요합니다.</p>
         </div>
     </div>
 </template>
@@ -37,7 +41,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAccountStore } from '@/stores/users'
-// import axios from 'axios'
+import axios from 'axios'
 
 const accountStore = useAccountStore()
 const isAuthenticated = computed(() => accountStore.isAuthenticated)
@@ -67,116 +71,19 @@ const goToWrite = () => {
     router.push({ name: 'freepostcreate' })
 }
 
-// ✅ 더미 데이터 삽입 + 최신순 정렬
 onMounted(async () => {
-    // try {
-    //   const res = await axios.get('http://127.0.0.1:8000/api/v1/posts/free/')
-    //   posts.value = res.data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-    // } catch (err) {
-    //   console.error('❌ 게시글 조회 실패', err)
-    // }
-
-    posts.value = [
-        {
-            id: 1,
-            title: '주식 투자 초보자를 위한 팁',
-            content: '주식 투자를 처음 시작하시는 분들을 위한 몇 가지 조언을 공유드립니다...',
-            created_at: '2025-05-18T14:00:00Z',
-            author: '투자마스터',
-            likes: 15,
-            comments: Array(8).fill({})
-        },
-        {
-            id: 2,
-            title: '적금 vs 주식 투자, 어떤 것이 더 좋을까요?',
-            content: '월 100만원으로 시작하는 재테크 방법 비교...',
-            created_at: '2025-05-19T09:00:00Z',
-            author: '하연',
-            likes: 22,
-            comments: Array(12).fill({})
-        },
-        {
-            id: 3,
-            title: '요즘 HOT한 ETF 추천',
-            content: '안정적인 수익을 위한 ETF 포트폴리오...',
-            author: '주식왕',
-            created_at: '2025-05-17T10:30:00Z',
-            likes: 18,
-            comments: Array(6).fill({})
-        },
-        {
-            id: 4,
-            title: '월급 관리의 기술',
-            content: '효율적인 지출 관리와 저축 방법...',
-            author: '자산관리전문가',
-            created_at: '2025-05-16T12:00:00Z',
-            likes: 25,
-            comments: Array(15).fill({})
-        },
-        {
-            id: 5,
-            title: '2025년 금리 전망',
-            content: '올해의 금리 동향과 향후 전망...',
-            author: '경제분석가',
-            created_at: '2025-05-15T09:00:00Z',
-            likes: 30,
-            comments: Array(20).fill({})
-        },
-        {
-            id: 6,
-            title: '주식 차트 보는 법',
-            content: '기술적 분석의 기초...',
-            author: '차트마스터',
-            created_at: '2025-05-14T08:00:00Z',
-            likes: 28,
-            comments: Array(16).fill({})
-        },
-        {
-            id: 7,
-            title: '연말정산 꿀팁 공유',
-            content: '세금 환급 최대화하는 방법...',
-            author: '세금전문가',
-            created_at: '2025-05-13T07:00:00Z',
-            likes: 45,
-            comments: Array(25).fill({})
-        },
-        {
-            id: 8,
-            title: '부동산 투자 실패 사례',
-            content: '실패에서 배우는 교훈...',
-            author: '부동산전문가',
-            created_at: '2025-05-12T06:00:00Z',
-            likes: 32,
-            comments: Array(18).fill({})
-        },
-        {
-            id: 9,
-            title: '저축의 즐거움',
-            content: '돈 모으는 재미있는 방법들...',
-            author: '머니러버',
-            created_at: '2025-05-11T05:00:00Z',
-            likes: 19,
-            comments: Array(9).fill({})
-        },
-        {
-            id: 10,
-            title: '투자 심리 관리하기',
-            content: '감정적 투자를 피하는 방법...',
-            author: '멘탈케어',
-            created_at: '2025-05-10T04:00:00Z',
-            likes: 27,
-            comments: Array(14).fill({})
-        },
-        {
-            id: 11,
-            title: '은행 적금 비교 분석',
-            content: '현재 가장 유리한 적금 상품은?',
-            author: '금융전문가',
-            created_at: '2025-05-09T03:00:00Z',
-            likes: 33,
-            comments: Array(22).fill({})
-        }
-    ].sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+    try {
+        const headers = accountStore.isAuthenticated
+            ? { Authorization: `Token ${accountStore.token}` }
+            : {}
+            
+        const res = await axios.get('http://127.0.0.1:8000/api/v1/community/free/', { headers })
+        posts.value = res.data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+    } catch (err) {
+        console.error('❌ 게시글 조회 실패', err)
+        alert('게시글을 불러오는데 실패했습니다.')
+        posts.value = []
+    }
 })
 </script>
 
@@ -283,7 +190,25 @@ onMounted(async () => {
     text-align: center;
     padding: 3rem 0;
     color: #666;
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #e0e0e0;
+    margin: 2rem 0;
+}
+
+.no-posts p {
+    margin: 0.5rem 0;
     font-size: 1.1rem;
+}
+
+.write-prompt {
+    color: #145c2b;
+    font-weight: 500;
+}
+
+.login-prompt {
+    font-size: 0.9rem;
+    color: #888;
 }
 
 .pagination {

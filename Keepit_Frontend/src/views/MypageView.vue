@@ -1,120 +1,147 @@
 <template>
   <div class="mypage-container">
     <!-- 프로필 섹션 -->
-    <div class="profile-top">
-      <div class="left">
-        <div class="profile-image">
-          <img src="/images/images_momo/momo_happy.png" alt="프로필 이미지" />
-        </div>
-        <div class="user-info">
-          <p><strong>{{ user.nickname }}</strong> ({{ user.userid }})</p>
-        </div>
-      </div>
-
-      <div class="right">
-        <div class="stats-box">
-          <div class="stat" @click="goToFollow">
-            <span>팔로우</span>
-            <strong>{{ user.following?.length ?? 0 }}</strong>
+    <div class="profile-card">
+      <div class="profile-header">
+        <div class="profile-main">
+          <div class="profile-image">
+            <img src="/images/images_momo/momo_happy.png" alt="프로필 이미지" />
           </div>
-          <div class="stat" @click="goToFollow">
-            <span>팔로워</span>
-            <strong>{{ user.followers?.length ?? 0 }}</strong>
-          </div>
-          <div class="stat" @click="goToMyPosts" style="cursor: pointer;">
-            <span>내가 쓴 글</span>
-            <strong>{{ user.my_posts?.length ?? 0 }}</strong>
+          <div class="profile-info">
+            <h2 class="user-name">{{ user.nickname }}</h2>
+            <p class="user-id">@{{ user.userid }}</p>
+            <button @click="goToEdit" class="edit-button">
+              <i class="fas fa-edit"></i> 프로필 수정
+            </button>
           </div>
         </div>
-        <div class="buttons">
-          <button @click="goToEdit">내 정보 수정</button>
+        <div class="profile-stats">
+          <div class="stat-item" @click="goToFollow">
+            <div class="stat-value">{{ user.following?.length ?? 0 }}</div>
+            <div class="stat-label">팔로우</div>
+          </div>
+          <div class="stat-item" @click="goToFollow">
+            <div class="stat-value">{{ user.followers?.length ?? 0 }}</div>
+            <div class="stat-label">팔로워</div>
+          </div>
+          <div class="stat-item" @click="goToMyPosts">
+            <div class="stat-value">{{ user.my_posts?.length ?? 0 }}</div>
+            <div class="stat-label">작성글</div>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- 성향 테스트 결과 -->
-    <div class="section">
-      <div class="section-header">
-        <h4>성향 테스트 결과</h4>
-        <div class="test-actions">
-          <button v-if="user.test_result" class="view-result" @click="goToTestResult">
-            결과 자세히 보기
-          </button>
-          <button class="take-test" @click="goToTest">
-            {{ user.test_result ? '테스트 다시하기' : '테스트 하러가기' }}
-          </button>
+    <div class="content-grid">
+      <!-- 성향 테스트 결과 카드 -->
+      <div class="content-card">
+        <div class="card-header">
+          <h3>투자 성향 분석</h3>
+          <div class="card-actions">
+            <button v-if="user.test_result" class="action-button" @click="goToTestResult">
+              결과 상세
+            </button>
+            <button class="action-button primary" @click="goToTest">
+              {{ user.test_result ? '다시하기' : '테스트하기' }}
+            </button>
+          </div>
+        </div>
+        <div class="card-content">
+          <template v-if="user.test_result">
+            <div class="test-result">
+              <div class="result-header">
+                <span class="result-type">{{ user.test_result.type }}</span>
+                <span class="result-score">{{ user.test_result.total_score }}점</span>
+              </div>
+              <p class="result-description">{{ user.test_result.description }}</p>
+            </div>
+          </template>
+          <div v-else class="empty-state">
+            <i class="fas fa-chart-line"></i>
+            <p>투자 성향 테스트를 진행해보세요!</p>
+          </div>
         </div>
       </div>
-      
-      <div v-if="user.test_result" class="test-result-preview">
-        <div class="result-type">
-          <strong>{{ user.test_result.type }}</strong>
-          <span class="score">{{ user.test_result.total_score }}점</span>
+
+      <!-- 찜한 상품 카드 -->
+      <div class="content-card">
+        <div class="card-header">
+          <h3>찜한 상품</h3>
         </div>
-        <p class="result-description">{{ user.test_result.description }}</p>
+        <div class="card-content">
+          <template v-if="user.liked_products?.length">
+            <ul class="product-list">
+              <li v-for="product in user.liked_products" :key="product.id" class="product-item">
+                <div class="product-name">{{ product.name }}</div>
+                <div class="product-info">
+                  <span class="bank">{{ product.bank }}</span>
+                  <span class="rate">{{ product.interest_rate }}% ~ {{ product.special_rate }}%</span>
+                  <span class="term">{{ product.term }}개월</span>
+                </div>
+              </li>
+            </ul>
+          </template>
+          <div v-else class="empty-state">
+            <i class="fas fa-heart"></i>
+            <p>관심있는 상품을 찜해보세요!</p>
+          </div>
+        </div>
       </div>
-      <div v-else class="no-result">
-        아직 성향 테스트를 완료하지 않았습니다.
-      </div>
-    </div>
 
-    <!-- 찜한 상품 -->
-    <div class="section">
-      <h4>찜한 상품</h4>
-      <template v-if="user.liked_products?.length">
-        <ul>
-          <li v-for="product in user.liked_products" :key="product.id">
-            {{ product.name }} - {{ product.bank }} /
-            {{ product.interest_rate }} ~ {{ product.special_rate }}% /
-            {{ product.term }}개월
-          </li>
-        </ul>
-      </template>
-      <template v-else>
-        <p>찜한 상품이 없습니다.</p>
-      </template>
-    </div>
+      <!-- 작성 글 카드 -->
+      <div class="content-card">
+        <div class="card-header">
+          <h3>최근 작성글</h3>
+          <button class="action-button" @click="goToMyPosts">전체보기</button>
+        </div>
+        <div class="card-content">
+          <div v-if="freePosts.length || questionPosts.length">
+            <div class="posts-grid">
+              <!-- 자유 게시판 -->
+              <div v-if="freePosts.length" class="posts-section">
+                <h4>자유게시판</h4>
+                <ul class="posts-list">
+                  <li v-for="post in freePosts.slice(0, 3)" :key="post.id" 
+                      @click="goToPost('free', post.id)" 
+                      class="post-item">
+                    <div class="post-title">{{ post.title }}</div>
+                    <div class="post-meta">
+                      <span class="post-date">{{ formatDate(post.created_at) }}</span>
+                      <span class="post-likes">
+                        <i class="fas fa-heart"></i> {{ post.likes }}
+                      </span>
+                    </div>
+                  </li>
+                </ul>
+              </div>
 
-    <!-- 내가 쓴 글 -->
-    <div class="section">
-      <div class="section-header">
-        <h4>내가 쓴 글</h4>
-        <button class="view-all" @click="goToMyPosts">전체보기</button>
-      </div>
-      
-      <!-- 자유 게시판 -->
-      <div class="posts-section" v-if="freePosts.length">
-        <h5>자유 게시판</h5>
-        <ul class="posts-list">
-          <li v-for="post in freePosts.slice(0, 3)" :key="post.id" @click="goToPost('free', post.id)">
-            <div class="post-title">{{ post.title }}</div>
-            <div class="post-info">
-              <span class="post-date">{{ formatDate(post.created_at) }}</span>
-              <span class="post-likes">공감 {{ post.likes }}</span>
+              <!-- 질문 게시판 -->
+              <div v-if="questionPosts.length" class="posts-section">
+                <h4>질문게시판</h4>
+                <ul class="posts-list">
+                  <li v-for="post in questionPosts.slice(0, 3)" :key="post.id" 
+                      @click="goToPost('question', post.id)"
+                      class="post-item">
+                    <div class="post-title">
+                      {{ post.title }}
+                      <span v-if="post.is_solved" class="solved-badge">해결</span>
+                    </div>
+                    <div class="post-meta">
+                      <span class="post-date">{{ formatDate(post.created_at) }}</span>
+                      <span class="post-likes">
+                        <i class="fas fa-heart"></i> {{ post.likes }}
+                      </span>
+                    </div>
+                  </li>
+                </ul>
+              </div>
             </div>
-          </li>
-        </ul>
-      </div>
-
-      <!-- 질문 게시판 -->
-      <div class="posts-section" v-if="questionPosts.length">
-        <h5>질문 게시판</h5>
-        <ul class="posts-list">
-          <li v-for="post in questionPosts.slice(0, 3)" :key="post.id" @click="goToPost('question', post.id)">
-            <div class="post-title">
-              {{ post.title }}
-              <span class="solved-badge" v-if="post.is_solved">해결됨</span>
-            </div>
-            <div class="post-info">
-              <span class="post-date">{{ formatDate(post.created_at) }}</span>
-              <span class="post-likes">공감 {{ post.likes }}</span>
-            </div>
-          </li>
-        </ul>
-      </div>
-
-      <div v-if="!freePosts.length && !questionPosts.length" class="no-posts">
-        작성한 글이 없습니다.
+          </div>
+          <div v-else class="empty-state">
+            <i class="fas fa-pen"></i>
+            <p>첫 게시글을 작성해보세요!</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -128,7 +155,6 @@ import { useRouter } from 'vue-router'
 
 const accountStore = useAccountStore()
 
-const token = accountStore.token  // token은 ref
 const router = useRouter()
 
 const user = ref({
@@ -144,40 +170,51 @@ const user = ref({
   region_district: '',
   followers: [],
   following: [],
-  // my_posts: [],
-  // test_result: null,
-  // liked_products: [],
 })
 
 const freePosts = ref([])
 const questionPosts = ref([])
 
 onMounted(async () => {
-  const raw = localStorage.getItem('account')
-  const parsed = raw ? JSON.parse(raw) : null
-  const localToken = parsed?.token
-  const localUserId = parsed?.user_id
+  const token = accountStore.token
+  const userId = accountStore.userId
 
-  if (!localToken || !localUserId) {
+  if (!token || !userId) {
     alert('⚠️ 로그인 정보가 없습니다. 다시 로그인해주세요.')
     router.push({ name: 'login' })
     return
   }
 
-  // localStorage의 실제 사용자 정보 사용
-  user.value = {
-    userid: parsed.userid || 'keepit22',  // localStorage에서 확인된 아이디
-    user_id: localUserId,  // 2
-    nickname: parsed.nickname || '키핏이',
-    followers: [],
-    following: [],
-    my_posts: [],
-    test_result: null,
-    liked_products: []
-  }
+  try {
+    const res = await axios.get('http://127.0.0.1:8000/api/v1/users/mypage/', {
+      headers: {
+        Authorization: `Token ${token}`
+      }
+    })
 
-  console.log('현재 로그인한 사용자 정보:', user.value)
-  console.log('localStorage account 정보:', parsed)
+    // API 응답으로 받은 사용자 정보로 업데이트
+    user.value = {
+      ...res.data,
+      followers: res.data.followers || [],
+      following: res.data.following || [],
+    }
+
+    // localStorage에 최신 사용자 정보 업데이트
+    localStorage.setItem('account', JSON.stringify({
+      ...JSON.parse(localStorage.getItem('account') || '{}'),
+      ...res.data
+    }))
+
+    console.log('현재 로그인한 사용자 정보:', user.value)
+
+  } catch (err) {
+    console.error('사용자 정보 로딩 실패:', err)
+    if (err.response?.status === 401) {
+      alert('로그인이 만료되었습니다. 다시 로그인해주세요.')
+      accountStore.logOut()
+      router.push({ name: 'login' })
+    }
+  }
 
   // 더미 게시글 데이터는 유지
   freePosts.value = [
@@ -219,34 +256,6 @@ onMounted(async () => {
       is_solved: false
     }
   ]
-
-  // 이제 백엔드 연결을 시도해보겠습니다.
-  try {
-    const [userRes, postsRes] = await Promise.all([
-      axios.get('http://localhost:8000/api/v1/users/mypage/', {
-        headers: {
-          Authorization: `Token ${localToken}`
-        }
-      }),
-      axios.get('http://localhost:8000/api/v1/community/my-posts/', {
-        headers: {
-          Authorization: `Token ${localToken}`
-        }
-      })
-    ])
-
-    if (userRes.data) {
-      user.value = { ...user.value, ...userRes.data }
-    }
-
-    if (Array.isArray(postsRes.data)) {
-      freePosts.value = postsRes.data.filter(post => post.type === 'free' || post.board_type === 'free')
-      questionPosts.value = postsRes.data.filter(post => post.type === 'question' || post.board_type === 'question')
-    }
-  } catch (err) {
-    console.error('❌ 마이페이지 로딩 실패:', err)
-    console.log('에러 상세:', err.response || err)
-  }
 })
 
 const formatDate = (dateString) => {
@@ -265,7 +274,7 @@ const goToEdit = () => {
 }
 
 const goToFollow = () => {
-  router.push({ name: 'followlist', params: { userid: accountStore.userId } })
+  router.push({ name: 'follow', params: { userid: accountStore.userId } })
 }
 
 const goToMyPosts = () => {
@@ -283,38 +292,39 @@ const goToTestResult = () => {
 
 <style scoped>
 .mypage-container {
-  max-width: 900px;
-  margin: auto;
-  padding: 2rem;
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1rem;
   font-family: 'Pretendard', sans-serif;
 }
 
-.profile-top {
+.profile-card {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.profile-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  background-color: #f9f9f9;
-  padding: 1.5rem;
-  border-radius: 10px;
+  gap: 2rem;
 }
 
-.left {
+.profile-main {
   display: flex;
-  flex-direction: column;
+  gap: 2rem;
   align-items: center;
-  text-align: center;
-  gap: 0.8rem;
 }
 
 .profile-image {
-  width: 300px;
-  height: 300px;
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
   overflow: hidden;
-  background-color: #eee;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: #f0f0f0;
 }
 
 .profile-image img {
@@ -323,89 +333,217 @@ const goToTestResult = () => {
   object-fit: cover;
 }
 
-.user-info p {
-  margin: 0.2rem 0;
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.user-name {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0;
   color: #333;
 }
 
-.right {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
+.user-id {
+  font-size: 1rem;
+  color: #666;
+  margin: 0;
 }
 
-.stats-box {
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-
-.stat {
-  background-color: white;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 0.8rem 1.2rem;
-  text-align: center;
-  min-width: 100px;
-  box-shadow: 0 0 3px rgba(0, 0, 0, 0.05);
-}
-
-.stat span {
-  display: block;
-  font-weight: bold;
-  color: #444;
-}
-
-.stat strong {
-  display: block;
-  font-size: 1.1rem;
-  margin-top: 0.4rem;
-}
-
-.buttons button {
-  border: 2px solid #145c2b;
-  color: #145c2b;
-  background-color: white;
-  padding: 0.5rem 1.3rem;
+.edit-button {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
   border-radius: 6px;
-  font-weight: bold;
+  color: #495057;
   cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s;
 }
 
-.buttons button:hover {
-  background-color: #145c2b;
-  color: white;
+.edit-button:hover {
+  background: #e9ecef;
 }
 
-.section-header {
+.profile-stats {
+  display: flex;
+  gap: 2rem;
+  margin-left: auto;
+}
+
+.stat-item {
+  text-align: center;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  min-width: 100px;
+  transition: transform 0.2s;
+}
+
+.stat-item:hover {
+  transform: translateY(-2px);
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #145c2b;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: 0.2rem;
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+}
+
+.content-card:last-child {
+  grid-column: 1 / -1;  /* 마지막 카드(최근 작성글)가 전체 너비를 차지하도록 설정 */
+}
+
+.content-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid #eee;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
 }
 
-.view-all {
-  background: none;
-  border: none;
-  color: #145c2b;
-  font-size: 0.9rem;
+.card-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.card-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.action-button {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  border: 1px solid #dee2e6;
+  background: white;
+  color: #495057;
   cursor: pointer;
-  padding: 0.3rem 0.8rem;
-  border-radius: 4px;
-  transition: all 0.2s ease;
+  font-size: 0.9rem;
+  transition: all 0.2s;
 }
 
-.view-all:hover {
-  background: rgba(20, 92, 43, 0.1);
+.action-button.primary {
+  background: #145c2b;
+  color: white;
+  border: none;
+}
+
+.action-button:hover {
+  background: #e9ecef;
+}
+
+.action-button.primary:hover {
+  background: #0e4a21;
+}
+
+.card-content {
+  padding: 1.5rem;
+}
+
+.card-content .posts-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 2rem;
+  color: #868e96;
+}
+
+.empty-state i {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.test-result {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+}
+
+.result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.result-type {
+  font-weight: 700;
+  color: #145c2b;
+}
+
+.result-score {
+  color: #495057;
+  font-size: 0.9rem;
+}
+
+.result-description {
+  color: #495057;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.product-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.product-item {
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+}
+
+.product-item:last-child {
+  border-bottom: none;
+}
+
+.product-name {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.product-info {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.9rem;
+  color: #666;
 }
 
 .posts-section {
   margin-bottom: 2rem;
 }
 
-.posts-section h5 {
-  font-size: 1.1rem;
-  color: #444;
+.posts-section h4 {
+  font-size: 1rem;
+  color: #495057;
   margin-bottom: 1rem;
 }
 
@@ -415,19 +553,18 @@ const goToTestResult = () => {
   margin: 0;
 }
 
-.posts-list li {
-  background: white;
-  border: 1px solid #eee;
-  border-radius: 6px;
+.post-item {
   padding: 1rem;
-  margin-bottom: 0.8rem;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.2s;
 }
 
-.posts-list li:hover {
+.post-item:hover {
   transform: translateY(-2px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .post-title {
@@ -435,100 +572,52 @@ const goToTestResult = () => {
   color: #333;
   margin-bottom: 0.5rem;
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.post-info {
-  display: flex;
   justify-content: space-between;
-  font-size: 0.9rem;
-  color: #666;
+  align-items: center;
 }
 
 .solved-badge {
   background: #145c2b;
   color: white;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
   font-size: 0.8rem;
-  padding: 0.2rem 0.6rem;
-  border-radius: 4px;
 }
 
-.no-posts {
-  text-align: center;
-  padding: 2rem;
-  color: #666;
-  background: #f9f9f9;
-  border-radius: 8px;
-}
-
-.test-actions {
+.post-meta {
   display: flex;
-  gap: 0.8rem;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: #868e96;
 }
 
-.view-result, .take-test {
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: all 0.2s;
-}
+@media (max-width: 768px) {
+  .profile-header {
+    flex-direction: column;
+  }
 
-.view-result {
-  background-color: white;
-  color: #145c2b;
-  border: 1px solid #145c2b;
-}
+  .profile-stats {
+    width: 100%;
+    justify-content: space-around;
+    margin-top: 1.5rem;
+  }
 
-.take-test {
-  background-color: #145c2b;
-  color: white;
-  border: none;
-}
+  .stat-item {
+    min-width: auto;
+  }
 
-.view-result:hover {
-  background-color: #f0f8f3;
-}
+  .content-grid {
+    grid-template-columns: 1fr;  /* 모바일에서는 카드들을 세로로 쌓습니다 */
+  }
 
-.take-test:hover {
-  background-color: #0d4420;
-}
+  .content-card:last-child {
+    grid-column: auto;  /* 모바일에서는 전체 너비 설정을 해제합니다 */
+  }
 
-.test-result-preview {
-  background: white;
-  border: 1px solid #eee;
-  border-radius: 8px;
-  padding: 1.2rem;
-}
-
-.result-type {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 0.8rem;
-}
-
-.result-type strong {
-  color: #145c2b;
-  font-size: 1.2rem;
-}
-
-.score {
-  color: #666;
-  font-size: 0.9rem;
-}
-
-.result-description {
-  color: #444;
-  line-height: 1.5;
-}
-
-.no-result {
-  text-align: center;
-  padding: 2rem;
-  color: #666;
-  background: #f9f9f9;
-  border-radius: 8px;
+  .card-content .posts-grid {
+    grid-template-columns: 1fr;  /* 모바일에서는 게시판을 세로로 배치합니다 */
+    gap: 1.5rem;
+  }
 }
 </style>
+

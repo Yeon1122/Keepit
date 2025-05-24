@@ -10,7 +10,7 @@
         <div class="content">
           <p class="subtitle">내 손 안의 금융비서</p>
           <h1 class="title">킵잇</h1>
-          <p class="explain">간단한 테스트로 나에게 맞는 투자 성향과 금융 상품을 추천해드려요. 나에게 꼭 맞는 금융 루틴, 지금 바로 시작해보세요!</p>
+          <p class="explain">간단한 테스트로 나에게 맞는 투자 성향과 금융 상품을 추천해드려요. <br> 나에게 꼭 맞는 금융 루틴, 지금 바로 시작해보세요!</p>
           <button class="go-to-test" @click="goToTest">
             투자 스타일 알아보기
             <span class="arrow">→</span>
@@ -152,6 +152,7 @@ onUnmounted(() => {
   color: #145c2b;
   font-weight: 600;
   margin-bottom: 0.5rem;
+  line-height: 1;
 }
 
 .title {
@@ -165,7 +166,7 @@ onUnmounted(() => {
 
 .explain {
   font-size: 0.8rem;
-  line-height: 1.7;
+  line-height: 2;
   color: #4a5568;
   margin-bottom: 2rem;
   word-break: keep-all;

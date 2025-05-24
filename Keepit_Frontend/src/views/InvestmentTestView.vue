@@ -37,8 +37,10 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useAccountStore } from '@/stores/users.js'
 import axios from 'axios'
 
+const accountStore = useAccountStore()
 const router = useRouter()
 const isSubmitted = ref(false)
 const answers = ref(Array(6).fill(null))
@@ -80,28 +82,56 @@ const submitTest = async () => {
     return
   }
 
-  const token = sessionStorage.getItem('token')
-  if (!token) {
+  if (!accountStore.isAuthenticated || !accountStore.token) {
     alert('로그인이 필요합니다.')
     router.push({ name: 'login', query: { redirect: '/test' } })
     return
   }
 
+  console.log('토큰 확인:', accountStore.token)
+  console.log('로그인 상태:', accountStore.isAuthenticated)
+
   isSubmitted.value = true
 
   try {
-    await axios.post('http://localhost:8000/api/v1/test/submit/', 
-      { answers: answers.value },
+    const formattedAnswers = {
+      q1_age: answers.value[0],
+      q2_experience: answers.value[1],
+      q3_loss_response: answers.value[2],
+      q4_income: answers.value[3],
+      q5_expected_return: answers.value[4],
+      q6_emergency: answers.value[5]
+    }
+
+    console.log('제출할 데이터:', formattedAnswers)
+
+    const response = await axios.post('http://127.0.0.1:8000/api/v1/test/submit/', 
+      formattedAnswers,
       {
         headers: {
-          Authorization: `Token ${token}`
+          Authorization: `Token ${accountStore.token}`,
+          'Content-Type': 'application/json'
         }
       }
     )
-    router.push({ name: 'testresult' })
+
+    console.log('테스트 제출 성공:', response.data)
+    
+    const resultResponse = await axios.get('http://127.0.0.1:8000/api/v1/test/result/', {
+      headers: {
+        Authorization: `Token ${accountStore.token}`
+      }
+    })
+    
+    console.log('테스트 결과 데이터:', resultResponse.data)
+    router.push({ 
+      name: 'testresult',
+      state: { testResult: resultResponse.data }
+    })
   } catch (err) {
-    console.error('테스트 제출 실패:', err)
+    console.error('테스트 제출 실패:', err.response?.data || err)
     if (err.response?.status === 401) {
+      accountStore.logOut()
       alert('로그인이 만료되었습니다. 다시 로그인해주세요.')
       router.push({ name: 'login', query: { redirect: '/test' } })
     } else {

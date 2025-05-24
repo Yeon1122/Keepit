@@ -1,5 +1,8 @@
 <template>
   <form @submit.prevent="onUpdate">
+    <label>아이디:</label>
+    <input type="text" v-model="form.userid" readonly class="readonly-input" />
+
     <label>이름:</label>
     <input type="text" v-model="form.name" />
 
@@ -55,6 +58,7 @@ const { token } = accountStore
 const router = useRouter()
 
 const form = ref({
+  userid: '',
   name: '',
   nickname: '',
   email: '',
@@ -107,6 +111,7 @@ onMounted(async () => {
 
     const user = res.data
     form.value = {
+      userid: user.userid,
       name: user.name,
       nickname: user.nickname,
       email: user.email,
@@ -205,5 +210,11 @@ button[type='submit']:hover {
 .delete-account:hover {
   color: #d9534f;
   /* 빨간색으로 강조 */
+}
+
+.readonly-input {
+  background-color: #eee;
+  color: #666;
+  cursor: not-allowed;
 }
 </style>

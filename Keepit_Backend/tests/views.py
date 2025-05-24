@@ -97,6 +97,9 @@ def submit_test(request):
     else:
         risk_type = 'aggressive'
     
+    # 이전 결과 삭제
+    TestResult.objects.filter(user=request.user).delete()
+    
     # 결과 저장
     result = TestResult.objects.create(
         user=request.user,

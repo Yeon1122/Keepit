@@ -13,15 +13,30 @@ class PostViewSet(viewsets.ModelViewSet):
     serializer_class = PostSerializer
     
     def get_permissions(self):
-        if self.action == 'list':  # 목록 조회
+        if self.action == 'list' or self.action == 'retrieve':  # 목록 조회와 상세 조회는 모두 가능
             permission_classes = [permissions.AllowAny]
-        else:  # 상세 조회, 생성, 수정, 삭제, 좋아요 등 다른 모든 동작
+        else:  # 생성, 수정, 삭제, 좋아요 등은 로그인 필요
             permission_classes = [permissions.IsAuthenticated]
         return [permission() for permission in permission_classes]
-
+    
     def get_queryset(self):
         board_type = self.kwargs.get('board_type')
         return Post.objects.filter(board_type=board_type)
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        post = self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response({
+            'id': post.id,
+            'board_type': post.board_type,
+            'message': '게시글이 성공적으로 생성되었습니다.',
+            'author_id': post.author.id,
+            'title': post.title,
+            'content': post.content,
+            'created_at': post.created_at,
+        }, status=status.HTTP_201_CREATED, headers=headers)
 
     def perform_create(self, serializer):
         print("Current user:", self.request.user)  # 디버깅용
@@ -33,6 +48,19 @@ class PostViewSet(viewsets.ModelViewSet):
         )
         print("Created post author:", post.author)  # 디버깅용
         return post
+
+    def perform_update(self, serializer):
+        post = self.get_object()
+        print(f"Updating post - Current user: {self.request.user.userid}, Post author: {post.author.userid}")  # 디버깅용
+        if str(post.author.userid) != str(self.request.user.userid):
+            raise permissions.PermissionDenied("자신의 게시글만 수정할 수 있습니다.")
+        serializer.save()
+
+    def perform_destroy(self, instance):
+        print(f"Deleting post - Current user: {self.request.user.userid}, Post author: {instance.author.userid}")  # 디버깅용
+        if str(instance.author.userid) != str(self.request.user.userid):
+            raise permissions.PermissionDenied("자신의 게시글만 삭제할 수 있습니다.")
+        instance.delete()
 
     @action(detail=True, methods=['post'])
     def like(self, request, pk=None, board_type=None):
@@ -48,7 +76,13 @@ class PostViewSet(viewsets.ModelViewSet):
 
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
-    permission_classes = [permissions.IsAuthenticated]  # 댓글은 모든 동작에 로그인 필요
+    
+    def get_permissions(self):
+        if self.action in ['list', 'retrieve']:  # 댓글 조회는 누구나 가능
+            permission_classes = [permissions.AllowAny]
+        else:  # 생성, 수정, 삭제, 좋아요 등은 로그인 필요
+            permission_classes = [permissions.IsAuthenticated]
+        return [permission() for permission in permission_classes]
 
     def get_queryset(self):
         return Comment.objects.filter(post_id=self.kwargs.get('post_pk'))

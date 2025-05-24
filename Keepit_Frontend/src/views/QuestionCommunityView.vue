@@ -2,12 +2,10 @@
     <div class="post-list">
         <div class="header-bar">
             <h2>질문 게시판</h2>
-            <router-link :to="{ name: 'questioncreate' }">
-                <button class="write-btn">질문하기</button>
-            </router-link>
+            <button v-if="isAuthenticated" class="write-btn" @click="goToWrite">질문하기</button>
         </div>
 
-        <div v-if="paginatedPosts.length">
+        <div v-if="posts.length > 0">
             <div v-for="(post, index) in paginatedPosts" :key="post.id" class="post-card">
                 <router-link :to="{ name: 'questiondetail', params: { id: post.id } }" class="post-link">
                     <div class="card-row">
@@ -24,7 +22,11 @@
             </div>
         </div>
 
-        <div v-else class="no-posts">등록된 질문이 없습니다.</div>
+        <div v-else class="no-posts">
+            <p>아직 작성된 게시글이 없습니다.</p>
+            <p v-if="isAuthenticated" class="write-prompt">첫 게시글을 작성해보세요!</p>
+            <p v-else class="login-prompt">게시글을 작성하려면 로그인이 필요합니다.</p>
+        </div>
 
         <div v-if="totalPages > 1" class="pagination">
             <button v-for="page in totalPages" :key="page" @click="currentPage = page"
@@ -37,7 +39,12 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { useAccountStore } from '@/stores/users'
 import axios from 'axios'
+
+const accountStore = useAccountStore()
+const isAuthenticated = computed(() => accountStore.isAuthenticated)
 
 const posts = ref([])
 const currentPage = ref(1)
@@ -58,65 +65,24 @@ const getPostNumber = (index) => {
     return (posts.value.length - 1) - ((currentPage.value - 1) * itemsPerPage + index) + 1
 }
 
+const router = useRouter()
+
+const goToWrite = () => {
+    router.push({ name: 'questioncreate' })
+}
+
 onMounted(async () => {
     try {
-        const res = await axios.get('/api/v1/posts/question/')
+        const headers = accountStore.isAuthenticated
+            ? { Authorization: `Token ${accountStore.token}` }
+            : {}
+
+        const res = await axios.get('http://127.0.0.1:8000/api/v1/community/question/', { headers })
         posts.value = res.data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
     } catch (err) {
         console.error('질문 목록 조회 실패:', err)
-        // 더미 데이터
-        posts.value = [
-            {
-                id: 1,
-                title: '주식투자 초보자인데 ETF 추천해주세요',
-                content: '안정적인 ETF 위주로 추천 부탁드립니다.',
-                created_at: '2025-05-18T14:00:00Z',
-                author: '투자초보',
-                likes: 5,
-                comments: Array(3).fill({}),
-                is_solved: true
-            },
-            {
-                id: 2,
-                title: '적금 금리 비교 어떻게 하나요?',
-                content: '은행마다 금리가 달라서 고민이에요.',
-                created_at: '2025-05-17T09:00:00Z',
-                author: '머니러버',
-                likes: 8,
-                comments: Array(5).fill({}),
-                is_solved: false
-            },
-            {
-                id: 3,
-                title: '주식 차트 보는 법 알려주세요',
-                content: '기술적 분석 어떻게 시작하나요?',
-                created_at: '2025-05-16T10:30:00Z',
-                author: '차트초보',
-                likes: 12,
-                comments: Array(7).fill({}),
-                is_solved: true
-            },
-            {
-                id: 4,
-                title: '연말정산 공제 항목 질문',
-                content: '올해 바뀐 공제 항목이 있나요?',
-                created_at: '2025-05-15T12:00:00Z',
-                author: '절세왕',
-                likes: 15,
-                comments: Array(10).fill({}),
-                is_solved: false
-            },
-            {
-                id: 5,
-                title: '주식 투자 시작 자금',
-                content: '처음 시작할 때 얼마부터 시작하는게 좋을까요?',
-                created_at: '2025-05-14T09:00:00Z',
-                author: '신입투자자',
-                likes: 20,
-                comments: Array(12).fill({}),
-                is_solved: true
-            }
-        ].sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+        alert('게시글을 불러오는데 실패했습니다.')
+        posts.value = []
     }
 })
 </script>
@@ -239,7 +205,25 @@ onMounted(async () => {
     text-align: center;
     padding: 3rem 0;
     color: #666;
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #e0e0e0;
+    margin: 2rem 0;
+}
+
+.no-posts p {
+    margin: 0.5rem 0;
     font-size: 1.1rem;
+}
+
+.write-prompt {
+    color: #145c2b;
+    font-weight: 500;
+}
+
+.login-prompt {
+    font-size: 0.9rem;
+    color: #888;
 }
 
 .pagination {

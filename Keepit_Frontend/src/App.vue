@@ -34,25 +34,6 @@ import FloatingButton from '@/components/FloatingButton.vue'
 /* Pretendard 폰트 import */
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
 
-/* 마루부리 폰트 import */
-@font-face {
-  font-family: 'MaruBuri';
-  font-weight: 400;
-  src: url('https://cdn.jsdelivr.net/gh/webfontworld/naver/MaruBuri-Regular.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'MaruBuri';
-  font-weight: 600;
-  src: url('https://cdn.jsdelivr.net/gh/webfontworld/naver/MaruBuri-SemiBold.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'MaruBuri';
-  font-weight: 700;
-  src: url('https://cdn.jsdelivr.net/gh/webfontworld/naver/MaruBuri-Bold.woff2') format('woff2');
-}
-
 /* 전역 스타일 */
 :root {
   /* 색상 변수 */
@@ -71,7 +52,7 @@ import FloatingButton from '@/components/FloatingButton.vue'
 }
 
 body {
-  font-family: 'MaruBuri', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   line-height: 1.6;
   color: var(--text-primary);
   background-color: var(--background-light);

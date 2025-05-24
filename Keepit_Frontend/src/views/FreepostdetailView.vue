@@ -17,13 +17,13 @@
             <div class="like-actions">
                 <div class="like-wrapper" v-if="isAuthenticated">
                     <LikeButton
-                        :initial-is-liked="isLiked"
-                        :initial-count="post.likes"
+                        :initial-is-liked="post.is_liked"
+                        :initial-count="post.likes_count"
                         @update:liked="handlePostLike"
                     />
                 </div>
                 <div v-else class="like-count">
-                    좋아요 {{ post.likes }}개
+                    좋아요 {{ post.likes_count }}개
                 </div>
 
                 <!-- 작성자만 볼 수 있는 수정/삭제 버튼 -->
@@ -37,7 +37,7 @@
         <hr />
 
         <div class="comments">
-            <h3>댓글 {{ comments.length }}개</h3>
+            <h3>댓글 {{ comments.length || 0 }}개</h3>
             
             <!-- 로그인한 경우에만 댓글 작성 폼 표시 -->
             <div v-if="isAuthenticated" class="comment-form">
@@ -59,13 +59,29 @@
                     <div class="comment-content">
                         <p>{{ comment.content }}</p>
                         <div class="comment-info">
-                            <span class="comment-author">{{ comment.author_nickname }}</span>
-                            <span>{{ formatDate(comment.created_at) }}</span>
+                            <router-link 
+                                :to="{ name: 'userpage', params: { userid: comment.author_id }}" 
+                                class="comment-author"
+                            >
+                                {{ comment.author_nickname }}
+                            </router-link>
+                            <span class="comment-date">{{ formatDate(comment.created_at) }}</span>
+                            <div class="comment-like-wrapper" v-if="isAuthenticated">
+                                <LikeButton
+                                    :initial-is-liked="comment.is_liked"
+                                    :initial-count="comment.likes_count"
+                                    @update:liked="(newState) => handleCommentLike(comment.id, newState)"
+                                    size="small"
+                                />
+                            </div>
+                            <div v-else class="like-count">
+                                좋아요 {{ comment.likes_count }}개
+                            </div>
                         </div>
                     </div>
                     <!-- 댓글 작성자만 볼 수 있는 삭제 버튼 -->
                     <button 
-                        v-if="isAuthenticated && comment.author_id === userId" 
+                        v-if="isAuthenticated && comment.author_id === accountStore.userId" 
                         class="btn-delete-comment"
                         @click="deleteComment(comment.id)"
                     >
@@ -95,80 +111,177 @@ const postId = route.params.id
 const post = ref(null)
 const newComment = ref('')
 const isLiked = ref(false)
+const comments = ref([])
 
 const accountStore = useAccountStore()
 const isAuthenticated = computed(() => accountStore.isAuthenticated)
-const userId = computed(() => accountStore.user_id)
+const userId = computed(() => accountStore.userId)
 
 const formatDate = (iso) => new Date(iso).toLocaleDateString()
 
-const toggleLike = async () => {
-    isLiked.value = !isLiked.value
-    post.value.likes += isLiked.value ? 1 : -1
-    // await axios.post(`http://localhost:8000/api/v1/posts/free/${postId}/like/`) // 실제 좋아요 요청
+// 현재 사용자가 글 작성자인지 확인
+const isAuthor = computed(() => {
+    return post.value && String(userId.value) === String(post.value.author_id);
+})
+
+const handlePostLike = async (newLikedState) => {
+    try {
+        await axios.post(`http://127.0.0.1:8000/api/v1/community/free/${postId}/like/`, {}, {
+            headers: {
+                Authorization: `Token ${accountStore.token}`
+            }
+        })
+        isLiked.value = newLikedState
+        if (post.value) {
+            post.value.likes += newLikedState ? 1 : -1
+        }
+    } catch (err) {
+        console.error('좋아요 처리 실패:', err)
+        if (err.response?.status === 401) {
+            alert('로그인이 필요합니다.')
+            router.push({ name: 'login' })
+        }
+    }
 }
 
-const toggleCommentLike = async (commentId) => {
-    const comment = post.value.comments.find(c => c.id === commentId)
-    comment.is_liked = !comment.is_liked
-    comment.likes += comment.is_liked ? 1 : -1
-    // await axios.post(`http://localhost:8000/api/v1/posts/free/${postId}/comments/${commentId}/like/`)
-}
-
-const deletePost = async () => {
-    if (!confirm('정말 삭제하시겠습니까?')) return
-    // await axios.delete(`http://localhost:8000/api/v1/posts/free/${postId}/`)
-    alert('삭제 완료')
-    router.push({ name: 'freecommunity' })
-}
-
-const editPost = () => {
+const handleEdit = () => {
+    if (!isAuthor.value) {
+        alert('자신의 게시글만 수정할 수 있습니다.')
+        return
+    }
     router.push({ name: 'freepostedit', params: { id: postId } })
 }
 
-const goToUserPage = (userid) => {
-    router.push({ name: 'userpage', params: { userid } })
+const handleDelete = async () => {
+    if (!isAuthor.value) {
+        alert('자신의 게시글만 삭제할 수 있습니다.')
+        return
+    }
+    
+    if (!confirm('정말 삭제하시겠습니까?')) return
+    
+    try {
+        await axios.delete(`http://127.0.0.1:8000/api/v1/community/free/${postId}/`, {
+            headers: {
+                Authorization: `Token ${accountStore.token}`
+            }
+        })
+        alert('게시글이 삭제되었습니다.')
+        router.push({ name: 'freecommunity' })
+    } catch (err) {
+        console.error('게시글 삭제 실패:', err)
+        if (err.response?.status === 401) {
+            alert('로그인이 필요합니다.')
+            router.push({ name: 'login' })
+        } else {
+            alert('게시글 삭제 중 오류가 발생했습니다.')
+        }
+    }
 }
 
-const submitComment = async () => {
+const addComment = async () => {
     if (!newComment.value.trim()) return
-
-    const tempComment = {
-        id: Date.now(),
-        content: newComment.value,
-        likes: 0,
-        is_liked: false
+    if (!isAuthenticated.value) {
+        alert('로그인이 필요합니다.')
+        router.push({ name: 'login' })
+        return
     }
 
-    post.value.comments.push(tempComment)
-    newComment.value = ''
-
-    // await axios.post(`http://localhost:8000/api/v1/posts/free/${postId}/comments/`, {
-    //   content: tempComment.content
-    // })
+    try {
+        const response = await axios.post(
+            `http://127.0.0.1:8000/api/v1/community/free/${postId}/comments/`,
+            { content: newComment.value },
+            {
+                headers: {
+                    Authorization: `Token ${accountStore.token}`,
+                    'Content-Type': 'application/json'
+                }
+            }
+        )
+        comments.value.push(response.data)
+        newComment.value = ''
+    } catch (err) {
+        console.error('댓글 작성 실패:', err)
+        if (err.response?.status === 401) {
+            alert('로그인이 필요합니다.')
+            router.push({ name: 'login' })
+        } else {
+            alert('댓글 작성 중 오류가 발생했습니다.')
+        }
+    }
 }
 
-// 현재 사용자가 글 작성자인지 확인
-const isAuthor = computed(() => {
-    return post.value && userId.value === post.value.author_id
-})
+const deleteComment = async (commentId) => {
+    try {
+        await axios.delete(
+            `http://127.0.0.1:8000/api/v1/community/free/${postId}/comments/${commentId}/`,
+            {
+                headers: {
+                    Authorization: `Token ${accountStore.token}`
+                }
+            }
+        )
+        comments.value = comments.value.filter(c => c.id !== commentId)
+    } catch (err) {
+        console.error('댓글 삭제 실패:', err)
+        if (err.response?.status === 401) {
+            alert('로그인이 필요합니다.')
+            router.push({ name: 'login' })
+        } else {
+            alert('댓글 삭제 중 오류가 발생했습니다.')
+        }
+    }
+}
+
+const handleCommentLike = async (commentId, newState) => {
+    try {
+        await axios.post(
+            `http://127.0.0.1:8000/api/v1/community/free/${postId}/comments/${commentId}/like/`,
+            {},
+            {
+                headers: {
+                    Authorization: `Token ${accountStore.token}`
+                }
+            }
+        )
+        comments.value = comments.value.map(c =>
+            c.id === commentId 
+                ? { 
+                    ...c, 
+                    is_liked: newState,
+                    likes_count: newState ? c.likes_count + 1 : c.likes_count - 1 
+                } 
+                : c
+        )
+    } catch (err) {
+        console.error('댓글 좋아요 처리 실패:', err)
+        if (err.response?.status === 401) {
+            alert('로그인이 필요합니다.')
+            router.push({ name: 'login' })
+        } else {
+            alert('댓글 좋아요 처리 중 오류가 발생했습니다.')
+        }
+    }
+}
 
 onMounted(async () => {
-    // const res = await axios.get(`http://localhost:8000/api/v1/posts/free/${postId}`)
-    // post.value = res.data
+    try {
+        const headers = accountStore.isAuthenticated
+            ? { Authorization: `Token ${accountStore.token}` }
+            : {}
 
-    post.value = {
-        id: postId,
-        title: '더미 게시글 제목',
-        content: '이것은 더미 게시글의 상세 내용입니다.',
-        created_at: '2024-05-01T12:00:00Z',
-        author: '홍길동',
-        author_id: 'hadmin',
-        likes: 5,
-        comments: [
-            { id: 1, content: '첫 번째 댓글입니다.', likes: 2, is_liked: false },
-            { id: 2, content: '좋은 글 감사합니다!', likes: 1, is_liked: true }
-        ]
+        const [postRes, commentsRes] = await Promise.all([
+            axios.get(`http://127.0.0.1:8000/api/v1/community/free/${postId}/`, { headers }),
+            axios.get(`http://127.0.0.1:8000/api/v1/community/free/${postId}/comments/`, { headers })
+        ])
+        
+        post.value = postRes.data
+        comments.value = commentsRes.data
+        isLiked.value = post.value.is_liked || false
+        
+    } catch (err) {
+        console.error('게시글 로딩 실패:', err)
+        alert('게시글을 불러오는데 실패했습니다.')
     }
 })
 </script>
@@ -257,17 +370,20 @@ onMounted(async () => {
 .like-actions {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    margin: 2rem 0;
-    padding: 1rem 0;
+    align-items: flex-start;
+    margin: 2rem 0 1rem;
+    padding: 2rem 0 0;
     border-top: 1px solid #f0f0f0;
 }
 
-.like-wrapper,
-.comment-like-wrapper {
+.like-wrapper {
+    margin-top: 0.5rem;
+}
+
+.post-actions {
     display: flex;
-    align-items: center;
-    gap: 0.7rem;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
 }
 
 .icon-button.heart {
@@ -367,10 +483,33 @@ onMounted(async () => {
     border-bottom: none;
 }
 
+.comment-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.comment-author {
+    color: #145c2b;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.comment-author:hover {
+    text-decoration: underline;
+}
+
+.comment-date {
+    color: #888;
+}
+
 .comment-like-wrapper {
     display: flex;
     align-items: center;
-    gap: 0.6rem;
+    gap: 0.5rem;
 }
 
 .like-count,
@@ -384,13 +523,6 @@ hr {
     height: 1px;
     background-color: #f0f0f0;
     margin: 2rem 0;
-}
-
-.post-actions,
-.comment-actions {
-    display: flex;
-    justify-content: flex-end;
-    padding: 1rem 0;
 }
 
 .login-prompt {
@@ -414,5 +546,51 @@ hr {
 .like-count-only {
     color: var(--text-secondary);
     font-size: 0.9rem;
+}
+
+.btn-delete-comment {
+    background: none;
+    border: none;
+    color: #dc3545;
+    font-size: 0.9rem;
+    cursor: pointer;
+    padding: 0.3rem 0.6rem;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.btn-delete-comment:hover {
+    background-color: #fff5f5;
+}
+
+.btn-edit {
+    background: #145c2b;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    margin-right: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.btn-edit:hover {
+    background: #0d3d1d;
+}
+
+.btn-delete {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.btn-delete:hover {
+    background: #c82333;
 }
 </style>
