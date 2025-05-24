@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'community',  # 자유 게시판, 질문 게시판, 댓글, 좋아요
     'tests',      # 금융 성향 결과 테스트, 결과 조회
     'regions',    # 지도 지역 설정
+    'chatbot',    # 챗봇 
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
@@ -147,3 +148,6 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'users.User'
+
+# OpenAI API 설정
+OPENAI_API_KEY = 'your-api-key-here'  # 실제 API 키로 교체 필요
