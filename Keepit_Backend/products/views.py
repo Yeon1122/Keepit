@@ -909,7 +909,7 @@ def stock_favorite(request, stock_code):
         
         # GET 요청: 찜하기 상태 확인
         if request.method == 'GET':
-            is_hearted = Favorite.objects.filter(
+            is_liked = Favorite.objects.filter(
                 user=request.user,
                 type='stock',
                 identifier=stock_code
@@ -919,7 +919,7 @@ def stock_favorite(request, stock_code):
                 identifier=stock_code
             ).count()
             return Response({
-                'is_hearted': is_hearted,
+                'is_liked': is_liked,
                 'count': count
             })
 
@@ -1022,14 +1022,14 @@ def etf_favorite(request, etf_code):
 
         if request.method == 'GET':
             # 찜하기 상태 확인
-            is_hearted = Favorite.objects.filter(
+            is_liked = Favorite.objects.filter(
                 user=user,
                 type='etf',
                 identifier=etf_code
             ).exists()
-            print(f"[etf_favorite] ETF {etf_code} is_hearted: {is_hearted}")
+            print(f"[etf_favorite] ETF {etf_code} is_liked: {is_liked}")
             return Response({
-                'is_hearted': is_hearted
+                'is_liked': is_liked
             })
 
         elif request.method == 'POST':
@@ -1042,7 +1042,7 @@ def etf_favorite(request, etf_code):
             print(f"[etf_favorite] ETF {etf_code} favorite created: {created}")
             return Response({
                 'message': '찜하기가 완료되었습니다.',
-                'is_hearted': True
+                'is_liked': True
             })
 
         elif request.method == 'DELETE':
@@ -1057,7 +1057,7 @@ def etf_favorite(request, etf_code):
                 print(f"[etf_favorite] ETF {etf_code} favorite removed")
                 return Response({
                     'message': '찜하기가 해제되었습니다.',
-                    'is_hearted': False
+                    'is_liked': False
                 })
             else:
                 print(f"[etf_favorite] ETF {etf_code} favorite not found")

@@ -108,7 +108,7 @@ const loadStockData = async () => {
       const favRes = await axios.get(`http://127.0.0.1:8000/api/v1/products/stocks/${stockCode}/favorite/`, {
         headers: { Authorization: `Token ${accountStore.token}` }
       })
-      isHearted.value = favRes.data.is_hearted
+      isHearted.value = favRes.data.is_liked
       heartCount.value = favRes.data.count
     }
 

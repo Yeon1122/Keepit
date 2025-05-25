@@ -63,7 +63,7 @@ const checkInitialLikeStatus = async () => {
       }
     })
     console.log('초기 상태 응답:', response.data)
-    isLiked.value = response.data.is_hearted
+    isLiked.value = response.data.is_liked
   } catch (err) {
     console.error('찜하기 상태 확인 오류:', err)
   }
