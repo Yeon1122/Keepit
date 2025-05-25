@@ -20,10 +20,25 @@ def filter_one_option_per_product(matched_products, preferred_months):
     result = {}
     for p in matched_products:
         name = p["name"]
-        if name not in result:
-            result[name] = p
-        else:
-            prev = result[name]
-            if abs(p["term"] - preferred_months) < abs(prev["term"] - preferred_months):
+        # 정확히 일치하는 기간만 선택
+        if p["term"] == preferred_months:
+            if name not in result:
                 result[name] = p
+            else:
+                # 같은 기간이면 금리가 높은 것 선택
+                prev = result[name]
+                if p["interest_rate"] > prev["interest_rate"]:
+                    result[name] = p
+    
+    # 정확히 일치하는 기간이 없으면 가장 가까운 기간 선택
+    if len(result) == 0:
+        for p in matched_products:
+            name = p["name"]
+            if name not in result:
+                result[name] = p
+            else:
+                prev = result[name]
+                if abs(p["term"] - preferred_months) < abs(prev["term"] - preferred_months):
+                    result[name] = p
+    
     return list(result.values())

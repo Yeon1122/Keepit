@@ -28,7 +28,7 @@
             <div class="stat-label">팔로워</div>
           </div>
           <div class="stat-item" @click="goToUserPosts">
-            <div class="stat-value">{{ user.my_posts?.length ?? 0 }}</div>
+            <div class="stat-value">{{ user.posts_summary?.total_posts ?? 0 }}</div>
             <div class="stat-label">작성글</div>
           </div>
         </div>
@@ -63,22 +63,87 @@
         <div class="card-header">
           <h3>찜한 상품</h3>
         </div>
+        <div class="filter-section">
+          <div class="filter-buttons filter-align">
+            <button 
+              class="filter-button" 
+              :class="{ active: selectedFilter === 'all' }"
+              @click="selectedFilter = 'all'"
+            >
+              전체
+            </button>
+            <button 
+              class="filter-button" 
+              :class="{ active: selectedFilter === 'deposit' }"
+              @click="selectedFilter = 'deposit'"
+            >
+              예금
+            </button>
+            <button 
+              class="filter-button" 
+              :class="{ active: selectedFilter === 'saving' }"
+              @click="selectedFilter = 'saving'"
+            >
+              적금
+            </button>
+            <button 
+              class="filter-button" 
+              :class="{ active: selectedFilter === 'stock' }"
+              @click="selectedFilter = 'stock'"
+            >
+              주식
+            </button>
+            <button 
+              class="filter-button" 
+              :class="{ active: selectedFilter === 'etf' }"
+              @click="selectedFilter = 'etf'"
+            >
+              ETF
+            </button>
+          </div>
+        </div>
         <div class="card-content">
-          <template v-if="user.liked_products?.length">
-            <ul class="product-list">
-              <li v-for="product in user.liked_products" :key="product.id" class="product-item">
-                <div class="product-name">{{ product.name }}</div>
-                <div class="product-info">
-                  <span class="bank">{{ product.bank }}</span>
-                  <span class="rate">{{ product.interest_rate }}% ~ {{ product.special_rate }}%</span>
-                  <span class="term">{{ product.term }}개월</span>
+          <template v-if="limitedFilteredProducts.length">
+            <div class="product-card" v-for="product in limitedFilteredProducts" :key="product.id" @click="goToProductDetail(product)" style="cursor:pointer;">
+              <div class="product-info">
+                <div class="product-header">
+                  <div class="product-type-name">
+                    <span class="product-type" :class="product.type">{{ getProductTypeText(product.type) }}</span>
+                    <span class="product-title">{{ getProductName(product) }}</span>
+                  </div>
                 </div>
-              </li>
-            </ul>
+                <!-- 예금/적금 상품일 경우 -->
+                <div v-if="['deposit', 'saving'].includes(product.type)" class="product-details">
+                  <div class="rate-info">
+                    <span class="label">금리</span>
+                    <span class="value">{{ product.interest_rate }}% ~ {{ product.special_rate }}%</span>
+                  </div>
+                  <div class="term-info">
+                    <span class="label">기간</span>
+                    <span class="value">{{ product.term }}개월</span>
+                  </div>
+                </div>
+                <!-- 주식/ETF 상품일 경우 -->
+                <div v-else class="product-details">
+                  <div class="price-info">
+                    <span class="label">현재가</span>
+                    <span class="value">{{ formatPrice(product.current_price) }}원</span>
+                  </div>
+                  <div class="change-info">
+                    <span class="label">변동가</span>
+                    <span class="value" :class="getPriceChangeClass(product.price_change)">
+                      <i :class="['fas', product.price_change > 0 ? 'fa-caret-up' : 'fa-caret-down']"></i>
+                      {{ formatPriceChange(product.price_change) }}원
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="product-divider"></div>
+            </div>
           </template>
           <div v-else class="empty-state">
             <i class="fas fa-heart"></i>
-            <p>찜한 상품이 없습니다.</p>
+            <p>{{ getEmptyStateMessage }}</p>
           </div>
         </div>
       </div>
@@ -136,7 +201,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import axios, { AxiosError } from 'axios'
 import { useAccountStore } from '@/stores/users.js'
 import { useRoute, useRouter } from 'vue-router'
@@ -156,12 +221,76 @@ const user = ref({
     free_posts: 0,
     question_posts: 0
   },
-  recent_posts: []
+  recent_posts: [],
+  liked_products: []
 })
 
 const freePosts = ref([])
 const questionPosts = ref([])
 const isFollowing = ref(false)
+const selectedFilter = ref('all')
+
+// 필터링된 상품 목록을 계산하는 computed 속성
+const filteredProducts = computed(() => {
+  const products = user.value.liked_products || []
+  if (selectedFilter.value === 'all') {
+    return products
+  }
+  return products.filter(product => product.type === selectedFilter.value)
+})
+
+// 필터링된 상품 목록에서 최대 4개만 보여주는 computed 속성
+const limitedFilteredProducts = computed(() => {
+  return filteredProducts.value.slice(0, 4)
+})
+
+// 빈 상태 메시지를 동적으로 생성하는 computed 속성
+const getEmptyStateMessage = computed(() => {
+  if (selectedFilter.value === 'all') {
+    return '찜한 상품이 없습니다.'
+  }
+  const typeMap = {
+    deposit: '예금',
+    saving: '적금',
+    stock: '주식',
+    etf: 'ETF'
+  }
+  return `찜한 ${typeMap[selectedFilter.value]} 상품이 없습니다.`
+})
+
+// 상품 타입 텍스트 변환 함수
+const getProductTypeText = (type) => {
+  const typeMap = {
+    deposit: '예금',
+    saving: '적금',
+    stock: '주식',
+    etf: 'ETF'
+  }
+  return typeMap[type] || type
+}
+
+// 상품명 가져오는 함수
+const getProductName = (product) => {
+  return product.name
+}
+
+// 가격 포맷팅 함수
+const formatPrice = (price) => {
+  if (!price) return '0'
+  return price.toLocaleString()
+}
+
+// 가격 변동 포맷팅 함수
+const formatPriceChange = (change) => {
+  if (!change) return '0'
+  return Math.abs(change).toLocaleString()
+}
+
+// 가격 변동에 따른 클래스 반환 함수
+const getPriceChangeClass = (change) => {
+  if (!change) return ''
+  return change > 0 ? 'price-up' : 'price-down'
+}
 
 onMounted(async () => {
   const token = accountStore.token
@@ -179,7 +308,14 @@ onMounted(async () => {
 
   try {
     // 사용자 정보 가져오기
-    const res = await axios.get(`http://127.0.0.1:8000/api/v1/users/${route.params.userid}/`, {
+    const res = await axios.get(`/api/v1/users/${route.params.userid}/`, {
+      headers: {
+        Authorization: `Token ${token}`
+      }
+    })
+
+    // 찜한 상품 목록 가져오기
+    const favoritesRes = await axios.get(`/api/v1/products/favorites/${route.params.userid}/`, {
       headers: {
         Authorization: `Token ${token}`
       }
@@ -189,6 +325,7 @@ onMounted(async () => {
       ...res.data,
       followers: res.data.followers || [],
       following: res.data.following || [],
+      liked_products: favoritesRes.data || []
     }
 
     // 최근 게시글 분류
@@ -220,7 +357,7 @@ onMounted(async () => {
 
   // 투자성향 테스트 결과 가져오기
   try {
-    const testRes = await axios.get(`http://127.0.0.1:8000/api/v1/test/result/${route.params.userid}/`, {
+    const testRes = await axios.get(`/api/v1/test/result/${route.params.userid}/`, {
       headers: {
         Authorization: `Token ${token}`
       }
@@ -244,16 +381,16 @@ const formatDate = (dateString) => {
 const handleFollowAction = async () => {
   try {
     const token = accountStore.token
-    const targetUserId = user.value.user_id  // userid가 아닌 user_id를 사용
+    const targetUserId = user.value.userid  // user_id 대신 userid 사용
 
     if (isFollowing.value) {
       // 언팔로우
-      await axios.delete(`http://127.0.0.1:8000/api/v1/users/${targetUserId}/follow/`, {
+      await axios.delete(`/api/v1/users/${targetUserId}/follow/`, {
         headers: { Authorization: `Token ${token}` }
       })
     } else {
       // 팔로우
-      await axios.post(`http://127.0.0.1:8000/api/v1/users/${targetUserId}/follow/`, {}, {
+      await axios.post(`/api/v1/users/${targetUserId}/follow/`, {}, {
         headers: { Authorization: `Token ${token}` }
       })
     }
@@ -262,7 +399,7 @@ const handleFollowAction = async () => {
     isFollowing.value = !isFollowing.value
 
     // 팔로워/팔로잉 목록 업데이트를 위해 사용자 정보 다시 불러오기
-    const res = await axios.get(`http://127.0.0.1:8000/api/v1/users/${route.params.userid}/`, {
+    const res = await axios.get(`/api/v1/users/${route.params.userid}/`, {
       headers: { Authorization: `Token ${token}` }
     })
     
@@ -270,6 +407,7 @@ const handleFollowAction = async () => {
       ...res.data,
       followers: res.data.followers || [],
       following: res.data.following || [],
+      liked_products: user.value.liked_products  // 기존 찜한 상품 목록 유지
     }
 
   } catch (error) {
@@ -300,6 +438,18 @@ const goToFollow = () => {
 
 const goToUserPosts = () => {
   router.push({ name: 'userposts', params: { userid: user.value.userid } })
+}
+
+const goToProductDetail = (product) => {
+  if (product.type === 'deposit') {
+    router.push({ name: 'depositdetail', params: { id: product.id } })
+  } else if (product.type === 'saving') {
+    router.push({ name: 'savingdetail', params: { id: product.id } })
+  } else if (product.type === 'stock') {
+    router.push({ name: 'stockdetail', params: { stock_code: product.product_code } })
+  } else if (product.type === 'etf') {
+    router.push({ name: 'etfdetail', params: { etf_code: product.product_code } })
+  }
 }
 </script>
 
@@ -616,6 +766,120 @@ const goToUserPosts = () => {
   padding: 0.2rem 0.5rem;
   border-radius: 4px;
   font-size: 0.8rem;
+}
+
+.filter-section {
+  margin-bottom: 1.2rem;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.filter-buttons.filter-align {
+  display: flex;
+  gap: 0.4rem;
+  justify-content: center;
+  align-items: flex-end;
+  margin-top: 0.2rem;
+}
+
+.filter-button {
+  padding: 0.35rem 0.9rem;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  background: white;
+  color: #495057;
+  cursor: pointer;
+  font-size: 0.95rem;
+  min-width: 60px;
+  height: 2.1rem;
+  transition: all 0.2s;
+  box-sizing: border-box;
+}
+
+.filter-button.active {
+  background: #145c2b;
+  color: #fff;
+  border-color: #145c2b;
+}
+
+.filter-button:not(.active):hover {
+  background: #e6f4ea;
+  color: #145c2b;
+  border-color: #b7e2c6;
+}
+
+.product-card {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 2rem;
+  padding: 1.2rem 1.5rem;
+  border-bottom: 1px solid #eee;
+  background: #fafbfc;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+}
+
+.product-card:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.product-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  font-size: 1rem;
+  color: #333;
+  flex: 1;
+}
+
+.product-header {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.product-type-name {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.product-type {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #145c2b;
+  background: #e6f4ea;
+  border-radius: 6px;
+  padding: 0.2rem 0.7rem;
+  margin-right: 0.5rem;
+}
+
+.product-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.product-details {
+  margin-top: 0.2rem;
+  display: flex;
+  gap: 2.5rem;
+}
+
+.rate-info, .term-info, .price-info, .change-info {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 1rem;
+  color: #666;
+}
+
+.product-divider {
+  display: none;
 }
 
 @media (max-width: 768px) {

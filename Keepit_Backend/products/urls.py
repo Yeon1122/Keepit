@@ -30,6 +30,7 @@ urlpatterns = [
     # 찜하기 기능
     path('favorites/by-id/<int:product_id>/', views.favorite_by_id, name='favorite-by-id'),
     path('favorites/', views.user_favorites, name='user-favorites'),
+    path('favorites/<str:userid>/', views.user_favorites, name='user-favorites-detail'),
     
     # 상품 비교
     path('compare/deposits/', views.compare_deposits, name='compare-deposits'),

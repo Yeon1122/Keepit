@@ -267,10 +267,10 @@ class LogoutView(APIView):
 class FollowToggleView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def post(self, request, user_id):
+    def post(self, request, userid):
         from_user = request.user
         try:
-            to_user = User.objects.get(id=user_id)
+            to_user = User.objects.get(userid=userid)
         except User.DoesNotExist:
             return Response({"message": "존재하지 않는 사용자입니다.", "status": 404}, status=404)
 
@@ -291,10 +291,10 @@ class FollowToggleView(APIView):
             }
         })
 
-    def delete(self, request, user_id):
+    def delete(self, request, userid):
         from_user = request.user
         try:
-            to_user = User.objects.get(id=user_id)
+            to_user = User.objects.get(userid=userid)
         except User.DoesNotExist:
             return Response({"message": "존재하지 않는 사용자입니다.", "status": 404}, status=404)
 
