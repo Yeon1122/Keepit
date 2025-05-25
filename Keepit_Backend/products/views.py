@@ -5,7 +5,7 @@ from .serializers import SavingsSerializer, StockSerializer, ETFSerializer, Prod
 
 import os
 import requests
-from django.http import JsonResponse
+from django.http import JsonResponse, StreamingHttpResponse
 from dotenv import load_dotenv
 
 from rest_framework.decorators import api_view, permission_classes
@@ -20,6 +20,9 @@ from .utils.savings_detail_cal import filter_one_option_per_product, calc_saving
 from django.conf import settings
 
 import logging
+import json
+import time
+
 logger = logging.getLogger(__name__)
 
 class SavingsListAPIView(generics.ListAPIView):
@@ -78,6 +81,16 @@ class SavingsListAPIView(generics.ListAPIView):
         logger.info(f"[SavingsListAPIView] Returning {len(serializer.data)} products")
         return Response(serializer.data)  # 배열 형태로 직접 반환
 
+class SavingsDetailAPIView(generics.RetrieveAPIView):
+    queryset = Product.objects.filter(type='saving')
+    serializer_class = SavingsSerializer
+    
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        logger.info(f"[SavingsDetailAPIView] Retrieved saving product with id {instance.id}")
+        return Response(serializer.data)
+
 class DepositListAPIView(generics.ListAPIView):
     serializer_class = SavingsSerializer
     
@@ -134,6 +147,15 @@ class DepositListAPIView(generics.ListAPIView):
         logger.info(f"[DepositListAPIView] Returning {len(serializer.data)} products")
         return Response(serializer.data)  # 배열 형태로 직접 반환
 
+class DepositDetailAPIView(generics.RetrieveAPIView):
+    queryset = Product.objects.filter(type='deposit')
+    serializer_class = SavingsSerializer
+    
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        logger.info(f"[DepositDetailAPIView] Retrieved deposit product with id {instance.id}")
+        return Response(serializer.data)
 
 class StockListAPIView(generics.ListAPIView):
     serializer_class = StockSerializer
@@ -327,29 +349,53 @@ def fetch_saving_products(request):
 def stock_list(request):
     codes = load_top_stock_codes()
     name_map = load_stock_name_map()
+    total_count = len(codes)
 
     result = []
-    for code in codes:
+    for idx, code in enumerate(codes, 1):
         data = fetch_stock_by_code(code)
         if data:
             data['name'] = name_map.get(code, None)
             result.append(data)
 
-    return Response(result)
+    return Response(
+        {
+            'data': result,
+            'loading_status': {
+                'completed': len(result),
+                'total': total_count,
+                'percentage': round((len(result) / total_count) * 100, 1)
+            }
+        },
+        content_type='application/json'
+    )
 
 @api_view(['GET'])
 def etf_list(request):
+    page = int(request.GET.get('page', 1))
+    size = int(request.GET.get('size', 100))
+    
     codes = load_top_etf_codes()
     name_map = load_etf_name_map()
     
+    # 페이지네이션 적용
+    start_idx = (page - 1) * size
+    end_idx = start_idx + size
+    current_codes = codes[start_idx:end_idx]
+    
     result = []
-    for code in codes:
+    for code in current_codes:
         data = fetch_etf_by_code(code)
         if data and data.get("current_price") is not None:
             data["name"] = name_map.get(code, None)
             result.append(data)
             
-    return Response(result)
+    return Response({
+        'data': result,
+        'has_more': end_idx < len(codes),
+        'total_count': len(codes),
+        'current_page': page
+    })
 
 @api_view(['GET'])
 # @permission_classes([IsAuthenticated])

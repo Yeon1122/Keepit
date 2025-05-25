@@ -1,11 +1,17 @@
 # products/urls.py
 from django.urls import path
 from . import views
+from .views import (
+    SavingsListAPIView, SavingsDetailAPIView,
+    DepositListAPIView, DepositDetailAPIView,
+)
 
 urlpatterns = [
     # 예금/적금 상품 목록
-    path('deposits/', views.DepositListAPIView.as_view(), name='deposit-list'),
-    path('savings/', views.SavingsListAPIView.as_view(), name='savings-list'),
+    path('deposits/', DepositListAPIView.as_view(), name='deposit-list'),
+    path('savings/', SavingsListAPIView.as_view(), name='savings-list'),
+    path('savings/<int:pk>/', SavingsDetailAPIView.as_view(), name='savings-detail'),
+    path('deposits/<int:pk>/', DepositDetailAPIView.as_view(), name='deposit-detail'),
     
     # 외부 API 데이터 가져오기
     path('fetch-deposits/', views.fetch_deposit_products, name='fetch-deposits'),

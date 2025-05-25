@@ -1,19 +1,22 @@
 import os
 import requests
+import time
 from dotenv import load_dotenv
-import requests
 
 load_dotenv()
 API_KEY = os.getenv("FSS_API_KEY")
 KIS_APP_KEY = os.getenv("KIS_APP_KEY")
 KIS_APP_SECRET = os.getenv("KIS_APP_SECRET")
-access_token = None
 
 API_URLS = {
     'deposit': 'https://finlife.fss.or.kr/finlifeapi/depositProductsSearch.json',
     'saving': 'https://finlife.fss.or.kr/finlifeapi/savingProductsSearch.json',
 }
 KIS_BASE_URL = "https://openapi.koreainvestment.com:9443"
+
+# 전역 캐시
+access_token = None
+token_expire_time = 0  # 초 단위
 
 # 예금 적금 정보 불러오기
 def fetch_products(product_type):
@@ -41,10 +44,15 @@ def fetch_products(product_type):
 
 # 한국투자증권 API 인증
 def get_access_token():
-    global access_token
-    if access_token:
+    global access_token, token_expire_time
+    
+    now = time.time()
+    
+    # 유효한 토큰이 있다면 재사용
+    if access_token and now < token_expire_time:
         return access_token
 
+    # 새로 발급
     url = f"{KIS_BASE_URL}/oauth2/tokenP"
     headers = {"content-type": "application/json"}
     data = {
@@ -52,9 +60,20 @@ def get_access_token():
         "appkey": KIS_APP_KEY,
         "appsecret": KIS_APP_SECRET
     }
-    res = requests.post(url, json=data, headers=headers)
-    access_token = res.json().get("access_token")
-    return access_token
+
+    try:
+        res = requests.post(url, json=data, headers=headers)
+        res.raise_for_status()  # HTTP 에러 체크
+        res_data = res.json()
+
+        access_token = res_data.get("access_token")
+        expires_in = int(res_data.get("expires_in", 0))  # 보통 초 단위
+        token_expire_time = now + expires_in - 60  # 1분 여유
+
+        return access_token
+    except Exception as e:
+        print(f"토큰 발급 중 오류 발생: {e}")
+        return None
 
 # 주식 정보 불러오기
 def fetch_stock_by_code(stock_code):
@@ -62,6 +81,9 @@ def fetch_stock_by_code(stock_code):
     stock_code = stock_code.replace("'", "")
     
     token = get_access_token()
+    if not token:
+        return None
+
     url = f"{KIS_BASE_URL}/uapi/domestic-stock/v1/quotations/inquire-price"
     headers = {
         "authorization": f"Bearer {token}",
@@ -73,32 +95,41 @@ def fetch_stock_by_code(stock_code):
         "fid_cond_mrkt_div_code": "J",  # J: 코스피 / Q: 코스닥
         "fid_input_iscd": stock_code,
     }
-    res = requests.get(url, headers=headers, params=params)
-    output = res.json().get("output", {})
     
-    # 문자열 값을 숫자로 변환하는 함수
-    def safe_convert(value, convert_type=float):
-        try:
-            return convert_type(value) if value is not None else 0
-        except (ValueError, TypeError):
-            return 0
-            
-    return {
-        'id': None,
-        'type': 'stock',
-        'name': output.get('hts_kor_isnm'),
-        'link': None,
-        'stock_code': stock_code,
-        'current_price': safe_convert(output.get('stck_prpr')),
-        'price_change': safe_convert(output.get('prdy_vrss')),
-        'market_cap': safe_convert(output.get('hts_avls')),
-        'trade_volume': safe_convert(output.get('acml_vol')),
-        'trade_value': safe_convert(output.get('acml_tr_pbmn')),
-    }
+    try:
+        res = requests.get(url, headers=headers, params=params)
+        res.raise_for_status()  # HTTP 에러 체크
+        output = res.json().get("output", {})
+        
+        # 문자열 값을 숫자로 변환하는 함수
+        def safe_convert(value, convert_type=float):
+            try:
+                return convert_type(value) if value is not None else 0
+            except (ValueError, TypeError):
+                return 0
+                
+        return {
+            'id': None,
+            'type': 'stock',
+            'name': output.get('hts_kor_isnm'),
+            'link': None,
+            'stock_code': stock_code,
+            'current_price': safe_convert(output.get('stck_prpr')),
+            'price_change': safe_convert(output.get('prdy_vrss')),
+            'market_cap': safe_convert(output.get('hts_avls')),
+            'trade_volume': safe_convert(output.get('acml_vol')),
+            'trade_value': safe_convert(output.get('acml_tr_pbmn')),
+        }
+    except Exception as e:
+        print(f"주식 정보 조회 중 오류 발생: {e}")
+        return None
 
 # 주식 상세정보 불러오기
 def fetch_stock_detail_by_code(stock_code):
     token = get_access_token()
+    if not token:
+        return None
+
     url = f"{KIS_BASE_URL}/uapi/domestic-stock/v1/quotations/inquire-price"
     headers = {
         "authorization": f"Bearer {token}",
@@ -110,47 +141,56 @@ def fetch_stock_detail_by_code(stock_code):
         "fid_cond_mrkt_div_code": "J",
         "fid_input_iscd": stock_code,
     }
-    res = requests.get(url, headers=headers, params=params)
-    output = res.json().get("output", {})
-    return {
-        'id': None,
-        'type': 'stock',
-        'name': output.get('hts_kor_isnm'),
-        # 'company': None,
-        'link': None,
-        'stock_code': stock_code,
-        'market_type': output.get('mksc_shrn_iscd'),
-        'current_price': output.get('stck_prpr'),
-        'price_change': output.get('prdy_vrss'),
-        'sector': output.get('bstp_kor_isnm'),
-        'warning_info': output.get('stck_rsk_yn'),
-        'open_price': output.get('stck_oprc'),
-        'high_price': output.get('stck_hgpr'),
-        'low_price': output.get('stck_lwpr'),
-        'base_price': output.get('stck_sdpr'),
-        'weighted_avg_price': output.get('wghn_avrg_stck_prc'),
-        'high_52w': output.get('h52w_prc'),
-        'high_52w_date': output.get('h52w_prc_dt'),
-        'low_52w': output.get('l52w_prc'),
-        'low_52w_date': output.get('l52w_prc_dt'),
-        'per': output.get('per'),
-        'pbr': output.get('pbr'),
-        'eps': output.get('eps'),
-        'bps': output.get('bps'),
-        'market_cap': output.get('hts_avls'),
-        'listed_shares': output.get('lstn_stcn'),
-        'settlement_month': output.get('stac_month'),
-        'per_value': output.get('per'),
-        'trade_volume': output.get('acml_vol'),
-        'trade_value': output.get('acml_tr_pbmn'),
-        'foreign_ownership': output.get('frgn_hldn_qty'),
-        'short_selling_allowed': output.get('short_over_yn'),
-        'short_selling_volume': output.get('short_over_prc'),
-    }
+    
+    try:
+        res = requests.get(url, headers=headers, params=params)
+        res.raise_for_status()  # HTTP 에러 체크
+        output = res.json().get("output", {})
+        
+        return {
+            'id': None,
+            'type': 'stock',
+            'name': output.get('hts_kor_isnm'),
+            'link': None,
+            'stock_code': stock_code,
+            'market_type': output.get('mksc_shrn_iscd'),
+            'current_price': output.get('stck_prpr'),
+            'price_change': output.get('prdy_vrss'),
+            'sector': output.get('bstp_kor_isnm'),
+            'warning_info': output.get('stck_rsk_yn'),
+            'open_price': output.get('stck_oprc'),
+            'high_price': output.get('stck_hgpr'),
+            'low_price': output.get('stck_lwpr'),
+            'base_price': output.get('stck_sdpr'),
+            'weighted_avg_price': output.get('wghn_avrg_stck_prc'),
+            'high_52w': output.get('h52w_prc'),
+            'high_52w_date': output.get('h52w_prc_dt'),
+            'low_52w': output.get('l52w_prc'),
+            'low_52w_date': output.get('l52w_prc_dt'),
+            'per': output.get('per'),
+            'pbr': output.get('pbr'),
+            'eps': output.get('eps'),
+            'bps': output.get('bps'),
+            'market_cap': output.get('hts_avls'),
+            'listed_shares': output.get('lstn_stcn'),
+            'settlement_month': output.get('stac_month'),
+            'per_value': output.get('per'),
+            'trade_volume': output.get('acml_vol'),
+            'trade_value': output.get('acml_tr_pbmn'),
+            'foreign_ownership': output.get('frgn_hldn_qty'),
+            'short_selling_allowed': output.get('short_over_yn'),
+            'short_selling_volume': output.get('short_over_prc'),
+        }
+    except Exception as e:
+        print(f"주식 상세 정보 조회 중 오류 발생: {e}")
+        return None
 
 # ETF 정보 불러오기
 def fetch_etf_by_code(etf_code):
     token = get_access_token()
+    if not token:
+        return None
+
     url = f"{KIS_BASE_URL}/uapi/domestic-stock/v1/quotations/inquire-price"
     headers = {
         "authorization": f"Bearer {token}",
@@ -163,26 +203,30 @@ def fetch_etf_by_code(etf_code):
         "fid_input_iscd": etf_code,
     }
 
-    res = requests.get(url, headers=headers, params=params)
-    output = res.json().get("output", {})
-    
-    def safe_convert(value, convert_type=float):
-        try:
-            return convert_type(value) if value is not None else 0
-        except (ValueError, TypeError):
-            return 0
+    try:
+        res = requests.get(url, headers=headers, params=params)
+        res.raise_for_status()  # HTTP 에러 체크
+        output = res.json().get("output", {})
+        
+        def safe_convert(value, convert_type=float):
+            try:
+                return convert_type(value) if value is not None else 0
+            except (ValueError, TypeError):
+                return 0
 
-    return {
-        'type': 'etf',
-        "etf_code": etf_code,
-        "name": output.get("hts_kor_isnm"),
-        "current_price": safe_convert(output.get("stck_prpr")),
-        "price_change": safe_convert(output.get("prdy_vrss")),
-        "market_cap": safe_convert(output.get("hts_avls")),
-        "trade_volume": safe_convert(output.get("acml_vol")),
-        "trade_value": safe_convert(output.get("acml_tr_pbmn")),
-    }
-
+        return {
+            'type': 'etf',
+            "etf_code": etf_code,
+            "name": output.get("hts_kor_isnm"),
+            "current_price": safe_convert(output.get("stck_prpr")),
+            "price_change": safe_convert(output.get("prdy_vrss")),
+            "market_cap": safe_convert(output.get("hts_avls")),
+            "trade_volume": safe_convert(output.get("acml_vol")),
+            "trade_value": safe_convert(output.get("acml_tr_pbmn")),
+        }
+    except Exception as e:
+        print(f"ETF 정보 조회 중 오류 발생: {e}")
+        return None
 
 # 예금 적금 찜한 상품 비교
 def fetch_product_details_by_name(product_names, product_type):
@@ -190,59 +234,42 @@ def fetch_product_details_by_name(product_names, product_type):
     상품 이름 리스트와 상품 타입(deposit/saving)을 받아,
     해당 이름의 상품 상세정보를 외부 API로부터 가져온다.
     """
-
-    API_URLS = (
+    API_URL = (
         'https://finlife.fss.or.kr/finlifeapi/depositProductsSearch.json'
         if product_type == "deposit"
         else "https://finlife.fss.or.kr/finlifeapi/savingProductsSearch.json"
     )
 
     params = {
-        "auth": API_KEY,
-        "topFinGrpNo": "020000",   # 은행
-        "pageNo": 1
+        'auth': API_KEY,
+        'topFinGrpNo': '020000',
+        'pageNo': 1
     }
 
-    response = requests.get(API_URLS, params=params)
-    if response.status_code != 200:
-        return []
+    res = requests.get(API_URL, params=params)
+    data = res.json()
 
-    result = response.json().get("result", {})
-    base_list = result.get("baseList", [])
-    option_list = result.get("optionList", [])
+    base_list = data.get('result', {}).get('baseList', [])
+    option_list = data.get('result', {}).get('optionList', [])
 
-    product_meta = {
-        p["fin_prdt_cd"]: {
-            "name": p.get("fin_prdt_nm", "").strip(),
-            "company": p.get("kor_co_nm", "").strip(),
-            "target": p.get("join_member", "").strip()
-        }
-        for p in base_list
-    }
-
+    # 상품 이름으로 필터링
     matched_products = []
-    for p in option_list:
-        code = p.get("fin_prdt_cd")
-        meta = product_meta.get(code)
-        if not meta:
-            continue
-
-        name = meta["name"]
-        for keyword in product_names:
-            if keyword in name or name in keyword:
+    for base in base_list:
+        if base['fin_prdt_nm'] in product_names:
+            # 해당 상품의 옵션 찾기
+            product_options = [
+                opt for opt in option_list
+                if opt['fin_co_no'] == base['fin_co_no'] and opt['fin_prdt_cd'] == base['fin_prdt_cd']
+            ]
+            
+            # 각 옵션에 대해 상품 정보 생성
+            for opt in product_options:
                 matched_products.append({
-                    "name": name,
-                    "company": meta["company"],
-                    "target": meta["target"],
-                    "interest_rate": float(p.get("intr_rate", 0)),
-                    "special_rate": float(p.get("intr_rate2", 0)),
-                    "term": int(p.get("save_trm", 12)),
+                    'name': base['fin_prdt_nm'],
+                    'company': base['kor_co_nm'],
+                    'interest_rate': float(opt['intr_rate'] or 0),
+                    'special_rate': float(opt['intr_rate2'] or 0),
+                    'term': int(opt['save_trm'] or 0)
                 })
-                break
-    
-    # print(f"✅ 매칭된 상품 수: {len(matched_products)}")
-    # for m in matched_products:
-    #     print(f" - {m['name']} (이율: {m['interest_rate']}%, 기간: {m['term']}개월)")
-
 
     return matched_products
