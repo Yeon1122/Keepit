@@ -11,6 +11,11 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
+
+# .env 파일 로드
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,13 +25,20 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-yixu%n8h)#!115@n9$m)eh+7ri!2%k&%b8(na6f5ub**wbbbx+'
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-yixu%n8h)#!115@n9$m)eh+7ri!2%k&%b8(na6f5ub**wbbbx+')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
+# API Keys
+FINLIFE_API_KEY = os.getenv('FSS_API_KEY')
+KIS_APP_KEY = os.getenv('KIS_APP_KEY')
+KIS_APP_SECRET = os.getenv('KIS_APP_SECRET')
+KIS_ACCOUNT_NUMBER = os.getenv('KIS_ACCOUNT_NUMBER')
+KIS_ACCOUNT_CODE = os.getenv('KIS_ACCOUNT_CODE')
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 
 # Application definition
 
@@ -50,9 +62,9 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -61,11 +73,7 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
-
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:5173',
-    'http://127.0.0.1:5173',
-]
+CORS_ALLOW_CREDENTIALS = True
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -148,6 +156,3 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'users.User'
-
-# OpenAI API 설정
-OPENAI_API_KEY = 'your-api-key-here'  # 실제 API 키로 교체 필요

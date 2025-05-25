@@ -1,15 +1,28 @@
 # products/serializers.py
 from rest_framework import serializers
-from .models import Product
+from .models import Product, Favorite
 from .utils.savings_detail_cal import calc_deposit_final_amount, calc_saving_final_amount
 
 class SavingsSerializer(serializers.ModelSerializer):
+    is_liked = serializers.SerializerMethodField()
+
+    def get_is_liked(self, obj):
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            return Favorite.objects.filter(
+                user=request.user,
+                type=obj.type,
+                identifier=f"{obj.type}_{obj.company}_{obj.name}"  # 상품 유형, 회사명, 이름으로 식별
+            ).exists()
+        return False
+
     class Meta:
         model = Product
         fields = [
-            'id','type', 
-            'name', 'company', 'link', 
-            'interest_rate', 'special_rate', 'term', 'target',
+            'id', 'type', 
+            'name', 'company',
+            'interest_rate', 'special_rate', 
+            'term', 'target', 'is_liked'
         ]
 
 class StockSerializer(serializers.ModelSerializer):

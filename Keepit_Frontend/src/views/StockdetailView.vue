@@ -2,7 +2,19 @@
   <div class="overlay" @click.self="close">
     <div class="modal">
       <button class="close-btn" @click="close">&times;</button>
-      <template v-if="stock">
+
+      <!-- 로딩 상태 -->
+      <div v-if="loading" class="loading-state">
+        데이터를 불러오는 중입니다...
+      </div>
+
+      <!-- 에러 상태 -->
+      <div v-else-if="error" class="error-state">
+        {{ error }}
+      </div>
+
+      <!-- 데이터 표시 -->
+      <template v-else-if="stock">
         <div class="header">
           <div class="title-section">
             <div class="title-with-heart">
@@ -45,6 +57,7 @@
           <NewsCard v-for="(news, i) in newsList" :key="i" :news="news" />
         </div>
       </template>
+
       <template v-else>
         <p class="empty">데이터가 없습니다.</p>
       </template>
@@ -68,54 +81,75 @@ const isAuthenticated = computed(() => accountStore.isAuthenticated)
 
 const isHearted = ref(false)
 const heartCount = ref(0)
+const loading = ref(true)
+const error = ref(null)
 
 const close = () => {
   router.back()
 }
 
-onMounted(() => {
-  const dummyStockData = {
-    '005930': {
-      name: '삼성전자', stock_code: '005930', market_type: 'KOSPI', current_price: 68800,
-      price_change: -100, sector: '전자', warning_info: '', open_price: 69000, high_price: 69200,
-      low_price: 68500, high_52w: 80000, high_52w_date: '2024-11-01', low_52w: 58000, low_52w_date: '2024-03-01',
-      per: 10.5, pbr: 1.3, eps: 6500, bps: 52000, market_cap: 412500000000000, listed_shares: 600000000,
-      foreign_ownership: 55.3, short_selling_allowed: true
-    },
-    '035720': {
-      name: '카카오', stock_code: '035720', market_type: 'KOSPI', current_price: 56000,
-      price_change: -200, sector: '인터넷', warning_info: '투자주의 종목', open_price: 55200, high_price: 55500,
-      low_price: 54600, high_52w: 70000, high_52w_date: '2024-10-01', low_52w: 50000, low_52w_date: '2024-01-01',
-      per: 35.2, pbr: 2.1, eps: 1600, bps: 26400, market_cap: 42300000000000, listed_shares: 880000000,
-      foreign_ownership: 32.8, short_selling_allowed: false
-    }
+
+onMounted(async () => {
+  const code = route.params.stock_code
+  if (!code) {
+    error.value = '종목 코드가 없습니다.'
+    return
   }
 
-  const dummyNews = [
-    { title: '삼성전자, 2분기 실적 발표…전망은?', url: 'https://news.example.com/1', date: '2025.05.21' },
-    { title: '카카오, 신사업 확장으로 주가 상승 기대', url: 'https://news.example.com/2', date: '2025.05.20' },
-    { title: 'IT 업계 하반기 투자 전략은?', url: 'https://news.example.com/3', date: '2025.05.19' }
-  ]
+  loading.value = true
+  error.value = null
 
-  const code = route.params.stock_code
-  stock.value = dummyStockData[code] || null
-  newsList.value = dummyNews
+  try {
+    // 주식 정보 가져오기
+    const stockRes = await axios.get(`http://127.0.0.1:8000/api/v1/products/stocks/${code}/`)
+    stock.value = stockRes.data
 
-  // 실제 API 요청 (백엔드 연결 시 사용 예정)
-  // try {
-  //   const res = await axios.get(`http://127.0.0.1:8000/api/v1/products/stocks/${code}`)
-  //   stock.value = res.data
-  // } catch (e) {
-  //   stock.value = null
-  // }
+    // 찜하기 상태 가져오기
+    if (isAuthenticated.value) {
+      const favRes = await axios.get(`http://127.0.0.1:8000/api/v1/products/stock/${code}/favorite/`, {
+        headers: { Authorization: `Token ${accountStore.token}` }
+      })
+      isHearted.value = favRes.data.is_hearted
+      heartCount.value = favRes.data.count
+    }
+
+    // 뉴스 데이터 가져오기
+    const newsRes = await axios.get(`http://127.0.0.1:8000/api/v1/news/stock/${code}/`)
+    newsList.value = newsRes.data
+
+  } catch (err) {
+    console.error('데이터 로딩 실패:', err)
+    error.value = '데이터를 불러오는데 실패했습니다.'
+  } finally {
+    loading.value = false
+  }
 })
+
+const handleHeart = async (value) => {
+  if (!isAuthenticated.value) {
+    alert('로그인이 필요한 서비스입니다.')
+    return
+  }
+
+  try {
+    const code = route.params.stock_code
+    const method = value ? 'POST' : 'DELETE'
+    const response = await axios({
+      method,
+      url: `http://127.0.0.1:8000/api/v1/products/stock/${code}/favorite/`,
+      headers: { Authorization: `Token ${accountStore.token}` }
+    })
+    
+    isHearted.value = value
+    heartCount.value = response.data.count
+  } catch (err) {
+    console.error('찜하기 실패:', err)
+    alert('찜하기 처리에 실패했습니다.')
+  }
+}
 
 const formatNumber = (val) => val == null ? '-' : Number(val).toLocaleString()
 const formatChange = (val) => val > 0 ? `+${val}` : val < 0 ? `${val}` : '0'
-
-const handleHeart = async (value) => {
-  // 찜하기 처리 로직
-}
 </script>
 
 <style scoped>
@@ -211,5 +245,17 @@ const handleHeart = async (value) => {
 .code {
   color: #666;
   font-size: 0.9rem;
+}
+
+.loading-state {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+}
+
+.error-state {
+  text-align: center;
+  padding: 2rem;
+  color: #dc3545;
 }
 </style>

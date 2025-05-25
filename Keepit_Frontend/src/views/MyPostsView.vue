@@ -1,70 +1,66 @@
 <template>
-  <div class="my-posts-container">
-    <h2 class="page-title">내가 쓴 글</h2>
-
-    <!-- 자유 게시판 섹션 -->
-    <div class="board-section">
-      <h3>자유 게시판</h3>
-      <div class="posts-list">
-        <template v-if="freePosts.length">
-          <div v-for="post in freePosts" :key="post.id" class="post-item" @click="goToPost('free', post.id)">
-            <div class="post-main">
-              <div class="post-title">{{ post.title }}</div>
-              <div class="post-content">{{ post.content }}</div>
-            </div>
-            <div class="post-info">
-              <span class="post-date">{{ formatDate(post.created_at) }}</span>
-              <div class="post-stats">
-                <span class="likes"><i class="fa-solid fa-heart"></i> {{ post.likes }}</span>
-                <span class="comments"><i class="fa-solid fa-comment"></i> {{ post.comments?.length || 0 }}</span>
-              </div>
-              <LikeButton
-                :initial-is-liked="post.is_liked"
-                :initial-count="post.likes"
-                :show-count="true"
-                @click.stop
-              />
-            </div>
-          </div>
-        </template>
-        <div v-else class="no-posts">
-          자유 게시판에 작성한 글이 없습니다.
-        </div>
+  <div class="myposts-container">
+    <h1 class="page-title">내가 쓴 글</h1>
+    
+    <div class="posts-summary">
+      <div class="summary-item">
+        <span class="summary-label">전체 게시글</span>
+        <span class="summary-value">{{ postsCount.total }}</span>
+      </div>
+      <div class="summary-item">
+        <span class="summary-label">자유게시판</span>
+        <span class="summary-value">{{ postsCount.free }}</span>
+      </div>
+      <div class="summary-item">
+        <span class="summary-label">질문게시판</span>
+        <span class="summary-value">{{ postsCount.question }}</span>
       </div>
     </div>
 
-    <!-- 질문 게시판 섹션 -->
-    <div class="board-section">
-      <h3>질문 게시판</h3>
-      <div class="posts-list">
-        <template v-if="questionPosts.length">
-          <div v-for="post in questionPosts" :key="post.id" class="post-item" @click="goToPost('question', post.id)">
-            <div class="post-main">
-              <div class="post-title">
-                {{ post.title }}
-                <span class="solved-badge" v-if="post.is_solved">해결됨</span>
-              </div>
-              <div class="post-content">{{ post.content }}</div>
+    <div class="posts-container">
+      <div v-if="loading" class="loading">
+        게시글을 불러오는 중입니다...
+      </div>
+      
+      <template v-else>
+        <div v-if="posts.length === 0" class="empty-state">
+          <i class="fas fa-pen"></i>
+          <p>아직 작성한 게시글이 없습니다.</p>
+          <div class="action-buttons">
+            <router-link :to="{ name: 'freepostcreate' }" class="write-button">
+              자유게시판 글쓰기
+            </router-link>
+            <router-link :to="{ name: 'questioncreate' }" class="write-button">
+              질문게시판 글쓰기
+            </router-link>
+          </div>
+        </div>
+
+        <div v-else class="posts-list">
+          <div v-for="post in posts" :key="post.id" class="post-item" 
+               @click="goToPost(post.board_type, post.id)">
+            <div class="post-header">
+              <span class="board-type" :class="post.board_type">
+                {{ post.board_type === 'free' ? '자유게시판' : '질문게시판' }}
+              </span>
+              <span v-if="post.board_type === 'question' && post.is_solved" 
+                    class="solved-badge">해결</span>
             </div>
-            <div class="post-info">
+            <div class="post-title">{{ post.title }}</div>
+            <div class="post-meta">
               <span class="post-date">{{ formatDate(post.created_at) }}</span>
               <div class="post-stats">
-                <span class="likes"><i class="fa-solid fa-heart"></i> {{ post.likes }}</span>
-                <span class="comments"><i class="fa-solid fa-comment"></i> {{ post.comments?.length || 0 }}</span>
+                <span class="likes">
+                  <i class="fas fa-heart"></i> {{ post.likes_count }}
+                </span>
+                <span class="comments">
+                  <i class="fas fa-comment"></i> {{ post.comments.length }}
+                </span>
               </div>
-              <LikeButton
-                :initial-is-liked="post.is_liked"
-                :initial-count="post.likes"
-                :show-count="true"
-                @click.stop
-              />
             </div>
           </div>
-        </template>
-        <div v-else class="no-posts">
-          질문 게시판에 작성한 글이 없습니다.
         </div>
-      </div>
+      </template>
     </div>
   </div>
 </template>
@@ -72,46 +68,66 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { useAccountStore } from '@/stores/users'
 import axios from 'axios'
-import LikeButton from '@/components/LikeButton.vue'
 
 const router = useRouter()
-const freePosts = ref([])
-const questionPosts = ref([])
+const accountStore = useAccountStore()
+
+const loading = ref(true)
+const posts = ref([])
+const postsCount = ref({
+  total: 0,
+  free: 0,
+  question: 0
+})
 
 onMounted(async () => {
-  const raw = localStorage.getItem('account')
-  const parsed = raw ? JSON.parse(raw) : null
-  const localToken = parsed?.token
-
-  if (!localToken) {
-    alert('로그인이 필요합니다.')
+  const token = accountStore.token
+  if (!token) {
+    alert('⚠️ 로그인이 필요한 서비스입니다.')
     router.push({ name: 'login' })
     return
   }
 
   try {
-    const res = await axios.get('http://localhost:8000/api/v1/community/my-posts/', {
+    const response = await axios.get('/api/v1/community/my-posts/', {
       headers: {
-        Authorization: `Token ${localToken}`
+        Authorization: `Token ${token}`
       }
     })
-    
-    // 게시글 분류
-    if (Array.isArray(res.data)) {
-      freePosts.value = res.data.filter(post => post.type === 'free' || post.board_type === 'free')
-      questionPosts.value = res.data.filter(post => post.type === 'question' || post.board_type === 'question')
-    } else {
-      console.error('API 응답이 배열 형태가 아닙니다:', res.data)
+
+    if (!response.data) {
+      throw new Error('데이터가 없습니다.')
     }
-  } catch (err) {
-    console.error('내가 쓴 글 로딩 실패:', err)
-    if (err.response?.status === 401) {
-      alert('로그인이 필요합니다.')
-      router.push({ name: 'login' })
-    } else {
-      alert('내가 쓴 글을 불러오는데 실패했습니다.')
+
+    posts.value = response.data.posts || []
+    postsCount.value = {
+      total: response.data.total_posts || 0,
+      free: response.data.posts_count?.free || 0,
+      question: response.data.posts_count?.question || 0
     }
+  } catch (error) {
+    console.error('게시글 로딩 실패:', error)
+    if (error.response) {
+      // 서버에서 응답이 왔지만 에러인 경우
+      if (error.response.status === 401) {
+        alert('로그인이 필요한 서비스입니다.')
+        router.push({ name: 'login' })
+      } else if (error.response.status === 404) {
+        alert('요청한 페이지를 찾을 수 없습니다.')
+      } else {
+        alert(`서버 오류가 발생했습니다. (${error.response.status})`)
+      }
+    } else if (error.request) {
+      // 요청은 보냈지만 응답이 없는 경우
+      alert('서버에 연결할 수 없습니다. 서버가 실행 중인지 확인해주세요.')
+    } else {
+      // 요청 자체를 보내지 못한 경우
+      alert('요청을 보내는 중 오류가 발생했습니다.')
+    }
+  } finally {
+    loading.value = false
   }
 })
 
@@ -128,28 +144,90 @@ const goToPost = (type, postId) => {
 </script>
 
 <style scoped>
-.my-posts-container {
-  max-width: 900px;
+.myposts-container {
+  max-width: 1200px;
   margin: 2rem auto;
   padding: 0 1rem;
 }
 
 .page-title {
-  font-size: 1.8rem;
   color: #333;
   margin-bottom: 2rem;
+  text-align: center;
 }
 
-.board-section {
-  margin-bottom: 3rem;
+.posts-summary {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.board-section h3 {
-  font-size: 1.4rem;
+.summary-item {
+  text-align: center;
+}
+
+.summary-label {
+  display: block;
+  color: #666;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.summary-value {
+  font-size: 1.5rem;
+  font-weight: 700;
   color: #145c2b;
+}
+
+.posts-container {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #666;
+}
+
+.empty-state i {
+  font-size: 2rem;
   margin-bottom: 1rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 2px solid #145c2b;
+  color: #145c2b;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.write-button {
+  padding: 0.8rem 1.5rem;
+  border-radius: 6px;
+  background: #145c2b;
+  color: white;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.write-button:hover {
+  background: #0d4420;
+  transform: translateY(-2px);
 }
 
 .posts-list {
@@ -159,49 +237,68 @@ const goToPost = (type, postId) => {
 }
 
 .post-item {
-  background: white;
+  padding: 1.5rem;
   border: 1px solid #eee;
   border-radius: 8px;
-  padding: 1.2rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.2s;
 }
 
 .post-item:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.post-main {
-  margin-bottom: 1rem;
+.post-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.board-type {
+  font-size: 0.8rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  background: #e9ecef;
+  color: #495057;
+}
+
+.board-type.free {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.board-type.question {
+  background: #fbe9e7;
+  color: #d84315;
+}
+
+.solved-badge {
+  font-size: 0.8rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  background: #e8f5e9;
+  color: #2e7d32;
 }
 
 .post-title {
   font-size: 1.1rem;
-  font-weight: 500;
   color: #333;
-  margin-bottom: 0.5rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  margin: 0.5rem 0;
+  font-weight: 500;
 }
 
-.post-content {
-  color: #666;
-  font-size: 0.95rem;
-  line-height: 1.5;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-}
-
-.post-info {
+.post-meta {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: 0.5rem;
   font-size: 0.9rem;
+  color: #666;
+}
+
+.post-date {
   color: #888;
 }
 
@@ -210,34 +307,26 @@ const goToPost = (type, postId) => {
   gap: 1rem;
 }
 
-.likes, .comments {
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
+.likes i {
+  color: #e91e63;
 }
 
-.solved-badge {
-  background: #145c2b;
-  color: white;
-  font-size: 0.8rem;
-  padding: 0.2rem 0.6rem;
-  border-radius: 4px;
+.comments i {
+  color: #2196f3;
 }
 
-.no-posts {
-  text-align: center;
-  padding: 2rem;
-  color: #666;
-  background: #f9f9f9;
-  border-radius: 8px;
-}
-
-.post-meta {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-top: 0.5rem;
-  color: #666;
-  font-size: 0.9rem;
+@media (max-width: 768px) {
+  .posts-summary {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+  }
+  
+  .write-button {
+    width: 100%;
+  }
 }
 </style> 

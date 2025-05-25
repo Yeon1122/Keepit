@@ -2,78 +2,44 @@ from django.db import models
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
-PRODUCT_TYPES = (
-    ('deposit', '정기예금'),
-    ('saving', '적금'),
-    ('stock', '주식'),
-    ('etf','ETF'),
-    ('goods','현물')
-)
 
 class Product(models.Model):
-    # 상품 유형: deposit(정기예금), saving(적금), stock(주식), etf(ETF), goods(현물)
-    type = models.CharField(max_length=10, choices=PRODUCT_TYPES)
-
-    # 공통 필드
-    name = models.CharField(max_length=100) # 상품 이름 또는 종목명
-    company = models.CharField(max_length=100, blank=True, null=True)  # 금융사 이름(예/적금) 또는 발행사(주식/ETF)
-    link = models.URLField(blank=True)
-
-    # 예금/적금용 필드
-    interest_rate = models.FloatField(blank=True, null=True)
-    special_rate = models.FloatField(blank=True, null=True)
-    term = models.CharField(max_length=100, blank=True, null=True)
-    target = models.CharField(max_length=100, blank=True, null=True)
-
-    # 주식/ETF용 필드
-    stock_code = models.CharField(max_length=20, blank=True, null=True)  # 종목코드
-    market_type = models.CharField(max_length=50, blank=True, null=True)  # 코스피, 코스닥 등
+    PRODUCT_TYPES = (
+        ('deposit', '정기예금'),
+        ('saving', '적금'),
+        ('stock', '주식'),
+        ('etf', 'ETF'),
+        ('goods', '현물'),
+    )
     
-    # 주식만을 위한 필드
-    current_price = models.FloatField(blank=True, null=True)
-    price_change = models.FloatField(blank=True, null=True)
-    sector = models.CharField(max_length=10)
-    warning_info = models.TextField(max_length=300, blank=True, null=True)
+    product_code = models.CharField(max_length=100, unique=True, null=True, blank=True)
+    type = models.CharField(max_length=20, choices=PRODUCT_TYPES)
+    name = models.CharField(max_length=200)
+    company = models.CharField(max_length=100)
+    interest_rate = models.FloatField(null=True, blank=True)
+    special_rate = models.FloatField(null=True, blank=True)
+    term = models.IntegerField(null=True, blank=True)
+    target = models.CharField(max_length=200, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
-    open_price = models.FloatField(blank=True, null=True)
-    high_price = models.FloatField(blank=True, null=True)
-    low_price = models.FloatField(blank=True, null=True)
-    base_price = models.FloatField(blank=True, null=True)
-    weighted_avg_price = models.FloatField(blank=True, null=True)
-
-    high_52w = models.FloatField(blank=True, null=True)
-    high_52w_date = models.DateField(blank=True, null=True)
-    low_52w = models.FloatField(blank=True, null=True)
-    low_52w_date = models.DateField(blank=True, null=True)
-
-    per = models.FloatField(blank=True, null=True)
-    pbr = models.FloatField(blank=True, null=True)
-    eps = models.FloatField(blank=True, null=True)
-    bps = models.FloatField(blank=True, null=True)
-
-    market_cap = models.FloatField(blank=True, null=True)
-    listed_shares = models.IntegerField(blank=True, null=True)
-    settlement_month = models.CharField(max_length=10, blank=True, null=True)
-
-    per_value = models.FloatField(blank=True, null=True)
-    trade_volume = models.IntegerField(blank=True, null=True)
-    trade_value = models.FloatField(blank=True, null=True)
-    foreign_ownership = models.FloatField(blank=True, null=True)
-
-    short_selling_allowed = models.BooleanField(blank=True, null=True)
-    short_selling_volume = models.IntegerField(blank=True, null=True)
-
-
-    # ETF만을 위한 필드
-    nav = models.FloatField(blank=True, null=True)  # 순자산가치
-    nav_change = models.FloatField(blank=True, null=True)
+    class Meta:
+        ordering = ['-created_at']
+        unique_together = ('type', 'name', 'company')
 
     def __str__(self):
-        return f"[{self.get_product_type_display()}] {self.name}"
-    
+        return f"{self.name} ({self.company})"
+
 
 class Favorite(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    type = models.CharField(max_length=10)  # 'deposit', 'saving', 'stock', 'etf'
-    identifier = models.CharField(max_length=50)  # 예: stock_code 또는 예금명+회사명
-    added_at = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favorites')
+    type = models.CharField(max_length=20)
+    identifier = models.CharField(max_length=100)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'type', 'identifier')
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.user.username}'s favorite {self.type}: {self.identifier}"

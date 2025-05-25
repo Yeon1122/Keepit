@@ -45,10 +45,10 @@
           <template v-if="user.test_result">
             <div class="test-result">
               <div class="result-header">
-                <span class="result-type">{{ user.test_result.type }}</span>
-                <span class="result-score">{{ user.test_result.total_score }}점</span>
+                <div class="result-type-text">{{ user.nickname }}님은</div>
+                <div class="result-type">{{ user.test_result.type }}</div>
               </div>
-              <p class="result-description">{{ user.test_result.description }}</p>
+              <div class="result-score">총점: {{ user.test_result.total_score }}점</div>
             </div>
           </template>
           <div v-else class="empty-state">
@@ -87,7 +87,6 @@
       <div class="content-card">
         <div class="card-header">
           <h3>최근 작성글</h3>
-          <button class="action-button" @click="goToUserPosts">전체보기</button>
         </div>
         <div class="card-content">
           <div v-if="freePosts.length || questionPosts.length">
@@ -102,9 +101,6 @@
                     <div class="post-title">{{ post.title }}</div>
                     <div class="post-meta">
                       <span class="post-date">{{ formatDate(post.created_at) }}</span>
-                      <span class="post-likes">
-                        <i class="fas fa-heart"></i> {{ post.likes }}
-                      </span>
                     </div>
                   </li>
                 </ul>
@@ -123,9 +119,6 @@
                     </div>
                     <div class="post-meta">
                       <span class="post-date">{{ formatDate(post.created_at) }}</span>
-                      <span class="post-likes">
-                        <i class="fas fa-heart"></i> {{ post.likes }}
-                      </span>
                     </div>
                   </li>
                 </ul>
@@ -158,7 +151,12 @@ const user = ref({
   followers: [],
   following: [],
   test_result: null,
-  liked_products: [],
+  posts_summary: {
+    total_posts: 0,
+    free_posts: 0,
+    question_posts: 0
+  },
+  recent_posts: []
 })
 
 const freePosts = ref([])
@@ -193,6 +191,10 @@ onMounted(async () => {
       following: res.data.following || [],
     }
 
+    // 최근 게시글 분류
+    freePosts.value = res.data.recent_posts.filter(post => post.board_type === '자유게시판')
+    questionPosts.value = res.data.recent_posts.filter(post => post.board_type === '질문게시판')
+
     // 백엔드에서 보내주는 is_following 값을 사용
     isFollowing.value = res.data.is_following
 
@@ -216,37 +218,21 @@ onMounted(async () => {
     }
   }
 
-  // 더미 게시글 데이터는 유지
-  freePosts.value = [
-    {
-      id: 1,
-      title: '적금 드디어 만기!',
-      content: '2년동안 열심히 모았네요. 다들 화이팅하세요!',
-      created_at: '2024-03-15T10:00:00',
-      likes: 15,
-      comments: [1, 2, 3]
-    },
-    {
-      id: 2,
-      title: '재테크 시작하려고 합니다',
-      content: '첫 직장인이라 재테크 공부중입니다.',
-      created_at: '2024-03-14T15:30:00',
-      likes: 8,
-      comments: [1, 2]
+  // 투자성향 테스트 결과 가져오기
+  try {
+    const testRes = await axios.get(`http://127.0.0.1:8000/api/v1/test/result/${route.params.userid}/`, {
+      headers: {
+        Authorization: `Token ${token}`
+      }
+    })
+    user.value.test_result = testRes.data
+  } catch (err) {
+    if (err.response?.status === 404) {
+      user.value.test_result = null
+    } else {
+      console.error('테스트 결과 로딩 실패:', err)
     }
-  ]
-
-  questionPosts.value = [
-    {
-      id: 1,
-      title: '적금 중도해지 어떻게 하나요?',
-      content: '급하게 돈이 필요한데 중도해지 절차가 궁금합니다.',
-      created_at: '2024-03-13T09:00:00',
-      likes: 5,
-      comments: [1, 2, 3, 4],
-      is_solved: true
-    }
-  ]
+  }
 })
 
 const formatDate = (dateString) => {
@@ -505,32 +491,65 @@ const goToUserPosts = () => {
 }
 
 .test-result {
+  text-align: center;
+  padding: 2rem;
   background: #f8f9fa;
-  padding: 1.5rem;
   border-radius: 8px;
 }
 
 .result-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+  gap: 0.5rem;
   margin-bottom: 1rem;
 }
 
+.result-type-text {
+  font-size: 1.2rem;
+  color: #495057;
+}
+
 .result-type {
+  font-size: 1.5rem;
   font-weight: 700;
   color: #145c2b;
 }
 
 .result-score {
-  color: #495057;
-  font-size: 0.9rem;
+  font-size: 1.1rem;
+  color: #666;
+  margin-bottom: 1rem;
 }
 
-.result-description {
+.like-button {
+  padding: 0.3rem 0.8rem;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  background: white;
   color: #495057;
-  line-height: 1.6;
-  margin: 0;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.like-button:hover {
+  background: #f8f9fa;
+}
+
+.like-button.liked {
+  background: #145c2b;
+  color: white;
+  border-color: #145c2b;
+}
+
+.post-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.post-title {
+  cursor: pointer;
 }
 
 .product-list {
@@ -591,28 +610,12 @@ const goToUserPosts = () => {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-.post-title {
-  font-weight: 500;
-  color: #333;
-  margin-bottom: 0.5rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
 .solved-badge {
   background: #145c2b;
   color: white;
   padding: 0.2rem 0.5rem;
   border-radius: 4px;
   font-size: 0.8rem;
-}
-
-.post-meta {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.85rem;
-  color: #868e96;
 }
 
 @media (max-width: 768px) {

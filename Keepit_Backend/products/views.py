@@ -17,16 +17,122 @@ from .external_fetch import fetch_products, fetch_stock_by_code, fetch_stock_det
 from products.utils.stock_code_loader import load_top_stock_codes, load_stock_name_map, load_top_etf_codes, load_etf_name_map
 from .external_fetch import fetch_products, fetch_product_details_by_name
 from .utils.savings_detail_cal import filter_one_option_per_product, calc_saving_final_amount, calc_deposit_final_amount
+from django.conf import settings
+
+import logging
+logger = logging.getLogger(__name__)
 
 class SavingsListAPIView(generics.ListAPIView):
     serializer_class = SavingsSerializer
-    def get_queryset(self):
-        return Product.objects.filter(type='saving')
     
+    def get_queryset(self):
+        queryset = Product.objects.filter(type='saving')
+        count = queryset.count()
+        logger.info(f"[SavingsListAPIView] Found {count} saving products in DB")
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        
+        # DB에 데이터가 없으면 외부 API에서 가져오기
+        if not queryset.exists():
+            logger.info("[SavingsListAPIView] DB empty, fetching from external API")
+            try:
+                # 외부 API에서 데이터 가져오기
+                data = fetch_products('saving')
+                logger.info(f"[SavingsListAPIView] Fetched {len(data)} products from external API")
+                
+                # DB에 저장
+                saved_count = 0
+                for product_data in data:
+                    try:
+                        Product.objects.update_or_create(
+                            type='saving',
+                            name=product_data['fin_prdt_nm'],
+                            company=product_data['kor_co_nm'],
+                            defaults={
+                                'interest_rate': product_data['intr_rate'] or 0,
+                                'special_rate': product_data['intr_rate2'] or 0,
+                                'term': product_data['save_trm'] or 0,
+                                'target': product_data['join_member'] or ''
+                            }
+                        )
+                        saved_count += 1
+                    except Exception as e:
+                        logger.error(f"[SavingsListAPIView] Error saving product: {str(e)}")
+                        continue
+                
+                logger.info(f"[SavingsListAPIView] Saved {saved_count} products to DB")
+                
+                # 저장된 데이터 다시 조회
+                queryset = self.get_queryset()
+            except Exception as e:
+                logger.error(f"[SavingsListAPIView] Error fetching from external API: {str(e)}")
+                return Response({
+                    "error": "Failed to fetch products",
+                    "detail": str(e)
+                }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+        # 데이터 직렬화 및 응답
+        serializer = self.get_serializer(queryset, many=True)
+        logger.info(f"[SavingsListAPIView] Returning {len(serializer.data)} products")
+        return Response(serializer.data)  # 배열 형태로 직접 반환
+
 class DepositListAPIView(generics.ListAPIView):
     serializer_class = SavingsSerializer
+    
     def get_queryset(self):
-        return Product.objects.filter(type='deposit')
+        queryset = Product.objects.filter(type='deposit')
+        count = queryset.count()
+        logger.info(f"[DepositListAPIView] Found {count} deposit products in DB")
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        
+        # DB에 데이터가 없으면 외부 API에서 가져오기
+        if not queryset.exists():
+            logger.info("[DepositListAPIView] DB empty, fetching from external API")
+            try:
+                # 외부 API에서 데이터 가져오기
+                data = fetch_products('deposit')
+                logger.info(f"[DepositListAPIView] Fetched {len(data)} products from external API")
+                
+                # DB에 저장
+                saved_count = 0
+                for product_data in data:
+                    try:
+                        Product.objects.update_or_create(
+                            type='deposit',
+                            name=product_data['fin_prdt_nm'],
+                            company=product_data['kor_co_nm'],
+                            defaults={
+                                'interest_rate': product_data['intr_rate'] or 0,
+                                'special_rate': product_data['intr_rate2'] or 0,
+                                'term': product_data['save_trm'] or 0,
+                                'target': product_data['join_member'] or ''
+                            }
+                        )
+                        saved_count += 1
+                    except Exception as e:
+                        logger.error(f"[DepositListAPIView] Error saving product: {str(e)}")
+                        continue
+                
+                logger.info(f"[DepositListAPIView] Saved {saved_count} products to DB")
+                
+                # 저장된 데이터 다시 조회
+                queryset = self.get_queryset()
+            except Exception as e:
+                logger.error(f"[DepositListAPIView] Error fetching from external API: {str(e)}")
+                return Response({
+                    "error": "Failed to fetch products",
+                    "detail": str(e)
+                }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+        # 데이터 직렬화 및 응답
+        serializer = self.get_serializer(queryset, many=True)
+        logger.info(f"[DepositListAPIView] Returning {len(serializer.data)} products")
+        return Response(serializer.data)  # 배열 형태로 직접 반환
 
 
 class StockListAPIView(generics.ListAPIView):
@@ -86,6 +192,7 @@ def fetch_products(product_type):
     page = 1
     result = []
 
+    logger.info(f"[fetch_products] Fetching {product_type} products from external API")
     while True:
         params = {
             'auth': API_KEY,
@@ -94,11 +201,17 @@ def fetch_products(product_type):
         }
         res = requests.get(url, params=params)
         if res.status_code != 200:
+            logger.error(f"[fetch_products] API request failed: {res.status_code}")
             break
 
         json_data = res.json().get('result', {})
         base_list = json_data.get('baseList', [])
         option_list = json_data.get('optionList', [])
+
+        if not base_list:
+            break
+
+        logger.info(f"[fetch_products] Page {page}: Found {len(base_list)} base products and {len(option_list)} options")
 
         # optionList를 상품코드 기준으로 그룹핑
         option_map = {}
@@ -114,33 +227,101 @@ def fetch_products(product_type):
 
             for opt in options:
                 result.append({
-                    'name': base.get('fin_prdt_nm'),
-                    'company': base.get('kor_co_nm'),
-                    'link': base.get('join_link', ''),
-                    'interest_rate': safe_float(opt.get('intr_rate')),
-                    'special_rate': safe_float(opt.get('intr_rate2')),
-                    'term': safe_int(opt.get('save_trm')),
-                    'target': base.get('join_member'),
+                    'fin_prdt_nm': base.get('fin_prdt_nm'),
+                    'kor_co_nm': base.get('kor_co_nm'),
+                    'join_member': base.get('join_member', ''),
+                    'intr_rate': safe_float(opt.get('intr_rate')),
+                    'intr_rate2': safe_float(opt.get('intr_rate2')),
+                    'save_trm': safe_int(opt.get('save_trm')),
                 })
-
-        if not base_list:
-            break
 
         page += 1
 
+    logger.info(f"[fetch_products] Total {len(result)} products fetched from external API")
     return result
 
 
 @api_view(['GET'])
-def live_deposit_products(request):
-    data = fetch_products('deposit')
-    return Response(data)
-
+def fetch_deposit_products(request):
+    """외부 API에서 예금 상품을 가져와서 DB에 저장"""
+    try:
+        data = fetch_products('deposit')
+        logger.info(f"[fetch_deposit_products] Fetched {len(data)} deposit products from external API")
+        
+        saved_count = 0
+        for product_data in data:
+            try:
+                Product.objects.update_or_create(
+                    type='deposit',
+                    name=product_data['fin_prdt_nm'],
+                    company=product_data['kor_co_nm'],
+                    defaults={
+                        'interest_rate': product_data['intr_rate'] or 0,
+                        'special_rate': product_data['intr_rate2'] or 0,
+                        'term': product_data['save_trm'] or 0,
+                        'target': product_data['join_member'] or ''
+                    }
+                )
+                saved_count += 1
+            except Exception as e:
+                logger.error(f"[fetch_deposit_products] Error saving product: {str(e)}")
+                continue
+        
+        logger.info(f"[fetch_deposit_products] Successfully saved {saved_count} deposit products to DB")
+        return Response({
+            "message": f"Successfully fetched and saved {saved_count} deposit products",
+            "total_fetched": len(data),
+            "source": "external_api",
+            "status": "completed"
+        })
+    except Exception as e:
+        logger.error(f"[fetch_deposit_products] Error: {str(e)}")
+        return Response({
+            "error": "Failed to fetch deposit products",
+            "source": "external_api",
+            "status": "failed"
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @api_view(['GET'])
-def live_saving_products(request):
-    data = fetch_products('saving')
-    return Response(data)
+def fetch_saving_products(request):
+    """외부 API에서 적금 상품을 가져와서 DB에 저장"""
+    try:
+        data = fetch_products('saving')
+        logger.info(f"[fetch_saving_products] Fetched {len(data)} saving products from external API")
+        
+        saved_count = 0
+        for product_data in data:
+            try:
+                Product.objects.update_or_create(
+                    type='saving',
+                    name=product_data['fin_prdt_nm'],
+                    company=product_data['kor_co_nm'],
+                    defaults={
+                        'interest_rate': product_data['intr_rate'] or 0,
+                        'special_rate': product_data['intr_rate2'] or 0,
+                        'term': product_data['save_trm'] or 0,
+                        'target': product_data['join_member'] or ''
+                    }
+                )
+                saved_count += 1
+            except Exception as e:
+                logger.error(f"[fetch_saving_products] Error saving product: {str(e)}")
+                continue
+        
+        logger.info(f"[fetch_saving_products] Successfully saved {saved_count} saving products to DB")
+        return Response({
+            "message": f"Successfully fetched and saved {saved_count} saving products",
+            "total_fetched": len(data),
+            "source": "external_api",
+            "status": "completed"
+        })
+    except Exception as e:
+        logger.error(f"[fetch_saving_products] Error: {str(e)}")
+        return Response({
+            "error": "Failed to fetch saving products",
+            "source": "external_api",
+            "status": "failed"
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @api_view(['GET'])
 def stock_list(request):
@@ -176,47 +357,118 @@ def stock_detail(request, stock_code):
     data = fetch_stock_detail_by_code(stock_code)
     return Response(data)
 
-@api_view(['POST', 'DELETE'])
+@api_view(['GET', 'POST', 'DELETE'])
 @permission_classes([IsAuthenticated])
-def toggle_favorite(request, type, identifier):
-    user = request.user
+def favorite_by_id(request, product_id):
+    """
+    상품 ID를 기반으로 찜하기/찜해제 토글 API
+    """
+    try:
+        user = request.user
+        logger.info(f"[favorite_by_id] User {user.id} trying to toggle favorite for product {product_id}")
 
-    if type not in ['stock', 'deposit', 'saving', 'etf','goods']:
-        return Response({'error': '유효하지 않은 상품 유형입니다.'}, status=400)
+        # 상품 존재 여부 확인
+        product = Product.objects.filter(id=product_id).first()
+        if not product:
+            logger.error(f"[favorite_by_id] Product not found: {product_id}")
+            return Response(
+                {'error': '해당 상품을 찾을 수 없습니다.'}, 
+                status=status.HTTP_404_NOT_FOUND
+            )
 
-    if request.method == 'POST':
-        Favorite.objects.get_or_create(user=user, type=type, identifier=identifier)
-        return Response({'message': '찜 등록 완료'})
+        if request.method == 'GET':
+            # 찜하기 상태 확인
+            is_liked = Favorite.objects.filter(
+                user=user,
+                type=product.type,
+                identifier=str(product_id)
+            ).exists()
+            logger.info(f"[favorite_by_id] Product is {'liked' if is_liked else 'not liked'} by user {user.id}")
+            return Response({
+                'is_liked': is_liked
+            })
 
-    elif request.method == 'DELETE':
-        fav = Favorite.objects.filter(user=user, type=type, identifier=identifier).first()
-        if fav:
-            fav.delete()
-            return Response({'message': '찜 해제 완료'})
-        return Response({'error': '해당 찜이 존재하지 않습니다.'}, status=404)
+        elif request.method == 'POST':
+            # 찜하기 생성 또는 가져오기
+            favorite, created = Favorite.objects.get_or_create(
+                user=user,
+                type=product.type,
+                identifier=str(product_id)
+            )
+            logger.info(f"[favorite_by_id] Favorite {'created' if created else 'already exists'} for user {user.id}")
+            return Response({
+                'message': '찜하기가 완료되었습니다.',
+                'is_liked': True
+            })
+
+        elif request.method == 'DELETE':
+            # 찜하기 삭제
+            result = Favorite.objects.filter(
+                user=user,
+                type=product.type,
+                identifier=str(product_id)
+            ).delete()
+            
+            if result[0] > 0:  # 삭제된 항목이 있는 경우
+                logger.info(f"[favorite_by_id] Favorite removed for user {user.id}")
+                return Response({
+                    'message': '찜하기가 해제되었습니다.',
+                    'is_liked': False
+                })
+            logger.warning(f"[favorite_by_id] Favorite not found for user {user.id}")
+            return Response(
+                {'error': '해당 찜하기가 존재하지 않습니다.'}, 
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+    except Exception as e:
+        logger.error(f"[favorite_by_id] Error: {str(e)}")
+        return Response(
+            {'error': '찜하기 처리 중 오류가 발생했습니다.'}, 
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
 
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def user_favorites(request):
-    favorites = Favorite.objects.filter(user=request.user)
-    result = []
+    """
+    사용자가 찜한 상품 목록을 반환하는 API
+    """
+    try:
+        favorites = Favorite.objects.filter(user=request.user)
+        result = []
 
-    for fav in favorites:
-        if fav.type == 'stock':
-            stock_info = fetch_stock_by_code(fav.identifier)
-            if stock_info:
-                stock_info['type'] = 'stock'
-                result.append(stock_info)
+        for fav in favorites:
+            if fav.type in ['deposit', 'saving']:
+                try:
+                    # identifier를 정수로 변환하여 조회
+                    product_id = int(fav.identifier)
+                    product = Product.objects.filter(id=product_id).first()
+                    if product:
+                        result.append({
+                            'id': product.id,
+                            'type': product.type,
+                            'name': product.name,
+                            'company': product.company,
+                            'interest_rate': product.interest_rate,
+                            'special_rate': product.special_rate,
+                            'term': product.term,
+                            'target': product.target,
+                            'is_liked': True  # 찜한 상품이므로 True
+                        })
+                except (ValueError, TypeError):
+                    # identifier가 정수로 변환할 수 없는 경우 무시
+                    logger.warning(f"[user_favorites] Invalid identifier format: {fav.identifier}")
+                    continue
 
-        elif fav.type in ['deposit', 'saving']:
-            products = fetch_products(fav.type)
-            item = next((p for p in products if p['name'] + p['company'] == fav.identifier), None)
-            if item:
-                item['type'] = fav.type
-                result.append(item)
-
-    return Response(result)
+        return Response(result)
+    except Exception as e:
+        logger.error(f"[user_favorites] Error: {str(e)}")
+        return Response(
+            {'error': '찜한 상품 목록을 불러오는 중 오류가 발생했습니다.'}, 
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
 
 # 예금, 적금 상세 비교
 @api_view(['POST'])
@@ -296,14 +548,139 @@ def compare_products_by_name(request, product_type):
 
     return Response({'products': result})
 
-'''
 
 @api_view(['GET'])
 def savings_list(request):
-    products = Product.objects.filter(type__in=['deposit', 'saving'])
-    serializer = SavingsSerializer(products, many=True)
-    return Response(serializer.data)
+    try:
+        # API 키 확인
+        api_key = settings.FSS_API_KEY
+        if not api_key:
+            return Response({"error": "API key is not configured"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+        # 정기예금 데이터 가져오기
+        deposit_url = 'https://finlife.fss.or.kr/finlifeapi/depositProductsSearch.json'
+        deposit_response = requests.get(deposit_url, params={
+            'auth': api_key,
+            'topFinGrpNo': '020000',
+            'pageNo': '1'
+        })
+        
+        if deposit_response.status_code != 200:
+            print(f"Deposit API Error: {deposit_response.text}")
+            return Response({"error": "Failed to fetch deposit products"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+        deposit_data = deposit_response.json()
+        
+        # 적금 데이터 가져오기
+        saving_url = 'https://finlife.fss.or.kr/finlifeapi/savingProductsSearch.json'
+        saving_response = requests.get(saving_url, params={
+            'auth': api_key,
+            'topFinGrpNo': '020000',
+            'pageNo': '1'
+        })
+        
+        if saving_response.status_code != 200:
+            print(f"Saving API Error: {saving_response.text}")
+            return Response({"error": "Failed to fetch saving products"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
+        saving_data = saving_response.json()
+        
+        # 데이터 변환 및 통합
+        products = []
+        user = request.user
+        
+        # 정기예금 데이터 변환 및 저장
+        if 'result' in deposit_data and 'baseList' in deposit_data['result']:
+            for base_item in deposit_data['result']['baseList']:
+                options = deposit_data['result'].get('optionList', [])
+                matching_options = [opt for opt in options if opt['fin_prdt_cd'] == base_item['fin_prdt_cd']]
+                
+                if matching_options:
+                    for opt in matching_options:
+                        product_data = {
+                            'product_code': base_item['fin_prdt_cd'],
+                            'type': 'deposit',
+                            'name': base_item['fin_prdt_nm'],
+                            'company': base_item['kor_co_nm'],
+                            'interest_rate': float(opt.get('intr_rate', 0) or 0),
+                            'special_rate': float(opt.get('intr_rate2', 0) or 0),
+                            'term': int(opt.get('save_trm', 0) or 0),
+                            'target': base_item.get('join_member', '')
+                        }
+                        
+                        # DB에 저장 또는 업데이트
+                        product, created = Product.objects.update_or_create(
+                            product_code=product_data['product_code'],
+                            type=product_data['type'],
+                            defaults=product_data
+                        )
+                        
+                        # 찜하기 상태 확인
+                        is_liked = False
+                        if user.is_authenticated:
+                            is_liked = Favorite.objects.filter(
+                                user=user,
+                                type='deposit',
+                                identifier=product.product_code
+                            ).exists()
+                        
+                        response_data = {
+                            **product_data,
+                            'is_liked': is_liked
+                        }
+                        products.append(response_data)
+        
+        # 적금 데이터 변환 및 저장
+        if 'result' in saving_data and 'baseList' in saving_data['result']:
+            for base_item in saving_data['result']['baseList']:
+                options = saving_data['result'].get('optionList', [])
+                matching_options = [opt for opt in options if opt['fin_prdt_cd'] == base_item['fin_prdt_cd']]
+                
+                if matching_options:
+                    for opt in matching_options:
+                        product_data = {
+                            'product_code': base_item['fin_prdt_cd'],
+                            'type': 'saving',
+                            'name': base_item['fin_prdt_nm'],
+                            'company': base_item['kor_co_nm'],
+                            'interest_rate': float(opt.get('intr_rate', 0) or 0),
+                            'special_rate': float(opt.get('intr_rate2', 0) or 0),
+                            'term': int(opt.get('save_trm', 0) or 0),
+                            'target': base_item.get('join_member', '')
+                        }
+                        
+                        # DB에 저장 또는 업데이트
+                        product, created = Product.objects.update_or_create(
+                            product_code=product_data['product_code'],
+                            type=product_data['type'],
+                            defaults=product_data
+                        )
+                        
+                        # 찜하기 상태 확인
+                        is_liked = False
+                        if user.is_authenticated:
+                            is_liked = Favorite.objects.filter(
+                                user=user,
+                                type='saving',
+                                identifier=product.product_code
+                            ).exists()
+                        
+                        response_data = {
+                            **product_data,
+                            'is_liked': is_liked
+                        }
+                        products.append(response_data)
+        
+        return Response(products)
+    
+    except Exception as e:
+        print(f"Error in savings_list: {str(e)}")
+        return Response(
+            {"error": f"Failed to fetch financial products: {str(e)}"}, 
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+    
+'''
 @api_view(['GET'])
 def stocks_list(request):
     products = Product.objects.filter(type='stock')
@@ -324,3 +701,52 @@ def goods_list(request):
     return Response(serializer.data)
 
 '''
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def check_favorite(request, identifier):
+    """
+    상품 찜하기 상태 확인 API
+    identifier 형식: {type}_{company}_{name}
+    """
+    try:
+        user = request.user
+        logger.info(f"[check_favorite] User {user.id} checking favorite status for {identifier}")
+
+        # identifier 파싱
+        parts = identifier.split('_')
+        if len(parts) < 3:
+            return Response(
+                {'error': '잘못된 식별자 형식입니다.'}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        product_type = parts[0]
+        company = parts[1]
+        name = '_'.join(parts[2:])  # 상품명에 '_'가 포함될 수 있음
+
+        # 상품 타입 검증
+        if product_type not in ['deposit', 'saving']:
+            return Response(
+                {'error': '유효하지 않은 상품 유형입니다.'}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # 찜하기 상태 확인
+        is_liked = Favorite.objects.filter(
+            user=user,
+            type=product_type,
+            identifier=identifier
+        ).exists()
+
+        logger.info(f"[check_favorite] Product is {'liked' if is_liked else 'not liked'} by user {user.id}")
+        return Response({
+            'is_liked': is_liked
+        })
+
+    except Exception as e:
+        logger.error(f"[check_favorite] Error: {str(e)}")
+        return Response(
+            {'error': '찜하기 상태 확인 중 오류가 발생했습니다.'}, 
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
