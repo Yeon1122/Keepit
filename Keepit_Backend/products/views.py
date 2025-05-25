@@ -347,28 +347,56 @@ def fetch_saving_products(request):
 
 @api_view(['GET'])
 def stock_list(request):
+    page = int(request.GET.get('page', 1))
+    size = int(request.GET.get('size', 50))
+    
     codes = load_top_stock_codes()
     name_map = load_stock_name_map()
-    total_count = len(codes)
-
+    
+    # 페이지네이션 적용
+    start_idx = (page - 1) * size
+    end_idx = start_idx + size
+    current_codes = codes[start_idx:end_idx]
+    
+    # 현재 사용자의 찜하기 목록 가져오기
+    user_favorites = set()
+    if request.user.is_authenticated:
+        favorites = Favorite.objects.filter(
+            user=request.user,
+            type='stock'
+        ).values_list('identifier', flat=True)
+        # 작은따옴표가 있든 없든 동일한 코드로 처리
+        user_favorites = {fav.replace("'", "") for fav in favorites}
+    
     result = []
-    for idx, code in enumerate(codes, 1):
-        data = fetch_stock_by_code(code)
+    for code in current_codes:
+        # 코드에서 작은따옴표 제거
+        clean_code = code.replace("'", "")
+        data = fetch_stock_by_code(clean_code)
         if data:
-            data['name'] = name_map.get(code, None)
+            # 네이버 크롤링 데이터에서 이름 가져오기
+            stock_name = name_map.get(clean_code)
+            
+            # 크롤링 데이터에 없으면 API 응답에서 가져오기
+            if not stock_name:
+                stock_name = data.get('hts_kor_isnm')
+                
+            # 둘 다 없으면 코드 사용
+            if not stock_name:
+                stock_name = clean_code
+                
+            data.update({
+                'name': stock_name,
+                'is_liked': clean_code in user_favorites
+            })
             result.append(data)
-
-    return Response(
-        {
-            'data': result,
-            'loading_status': {
-                'completed': len(result),
-                'total': total_count,
-                'percentage': round((len(result) / total_count) * 100, 1)
-            }
-        },
-        content_type='application/json'
-    )
+            
+    return Response({
+        'data': result,
+        'has_more': end_idx < len(codes),
+        'total_count': len(codes),
+        'current_page': page
+    })
 
 @api_view(['GET'])
 def etf_list(request):
@@ -383,11 +411,35 @@ def etf_list(request):
     end_idx = start_idx + size
     current_codes = codes[start_idx:end_idx]
     
+    # 현재 사용자의 찜하기 목록 가져오기
+    user_favorites = set()
+    if request.user.is_authenticated:
+        favorites = Favorite.objects.filter(
+            user=request.user,
+            type='etf'
+        ).values_list('identifier', flat=True)
+        user_favorites = {fav.replace("'", "") for fav in favorites}
+    
     result = []
     for code in current_codes:
-        data = fetch_etf_by_code(code)
+        clean_code = code.replace("'", "")
+        data = fetch_etf_by_code(clean_code)
         if data and data.get("current_price") is not None:
-            data["name"] = name_map.get(code, None)
+            # 네이버 크롤링 데이터에서 이름 가져오기
+            etf_name = name_map.get(clean_code)
+            
+            # 크롤링 데이터에 없으면 API 응답에서 가져오기
+            if not etf_name:
+                etf_name = data.get('hts_kor_isnm')
+                
+            # 둘 다 없으면 코드 사용
+            if not etf_name:
+                etf_name = clean_code
+                
+            data.update({
+                'name': etf_name,
+                'is_liked': clean_code in user_favorites
+            })
             result.append(data)
             
     return Response({
@@ -481,32 +533,17 @@ def favorite_by_id(request, product_id):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def user_favorites(request):
-    """
-    사용자가 찜한 상품 목록을 반환하는 API
-    """
     try:
-        print(f"[user_favorites] 사용자 {request.user.username}의 찜 목록 조회")
         favorites = Favorite.objects.filter(user=request.user)
-        print(f"[user_favorites] 찾은 찜 개수: {favorites.count()}")
-        
-        # 디버깅: 각 타입별 찜 개수 출력
-        deposit_savings = favorites.filter(type__in=['deposit', 'saving']).count()
-        stocks = favorites.filter(type='stock').count()
-        etfs = favorites.filter(type='etf').count()
-        print(f"[user_favorites] 타입별 찜 개수 - 예적금: {deposit_savings}, 주식: {stocks}, ETF: {etfs}")
-        
         result = []
 
         for fav in favorites:
-            print(f"[user_favorites] 찜 처리 중: type={fav.type}, identifier={fav.identifier}")
-            
             if fav.type in ['deposit', 'saving']:
                 try:
                     product_id = int(fav.identifier)
                     product = Product.objects.filter(id=product_id).first()
                     
                     if product:
-                        print(f"[user_favorites] 예금/적금 상품 찾음: {product.name}")
                         result.append({
                             'id': product.id,
                             'type': product.type,
@@ -518,61 +555,60 @@ def user_favorites(request):
                             'target': product.target,
                             'is_liked': True
                         })
-                    else:
-                        print(f"[user_favorites] 예금/적금 상품을 찾을 수 없음: id={product_id}")
                 except Exception as e:
                     print(f"[user_favorites] 예금/적금 상품 처리 중 오류: {str(e)}")
                     continue
                     
             elif fav.type == 'stock':
                 try:
-                    stock_code = fav.identifier
-                    print(f"[user_favorites] 주식 데이터 요청: {stock_code}")
+                    stock_code = fav.identifier.replace("'", "")
+                    name_map = load_stock_name_map()
                     stock_data = fetch_stock_by_code(stock_code)
+                    
                     if stock_data:
-                        print(f"[user_favorites] 주식 상품 찾음: {stock_data.get('name')}")
+                        stock_name = name_map.get(stock_code)
+                        if not stock_name:
+                            stock_name = stock_data.get('hts_kor_isnm')
+                        if not stock_name:
+                            stock_name = stock_code
+                            
                         result.append({
                             'type': 'stock',
+                            'name': stock_name,
                             'stock_code': stock_code,
-                            'name': stock_data.get('name'),
                             'current_price': stock_data.get('current_price'),
                             'price_change': stock_data.get('price_change'),
-                            'market_cap': stock_data.get('market_cap'),
-                            'trade_volume': stock_data.get('trade_volume'),
-                            'trade_value': stock_data.get('trade_value'),
                             'is_liked': True
                         })
-                    else:
-                        print(f"[user_favorites] 주식 데이터를 가져올 수 없음: {stock_code}")
                 except Exception as e:
                     print(f"[user_favorites] 주식 상품 처리 중 오류: {str(e)}")
                     continue
                     
             elif fav.type == 'etf':
                 try:
-                    etf_code = fav.identifier
-                    print(f"[user_favorites] ETF 데이터 요청: {etf_code}")
+                    etf_code = fav.identifier.replace("'", "")
+                    name_map = load_etf_name_map()
                     etf_data = fetch_etf_by_code(etf_code)
+                    
                     if etf_data:
-                        print(f"[user_favorites] ETF 상품 찾음: {etf_data.get('name')}")
+                        etf_name = name_map.get(etf_code)
+                        if not etf_name:
+                            etf_name = etf_data.get('hts_kor_isnm')
+                        if not etf_name:
+                            etf_name = etf_code
+                            
                         result.append({
                             'type': 'etf',
+                            'name': etf_name,
                             'etf_code': etf_code,
-                            'name': etf_data.get('name'),
                             'current_price': etf_data.get('current_price'),
                             'price_change': etf_data.get('price_change'),
-                            'market_cap': etf_data.get('market_cap'),
-                            'trade_volume': etf_data.get('trade_volume'),
-                            'trade_value': etf_data.get('trade_value'),
                             'is_liked': True
                         })
-                    else:
-                        print(f"[user_favorites] ETF 데이터를 가져올 수 없음: {etf_code}")
                 except Exception as e:
                     print(f"[user_favorites] ETF 상품 처리 중 오류: {str(e)}")
                     continue
 
-        print(f"[user_favorites] 최종 결과 개수: {len(result)}")
         return Response(result)
     except Exception as e:
         print(f"[user_favorites] 전체 오류: {str(e)}")

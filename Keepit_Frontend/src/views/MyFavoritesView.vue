@@ -73,11 +73,14 @@
               <div class="product-details">
                 <div class="price-info">
                   <span class="label">현재가</span>
-                  <span class="value">{{ product.current_price?.toLocaleString() }}원</span>
+                  <span class="value">{{ formatPrice(product.current_price) }}원</span>
                 </div>
-                <div class="volume-info">
-                  <span class="label">거래량</span>
-                  <span class="value">{{ product.trade_volume?.toLocaleString() }}</span>
+                <div class="change-info">
+                  <span class="label">변동가</span>
+                  <span class="value" :class="getPriceChangeClass(product.price_change)">
+                    <i :class="['fas', product.price_change > 0 ? 'fa-caret-up' : 'fa-caret-down']"></i>
+                    {{ formatPriceChange(product.price_change) }}원
+                  </span>
                 </div>
               </div>
             </template>
@@ -91,11 +94,14 @@
               <div class="product-details">
                 <div class="price-info">
                   <span class="label">현재가</span>
-                  <span class="value">{{ product.current_price?.toLocaleString() }}원</span>
+                  <span class="value">{{ formatPrice(product.current_price) }}원</span>
                 </div>
-                <div class="volume-info">
-                  <span class="label">거래량</span>
-                  <span class="value">{{ product.trade_volume?.toLocaleString() }}</span>
+                <div class="change-info">
+                  <span class="label">변동가</span>
+                  <span class="value" :class="getPriceChangeClass(product.price_change)">
+                    <i :class="['fas', product.price_change > 0 ? 'fa-caret-up' : 'fa-caret-down']"></i>
+                    {{ formatPriceChange(product.price_change) }}원
+                  </span>
                 </div>
               </div>
             </template>
@@ -163,6 +169,24 @@ onMounted(async () => {
     alert('찜한 상품 목록을 불러오는데 실패했습니다.')
   }
 })
+
+// 가격 포맷팅 함수 추가
+const formatPrice = (price) => {
+  if (!price) return '0'
+  return price.toLocaleString()
+}
+
+// 가격 변동 포맷팅 함수 추가
+const formatPriceChange = (change) => {
+  if (!change) return '0'
+  return Math.abs(change).toLocaleString()
+}
+
+// 가격 변동에 따른 클래스 반환 함수 추가
+const getPriceChangeClass = (change) => {
+  if (!change) return ''
+  return change > 0 ? 'price-up' : 'price-down'
+}
 </script>
 
 <style scoped>
@@ -267,6 +291,7 @@ onMounted(async () => {
 .rate-info,
 .term-info,
 .price-info,
+.change-info,
 .volume-info {
   display: flex;
   justify-content: space-between;
@@ -317,5 +342,24 @@ onMounted(async () => {
   .product-list {
     grid-template-columns: 1fr;
   }
+}
+
+.price-up {
+  color: #d63031;
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.price-down {
+  color: #0984e3;
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.price-up i,
+.price-down i {
+  font-size: 1.2rem;
 }
 </style> 

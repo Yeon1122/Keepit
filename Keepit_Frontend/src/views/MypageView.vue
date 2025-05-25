@@ -110,64 +110,42 @@
         </div>
         <div class="card-content">
           <template v-if="limitedFilteredProducts.length">
-            <ul class="product-list">
-              <li v-for="product in limitedFilteredProducts" :key="product.id || product.stock_code || product.etf_code" class="product-item">
-                <!-- 예금/적금 상품 -->
-                <template v-if="product.type === 'deposit' || product.type === 'saving'">
-                  <div class="product-info-header">
-                    <span class="product-type">{{ product.type === 'deposit' ? '정기예금' : '적금' }}</span>
-                    <span class="bank-name">{{ product.company }}</span>
+            <div class="product-card" v-for="product in limitedFilteredProducts" :key="product.id">
+              <div class="product-info">
+                <div class="product-header">
+                  <div class="product-type-name">
+                    <span class="product-type" :class="product.type">{{ getProductTypeText(product.type) }}</span>
+                    <span class="product-title">{{ getProductName(product) }}</span>
                   </div>
-                  <div class="product-name">{{ product.name }}</div>
-                  <div class="product-details">
-                    <div class="rate-info">
-                      <span class="label">금리</span>
-                      <span class="value">{{ product.interest_rate }}% ~ {{ product.special_rate }}%</span>
-                    </div>
-                    <div class="term-info">
-                      <span class="label">기간</span>
-                      <span class="value">{{ product.term }}개월</span>
-                    </div>
+                </div>
+                <!-- 예금/적금 상품일 경우 -->
+                <div v-if="['deposit', 'saving'].includes(product.type)" class="product-details">
+                  <div class="rate-info">
+                    <span class="label">금리</span>
+                    <span class="value">{{ product.interest_rate }}% ~ {{ product.special_rate }}%</span>
                   </div>
-                </template>
-                
-                <!-- 주식 상품 -->
-                <template v-else-if="product.type === 'stock'">
-                  <div class="product-info-header">
-                    <span class="product-type">주식</span>
+                  <div class="term-info">
+                    <span class="label">기간</span>
+                    <span class="value">{{ product.term }}개월</span>
                   </div>
-                  <div class="product-name">{{ product.name }}</div>
-                  <div class="product-details">
-                    <div class="price-info">
-                      <span class="label">현재가</span>
-                      <span class="value">{{ product.current_price?.toLocaleString() }}원</span>
-                    </div>
-                    <div class="volume-info">
-                      <span class="label">거래량</span>
-                      <span class="value">{{ product.trade_volume?.toLocaleString() }}</span>
-                    </div>
+                </div>
+                <!-- 주식/ETF 상품일 경우 -->
+                <div v-else class="product-details">
+                  <div class="price-info">
+                    <span class="label">현재가</span>
+                    <span class="value">{{ formatPrice(product.current_price) }}원</span>
                   </div>
-                </template>
-
-                <!-- ETF 상품 -->
-                <template v-else-if="product.type === 'etf'">
-                  <div class="product-info-header">
-                    <span class="product-type">ETF</span>
+                  <div class="change-info">
+                    <span class="label">변동가</span>
+                    <span class="value" :class="getPriceChangeClass(product.price_change)">
+                      <i :class="['fas', product.price_change > 0 ? 'fa-caret-up' : 'fa-caret-down']"></i>
+                      {{ formatPriceChange(product.price_change) }}원
+                    </span>
                   </div>
-                  <div class="product-name">{{ product.name }}</div>
-                  <div class="product-details">
-                    <div class="price-info">
-                      <span class="label">현재가</span>
-                      <span class="value">{{ product.current_price?.toLocaleString() }}원</span>
-                    </div>
-                    <div class="volume-info">
-                      <span class="label">거래량</span>
-                      <span class="value">{{ product.trade_volume?.toLocaleString() }}</span>
-                    </div>
-                  </div>
-                </template>
-              </li>
-            </ul>
+                </div>
+              </div>
+              <div class="product-divider"></div>
+            </div>
             <div v-if="filteredProducts.length > 4" class="view-more-section">
               <button class="view-more-button" @click="goToFavorites">
                 더보기
@@ -278,15 +256,16 @@ const questionPosts = ref([])
 // 필터 상태 추가
 const selectedFilter = ref('all')
 
-// 필터링된 상품 목록을 계산하는 computed 속성 추가
+// 필터링된 상품 목록을 계산하는 computed 속성 수정
 const filteredProducts = computed(() => {
+  const products = user.value.liked_products || []
   if (selectedFilter.value === 'all') {
-    return user.value.liked_products || []
+    return products
   }
-  return (user.value.liked_products || []).filter(product => product.type === selectedFilter.value)
+  return products.filter(product => product.type === selectedFilter.value)
 })
 
-// 필터링된 상품 목록에서 최대 4개만 보여주는 computed 속성 추가
+// 필터링된 상품 목록에서 최대 4개만 보여주는 computed 속성
 const limitedFilteredProducts = computed(() => {
   return filteredProducts.value.slice(0, 4)
 })
@@ -335,7 +314,7 @@ onMounted(async () => {
       ...res.data,
       followers: res.data.followers || [],
       following: res.data.following || [],
-      test_result: res.data.test_result || null,  // 테스트 결과도 마이페이지 응답에서 받아옴
+      test_result: res.data.test_result || null,
       liked_products: favoritesRes.data || [],  // 찜한 상품 목록 추가
       posts_summary: res.data.posts_summary || { total_posts: 0, free_posts: 0, question_posts: 0 },
       recent_posts: res.data.recent_posts || [],
@@ -353,7 +332,7 @@ onMounted(async () => {
     }))
 
     console.log('현재 로그인한 사용자 정보:', user.value)
-    console.log('찜한 상품 목록:', favoritesRes.data)  // 디버깅용 로그 추가
+    console.log('찜한 상품 목록:', favoritesRes.data)  // 디버깅용 로그
 
   } catch (err) {
     console.error('사용자 정보 로딩 실패:', err)
@@ -409,6 +388,40 @@ const goToSavings = () => {
 
 const goToFavorites = () => {
   router.push({ name: 'myfavorites' })
+}
+
+// 상품 타입 텍스트 변환 함수 추가
+const getProductTypeText = (type) => {
+  const typeMap = {
+    deposit: '예금',
+    saving: '적금',
+    stock: '주식',
+    etf: 'ETF'
+  }
+  return typeMap[type] || type
+}
+
+// 상품명 가져오는 함수 수정
+const getProductName = (product) => {
+  return product.name
+}
+
+// 가격 포맷팅 함수 추가
+const formatPrice = (price) => {
+  if (!price) return '0'
+  return price.toLocaleString()
+}
+
+// 가격 변동 포맷팅 함수 추가
+const formatPriceChange = (change) => {
+  if (!change) return '0'
+  return Math.abs(change).toLocaleString()
+}
+
+// 가격 변동에 따른 클래스 반환 함수 추가
+const getPriceChangeClass = (change) => {
+  if (!change) return ''
+  return change > 0 ? 'price-up' : 'price-down'
 }
 </script>
 
@@ -770,10 +783,10 @@ const goToFavorites = () => {
 }
 
 .product-name {
-  font-weight: bold;
-  margin: 0.5rem 0;
   font-size: 1.1rem;
-  color: #333;
+  font-weight: bold;
+  color: #145c2b;
+  margin-bottom: 0.5rem;
 }
 
 .product-details {
@@ -952,6 +965,114 @@ const goToFavorites = () => {
     padding: 0.4rem 0.8rem;  /* 모바일에서는 버튼 크기 줄임 */
     font-size: 0.85rem;
   }
+}
+
+.product-card {
+  padding: 0.8rem 1.5rem;  /* 상하 패딩 줄임 */
+}
+
+.product-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.8rem;  /* 하단 마진 줄임 */
+}
+
+.product-type {
+  padding: 0.3rem 0.8rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: white;
+  background-color: #145c2b;
+}
+
+.product-title {
+  font-size: 1.1rem;
+  color: #333;
+  font-weight: 500;
+}
+
+.product-details {
+  display: grid;
+  gap: 0.4rem;  /* 상세 정보 간격 줄임 */
+}
+
+.rate-info,
+.term-info,
+.price-info,
+.change-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.label {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.value {
+  font-weight: 500;
+  color: #333;
+}
+
+.price-up {
+  color: #d63031;
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.price-down {
+  color: #0984e3;
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.price-up i,
+.price-down i {
+  font-size: 1.2rem;
+}
+
+.product-divider {
+  margin: 0.8rem -1.5rem;  /* 구분선 위아래 마진 줄임 */
+  height: 1px;
+  background-color: #eee;
+}
+
+/* 마지막 상품의 구분선 제거 */
+.product-card:last-child .product-divider {
+  display: none;
+}
+
+.product-type-name {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.product-type {
+  padding: 0.3rem 0.8rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: white;
+  background-color: #145c2b;
+  white-space: nowrap;
+}
+
+.product-title {
+  font-size: 1.1rem;
+  color: #333;
+  font-weight: 500;
+}
+
+.product-details {
+  margin-top: 0.8rem;
+  display: grid;
+  gap: 0.4rem;
 }
 </style>
 

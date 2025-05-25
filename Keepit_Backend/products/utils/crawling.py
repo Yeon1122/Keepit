@@ -19,7 +19,7 @@ def crawl_top_200_stocks():
             if link:
                 name = link.text.strip()
                 code = link['href'].split('code=')[-1]
-                code = f"'{code.zfill(6)}'"
+                code = code.zfill(6)  # 작은따옴표 제거하고 6자리로 맞춤
                 data.append({'종목명': name, '종목코드': code})
 
     df = pd.DataFrame(data)
