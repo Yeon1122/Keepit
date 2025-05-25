@@ -72,17 +72,18 @@
             <div class="left">
               <div class="info">
                 <div v-if="isAuthenticated" class="heart-space"></div>
-                <span>종목 · 업종</span>
+                <span>종목명</span>
               </div>
             </div>
             <div class="price-block">현재가</div>
-            <div class="marketcap-block">NAV</div>
+            <div class="volume-block">거래량 · 거래대금</div>
+            <div class="marketcap-block">시가총액</div>
           </div>
 
           <div class="etf-container">
             <EtfCard
               v-for="etf in etfData"
-              :key="etf.id"
+              :key="etf.etf_code"
               :data="etf"
               :show-heart="isAuthenticated"
             />

@@ -16,6 +16,7 @@ urlpatterns = [
     path('etfs/', views.etf_list, name='etf-list'),
     path('stocks/<str:stock_code>/', views.stock_detail, name='stock-detail'),
     path('stocks/<str:stock_code>/favorite/', views.stock_favorite, name='stock-favorite'),
+    path('etfs/<str:etf_code>/favorite/', views.etf_favorite, name='etf-favorite'),
     
     # 현물 관련
     path('goods/', views.goods_list, name='goods-list'),

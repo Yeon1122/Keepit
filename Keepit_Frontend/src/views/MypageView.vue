@@ -68,35 +68,116 @@
       <div class="content-card">
         <div class="card-header">
           <h3>찜한 상품</h3>
-          <button v-if="user.liked_products?.length" class="action-button" @click="goToSavings">
-            전체보기
-          </button>
+        </div>
+        <div class="filter-section">
+          <div class="filter-buttons">
+            <button 
+              class="filter-button" 
+              :class="{ active: selectedFilter === 'all' }"
+              @click="selectedFilter = 'all'"
+            >
+              전체
+            </button>
+            <button 
+              class="filter-button" 
+              :class="{ active: selectedFilter === 'deposit' }"
+              @click="selectedFilter = 'deposit'"
+            >
+              예금
+            </button>
+            <button 
+              class="filter-button" 
+              :class="{ active: selectedFilter === 'saving' }"
+              @click="selectedFilter = 'saving'"
+            >
+              적금
+            </button>
+            <button 
+              class="filter-button" 
+              :class="{ active: selectedFilter === 'stock' }"
+              @click="selectedFilter = 'stock'"
+            >
+              주식
+            </button>
+            <button 
+              class="filter-button" 
+              :class="{ active: selectedFilter === 'etf' }"
+              @click="selectedFilter = 'etf'"
+            >
+              ETF
+            </button>
+          </div>
         </div>
         <div class="card-content">
-          <template v-if="user.liked_products?.length">
+          <template v-if="limitedFilteredProducts.length">
             <ul class="product-list">
-              <li v-for="product in user.liked_products" :key="product.id" class="product-item">
-                <div class="product-info-header">
-                  <span class="product-type">{{ product.type === 'deposit' ? '정기예금' : '적금' }}</span>
-                  <span class="bank-name">{{ product.company }}</span>
-                </div>
-                <div class="product-name">{{ product.name }}</div>
-                <div class="product-details">
-                  <div class="rate-info">
-                    <span class="label">금리</span>
-                    <span class="value">{{ product.interest_rate }}% ~ {{ product.special_rate }}%</span>
+              <li v-for="product in limitedFilteredProducts" :key="product.id || product.stock_code || product.etf_code" class="product-item">
+                <!-- 예금/적금 상품 -->
+                <template v-if="product.type === 'deposit' || product.type === 'saving'">
+                  <div class="product-info-header">
+                    <span class="product-type">{{ product.type === 'deposit' ? '정기예금' : '적금' }}</span>
+                    <span class="bank-name">{{ product.company }}</span>
                   </div>
-                  <div class="term-info">
-                    <span class="label">기간</span>
-                    <span class="value">{{ product.term }}개월</span>
+                  <div class="product-name">{{ product.name }}</div>
+                  <div class="product-details">
+                    <div class="rate-info">
+                      <span class="label">금리</span>
+                      <span class="value">{{ product.interest_rate }}% ~ {{ product.special_rate }}%</span>
+                    </div>
+                    <div class="term-info">
+                      <span class="label">기간</span>
+                      <span class="value">{{ product.term }}개월</span>
+                    </div>
                   </div>
-                </div>
+                </template>
+                
+                <!-- 주식 상품 -->
+                <template v-else-if="product.type === 'stock'">
+                  <div class="product-info-header">
+                    <span class="product-type">주식</span>
+                  </div>
+                  <div class="product-name">{{ product.name }}</div>
+                  <div class="product-details">
+                    <div class="price-info">
+                      <span class="label">현재가</span>
+                      <span class="value">{{ product.current_price?.toLocaleString() }}원</span>
+                    </div>
+                    <div class="volume-info">
+                      <span class="label">거래량</span>
+                      <span class="value">{{ product.trade_volume?.toLocaleString() }}</span>
+                    </div>
+                  </div>
+                </template>
+
+                <!-- ETF 상품 -->
+                <template v-else-if="product.type === 'etf'">
+                  <div class="product-info-header">
+                    <span class="product-type">ETF</span>
+                  </div>
+                  <div class="product-name">{{ product.name }}</div>
+                  <div class="product-details">
+                    <div class="price-info">
+                      <span class="label">현재가</span>
+                      <span class="value">{{ product.current_price?.toLocaleString() }}원</span>
+                    </div>
+                    <div class="volume-info">
+                      <span class="label">거래량</span>
+                      <span class="value">{{ product.trade_volume?.toLocaleString() }}</span>
+                    </div>
+                  </div>
+                </template>
               </li>
             </ul>
+            <div v-if="filteredProducts.length > 4" class="view-more-section">
+              <button class="view-more-button" @click="goToFavorites">
+                더보기
+                <i class="fas fa-chevron-right"></i>
+              </button>
+            </div>
           </template>
           <div v-else class="empty-state">
             <i class="fas fa-heart"></i>
-            <p>아직 찜한 상품이 없습니다.</p>
+            <p>{{ getEmptyStateMessage }}</p>
             <p class="sub-text">마음에 드는 상품을 찜해보세요!</p>
             <button class="action-button primary" @click="goToSavings">
               상품 보러가기
@@ -160,7 +241,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import axios from 'axios'
 import { useAccountStore } from '@/stores/users.js'
 import { useRouter } from 'vue-router'
@@ -188,11 +269,42 @@ const user = ref({
     free_posts: 0,
     question_posts: 0
   },
-  recent_posts: []
+  recent_posts: [],
+  liked_products: []
 })
 
 const freePosts = ref([])
 const questionPosts = ref([])
+
+// 필터 상태 추가
+const selectedFilter = ref('all')
+
+// 필터링된 상품 목록을 계산하는 computed 속성 추가
+const filteredProducts = computed(() => {
+  if (selectedFilter.value === 'all') {
+    return user.value.liked_products || []
+  }
+  return (user.value.liked_products || []).filter(product => product.type === selectedFilter.value)
+})
+
+// 필터링된 상품 목록에서 최대 4개만 보여주는 computed 속성 추가
+const limitedFilteredProducts = computed(() => {
+  return filteredProducts.value.slice(0, 4)
+})
+
+// 빈 상태 메시지를 동적으로 생성하는 computed 속성
+const getEmptyStateMessage = computed(() => {
+  if (selectedFilter.value === 'all') {
+    return '아직 찜한 상품이 없습니다.'
+  }
+  const typeMap = {
+    deposit: '예금',
+    saving: '적금',
+    stock: '주식',
+    etf: 'ETF'
+  }
+  return `찜한 ${typeMap[selectedFilter.value]} 상품이 없습니다.`
+})
 
 onMounted(async () => {
   const token = accountStore.token
@@ -212,12 +324,22 @@ onMounted(async () => {
       }
     })
 
+    // 찜한 상품 목록 가져오기
+    const favoritesRes = await axios.get('/api/v1/products/favorites/', {
+      headers: {
+        Authorization: `Token ${token}`
+      }
+    })
+
     // API 응답으로 받은 사용자 정보로 업데이트
     user.value = {
       ...res.data,
       followers: res.data.followers || [],
       following: res.data.following || [],
-      test_result: res.data.test_result || null  // 테스트 결과도 마이페이지 응답에서 받아옴
+      test_result: res.data.test_result || null,  // 테스트 결과도 마이페이지 응답에서 받아옴
+      liked_products: favoritesRes.data || [],  // 찜한 상품 목록 추가
+      posts_summary: res.data.posts_summary || { total_posts: 0, free_posts: 0, question_posts: 0 },
+      recent_posts: res.data.recent_posts || []
     }
 
     // 최근 게시글 분류
@@ -231,6 +353,7 @@ onMounted(async () => {
     }))
 
     console.log('현재 로그인한 사용자 정보:', user.value)
+    console.log('찜한 상품 목록:', favoritesRes.data)  // 디버깅용 로그 추가
 
   } catch (err) {
     console.error('사용자 정보 로딩 실패:', err)
@@ -282,6 +405,10 @@ const goToTestResult = () => {
 
 const goToSavings = () => {
   router.push({ name: 'savings' })
+}
+
+const goToFavorites = () => {
+  router.push({ name: 'myfavorites' })
 }
 </script>
 
@@ -411,47 +538,48 @@ const goToSavings = () => {
 }
 
 .card-header {
-  padding: 1.5rem;
-  border-bottom: 1px solid #eee;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid #eee;
 }
 
 .card-header h3 {
   margin: 0;
-  font-size: 1.2rem;
   color: #333;
+  font-size: 1.25rem;
 }
 
 .card-actions {
   display: flex;
   gap: 0.5rem;
+  align-items: center;
 }
 
 .action-button {
   padding: 0.5rem 1rem;
-  border-radius: 6px;
   border: 1px solid #dee2e6;
+  border-radius: 6px;
   background: white;
-  color: #495057;
+  color: #145c2b;
   cursor: pointer;
   font-size: 0.9rem;
   transition: all 0.2s;
 }
 
+.action-button:hover {
+  background: #f8f9fa;
+}
+
 .action-button.primary {
   background: #145c2b;
   color: white;
-  border: none;
-}
-
-.action-button:hover {
-  background: #e9ecef;
+  border-color: #145c2b;
 }
 
 .action-button.primary:hover {
-  background: #0e4a21;
+  background: #0d4420;
 }
 
 .card-content {
@@ -495,16 +623,45 @@ const goToSavings = () => {
   align-items: center;
   gap: 0.5rem;
   transition: all 0.3s ease;
-}
-
-.empty-state .action-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 2px 8px rgba(20, 92, 43, 0.2);
+  background: #145c2b;
+  color: white;
+  border-color: #145c2b;
 }
 
 .empty-state .action-button i {
   font-size: 1rem;
   margin: 0;
+  color: rgba(255, 255, 255, 0.85);
+  transition: color 0.3s ease;
+}
+
+.empty-state .action-button:hover {
+  background: #0d4420;
+}
+
+.empty-state .action-button:hover i {
+  color: rgba(255, 255, 255, 1);
+}
+
+/* 투자 성향 분석 카드의 empty-state에만 적용되는 스타일 */
+.content-card:first-child .card-content {
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.content-card:first-child .empty-state {
+  padding: 0;
+  width: 100%;
+}
+
+.content-card:first-child .empty-state i {
+  margin-bottom: 1.5rem;
+}
+
+.content-card:first-child .empty-state p {
+  margin: 0.8rem 0;
 }
 
 .test-result {
@@ -573,15 +730,23 @@ const goToSavings = () => {
   list-style: none;
   padding: 0;
   margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1rem;
 }
 
 .product-item {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
   padding: 1rem;
-  border-bottom: 1px solid #eee;
+  transition: all 0.2s ease;
+  cursor: pointer;
 }
 
-.product-item:last-child {
-  border-bottom: none;
+.product-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .product-info-header {
@@ -592,48 +757,48 @@ const goToSavings = () => {
 }
 
 .product-type {
-  font-size: 0.8rem;
-  padding: 0.2rem 0.5rem;
-  background-color: #e3f2fd;
-  color: #1976d2;
+  background-color: #145c2b;
+  color: white;
+  padding: 0.25rem 0.5rem;
   border-radius: 4px;
+  font-size: 0.8rem;
 }
 
 .bank-name {
-  font-size: 0.9rem;
   color: #666;
+  font-size: 0.9rem;
 }
 
 .product-name {
+  font-weight: bold;
+  margin: 0.5rem 0;
   font-size: 1.1rem;
-  font-weight: 600;
   color: #333;
-  margin-bottom: 0.5rem;
 }
 
 .product-details {
-  display: flex;
-  gap: 1rem;
-  font-size: 0.9rem;
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
 }
 
-.rate-info, .term-info {
+.rate-info,
+.term-info,
+.price-info,
+.volume-info {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 0.5rem;
 }
 
 .label {
   color: #666;
+  font-size: 0.9rem;
 }
 
 .value {
-  font-weight: 500;
-  color: #333;
-}
-
-.rate-info .value {
-  color: #e64545;
+  font-weight: 600;
+  color: #145c2b;
 }
 
 .posts-section {
@@ -674,6 +839,64 @@ const goToSavings = () => {
   font-size: 0.8rem;
 }
 
+.filter-section {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #eee;
+}
+
+.filter-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.filter-button {
+  padding: 0.4rem 1rem;
+  border: 1px solid #dee2e6;
+  border-radius: 20px;
+  background: white;
+  color: #495057;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.filter-button:hover {
+  background: #f8f9fa;
+}
+
+.filter-button.active {
+  background: #145c2b;
+  color: white;
+  border-color: #145c2b;
+}
+
+.view-more-section {
+  display: flex;
+  justify-content: center;
+  padding: 1rem 0;
+}
+
+.view-more-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  background: none;
+  color: #145c2b;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.view-more-button:hover {
+  opacity: 0.8;
+}
+
+.view-more-button i {
+  font-size: 0.8rem;
+}
+
 @media (max-width: 768px) {
   .profile-header {
     flex-direction: column;
@@ -700,6 +923,34 @@ const goToSavings = () => {
   .card-content .posts-grid {
     grid-template-columns: 1fr;  /* 모바일에서는 게시판을 세로로 배치합니다 */
     gap: 1.5rem;
+  }
+
+  .card-header {
+    flex-direction: row;  /* 모바일에서도 가로 배치 유지 */
+    align-items: center;
+    padding: 1rem;
+  }
+
+  .filter-section {
+    padding: 1rem;
+  }
+
+  .filter-buttons {
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+  }
+
+  .filter-button {
+    white-space: nowrap;
+  }
+
+  .card-actions {
+    gap: 0.25rem;  /* 모바일에서는 버튼 간격 줄임 */
+  }
+
+  .action-button {
+    padding: 0.4rem 0.8rem;  /* 모바일에서는 버튼 크기 줄임 */
+    font-size: 0.85rem;
   }
 }
 </style>

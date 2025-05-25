@@ -1,63 +1,39 @@
 <template>
-  <div class="etf-card">
-    <div class="left">
+  <div class="etf-card" @click="handleClick">
+    <div class="left" @click.stop>
       <HeartButton
         v-if="showHeart"
         :initial-is-hearted="isLiked"
         @update:hearted="toggleLike"
       />
-      <div class="etf-info">
-        <div class="name">{{ data.name }}</div>
-        <div class="sector">{{ data.sector }}</div>
-      </div>
+      <div class="name">{{ data.name }}</div>
     </div>
-
     <div class="price-block">
-      <div class="current-price"
-           :class="{
-             red: data.price_change > 0,
-             blue: data.price_change < 0,
-             black: data.price_change === 0
-           }">
-        {{ formatNumber(data.current_price) }}원
-      </div>
-      <div class="price-change"
-           :class="{
-             red: data.price_change > 0,
-             blue: data.price_change < 0,
-             black: data.price_change === 0
-           }">
-        전일 대비 {{ formatChange(data.price_change) }}
+      <div class="current-price">{{ formatNumber(data.current_price) }}원</div>
+      <div class="price-change" :class="{ 'up': data.price_change > 0, 'down': data.price_change < 0 }">
+        {{ formatNumber(Math.abs(data.price_change)) }}원
+        ({{ data.price_change > 0 ? '▲' : data.price_change < 0 ? '▼' : '-' }})
       </div>
     </div>
-
-    <div class="nav-block">
-      <div class="nav"
-           :class="{
-             red: data.nav_change > 0,
-             blue: data.nav_change < 0,
-             black: data.nav_change === 0
-           }">
-        {{ formatNumber(data.nav) }}원
-      </div>
-      <div class="price-change"
-           :class="{
-             red: data.nav_change > 0,
-             blue: data.nav_change < 0,
-             black: data.nav_change === 0
-           }">
-        전일 대비 {{ formatChange(data.nav_change) }}
-      </div>
+    <div class="volume-block">
+      <div>{{ formatNumber(data.trade_volume) }}주</div>
+      <div>{{ formatCompact(data.trade_value) }}</div>
+    </div>
+    <div class="marketcap-block">
+      {{ formatMarketCap(data.market_cap) }}
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { useAccountStore } from '@/stores/users.js'
-import axios from 'axios'
+import { ref, onMounted } from 'vue'
+import { useAccountStore } from '@/stores/users'
+import { useRouter } from 'vue-router'
 import HeartButton from '@/components/HeartButton.vue'
+import axios from 'axios'
 
+const router = useRouter()
+const accountStore = useAccountStore()
 const props = defineProps({
   data: {
     type: Object,
@@ -69,44 +45,96 @@ const props = defineProps({
   }
 })
 
-const accountStore = useAccountStore()
-const token = accountStore.token
-
 const isLiked = ref(false)
-const isHovered = ref(false)
+
+// 초기 찜하기 상태 확인
+const checkInitialLikeStatus = async () => {
+  const token = accountStore.token
+  console.log('초기 상태 확인 시 토큰:', token)
+  
+  if (!token) return
+  
+  try {
+    const response = await axios({
+      method: 'GET',
+      url: `http://127.0.0.1:8000/api/v1/products/etfs/${props.data.etf_code}/favorite/`,
+      headers: {
+        Authorization: `Token ${token}`
+      }
+    })
+    console.log('초기 상태 응답:', response.data)
+    isLiked.value = response.data.is_hearted
+  } catch (err) {
+    console.error('찜하기 상태 확인 오류:', err)
+  }
+}
+
+// 컴포넌트 마운트 시 찜하기 상태 확인
+onMounted(checkInitialLikeStatus)
 
 const toggleLike = async () => {
-  if (!token) {
-    alert('로그인이 필요합니다.')
-    return
-  }
-
   try {
-    const url = `http://127.0.0.1:8000/api/v1/products/${props.data.id}/favorite/`
-    const headers = {
-      Authorization: `Token ${token}`
+    const token = accountStore.token
+    console.log('토글 시 토큰:', token)
+    
+    if (!token) {
+      alert('로그인이 필요한 서비스입니다.')
+      return
     }
 
-    if (isLiked.value) {
-      await axios.delete(url, { headers })
+    const method = isLiked.value ? 'DELETE' : 'POST'
+    console.log('현재 상태:', isLiked.value, '요청 메서드:', method)
+
+    const response = await axios({
+      method,
+      url: `http://127.0.0.1:8000/api/v1/products/etfs/${props.data.etf_code}/favorite/`,
+      headers: {
+        Authorization: `Token ${token}`
+      }
+    })
+    console.log('API 응답:', response.data)
+    
+    // 상태 업데이트
+    if (method === 'POST') {
+      isLiked.value = true
     } else {
-      await axios.post(url, {}, { headers })
+      isLiked.value = false
     }
-
-    isLiked.value = !isLiked.value
-  } catch (error) {
-    console.error('찜하기 오류:', error)
+  } catch (err) {
+    console.error('찜하기 오류:', err)
+    if (err.response?.status === 401) {
+      alert('로그인이 필요한 서비스입니다.')
+    } else {
+      alert('찜하기 처리에 실패했습니다.')
+    }
   }
+}
+
+const handleClick = () => {
+  router.push({
+    name: 'etfdetail',
+    params: { etf_code: props.data.etf_code }
+  })
 }
 
 const formatNumber = (val) => {
-  return val == null ? '-' : Number(val).toLocaleString()
+  if (val === null || val === undefined) return '-'
+  return Number(val).toLocaleString()
 }
 
-const formatChange = (val) => {
-  if (val > 0) return `+${val.toLocaleString()}`
-  if (val < 0) return `${val.toLocaleString()}`
-  return '0'
+const formatCompact = (val) => {
+  if (val >= 100000000) return `${(val / 100000000).toLocaleString()}백만`
+  if (val >= 10000) return `${(val / 10000).toLocaleString()}만원`
+  return `${val}원`
+}
+
+const formatMarketCap = (val) => {
+  if (val >= 1e13) {
+    return `${Math.floor(val / 1e13)}조 ${Math.floor((val % 1e13) / 1e9)}억`
+  } else if (val >= 1e12) {
+    return `${(val / 1e12).toFixed(1)}조`
+  }
+  return `${formatCompact(val)}`
 }
 </script>
 
@@ -123,6 +151,7 @@ const formatChange = (val) => {
   font-family: 'Noto Sans KR', sans-serif;
   font-size: 0.95rem;
   transition: box-shadow 0.2s;
+  cursor: pointer;
 }
 
 .etf-card:hover {
@@ -130,92 +159,56 @@ const formatChange = (val) => {
 }
 
 .left {
-  flex: 2;
   display: flex;
   align-items: center;
   gap: 0.7rem;
-}
-
-.etf-info {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
+  flex: 2;
 }
 
 .name {
   font-weight: 600;
-  font-size: 1.1rem;
+  font-size: 1rem;
   color: #333;
 }
 
-.sector {
-  font-size: 0.85rem;
-  color: #666;
+.price-block {
+  display: flex;
+  flex-direction: column;
+  align-items: right;
+  flex: 1.2;
+  text-align: right;
 }
 
-.price-block {
+.volume-block {
+  display: flex;
+  flex-direction: column;
+  align-items: right;
   flex: 1.5;
+  text-align: right;
+}
+
+.marketcap-block {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  flex: 1.2;
   text-align: right;
 }
 
 .current-price {
   font-weight: bold;
-  font-size: 1rem;
   color: #333;
 }
 
 .price-change {
-  font-size: 0.85rem;
-  color: #666;
-}
-
-.nav-block {
-  text-align: right;
-  flex: 1.5;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-}
-
-.nav {
-  font-weight: bold;
-  font-size: 1rem;
   color: #333;
 }
 
-.heart-button {
-  border: 2px solid #e272c0;
-  border-radius: 50%;
-  width: 32px;
-  height: 32px;
-  font-size: 0.85rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: white;
-  transition: all 0.2s;
-  cursor: pointer;
-  color: #e272c0;
-}
-
-.heart-button.active,
-.heart-button.hovered {
-  background-color: #e272c0;
-  color: white;
-}
-
-.red {
+.up {
   color: #e64545;
 }
 
-.blue {
+.down {
   color: #14449c;
-}
-
-.black {
-  color: #333;
 }
 </style>

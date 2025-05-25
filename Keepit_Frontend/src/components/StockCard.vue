@@ -83,15 +83,24 @@ const toggleLike = async () => {
       return
     }
 
+    const method = isLiked.value ? 'DELETE' : 'POST'
+    console.log('현재 상태:', isLiked.value, '요청 메서드:', method)
+
     const response = await axios({
-      method: isLiked.value ? 'DELETE' : 'POST',
+      method,
       url: `http://127.0.0.1:8000/api/v1/products/stocks/${props.data.stock_code}/favorite/`,
       headers: {
         Authorization: `Token ${token}`
       }
     })
     console.log('API 응답:', response.data)
-    isLiked.value = !isLiked.value
+    
+    // 상태 업데이트
+    if (method === 'POST') {
+      isLiked.value = true
+    } else {
+      isLiked.value = false
+    }
   } catch (err) {
     console.error('찜하기 오류:', err)
     if (err.response?.status === 401) {

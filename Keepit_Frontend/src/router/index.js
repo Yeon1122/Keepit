@@ -20,6 +20,7 @@ import InvestmentTestView from '@/views/InvestmentTestView.vue'
 import TestResultView from '@/views/TestResultView.vue'
 import LocationView from '../views/LocationView.vue'
 import ChatbotView from '../views/ChatbotView.vue'
+import MyFavoritesView from '@/views/MyFavoritesView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -152,6 +153,12 @@ const router = createRouter({
       component: TestResultView,
       meta: { requiresAuth: true }
     },
+    {
+      path: '/my/favorites',
+      name: 'myfavorites',
+      component: MyFavoritesView,
+      meta: { requiresAuth: true }
+    },
   ],
 })
 
@@ -167,7 +174,8 @@ const authRequiredPages = [
   'freepostedit',
   'questioncreate',
   'questionedit',
-  'compare'
+  'compare',
+  'myfavorites'
 ]
 
 // 비로그인 상태에서만 접근 가능한 페이지

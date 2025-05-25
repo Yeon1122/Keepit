@@ -442,37 +442,88 @@ def user_favorites(request):
         print(f"[user_favorites] 사용자 {request.user.username}의 찜 목록 조회")
         favorites = Favorite.objects.filter(user=request.user)
         print(f"[user_favorites] 찾은 찜 개수: {favorites.count()}")
+        
+        # 디버깅: 각 타입별 찜 개수 출력
+        deposit_savings = favorites.filter(type__in=['deposit', 'saving']).count()
+        stocks = favorites.filter(type='stock').count()
+        etfs = favorites.filter(type='etf').count()
+        print(f"[user_favorites] 타입별 찜 개수 - 예적금: {deposit_savings}, 주식: {stocks}, ETF: {etfs}")
+        
         result = []
 
         for fav in favorites:
             print(f"[user_favorites] 찜 처리 중: type={fav.type}, identifier={fav.identifier}")
+            
             if fav.type in ['deposit', 'saving']:
                 try:
-                    # identifier를 product_id로 사용하여 조회
-                    try:
-                        product_id = int(fav.identifier)
-                        product = Product.objects.filter(id=product_id).first()
-                        
-                        if product:
-                            print(f"[user_favorites] 상품 찾음: {product.name}")
-                            result.append({
-                                'id': product.id,
-                                'type': product.type,
-                                'name': product.name,
-                                'company': product.company,
-                                'interest_rate': product.interest_rate,
-                                'special_rate': product.special_rate,
-                                'term': product.term,
-                                'target': product.target,
-                                'is_liked': True
-                            })
-                        else:
-                            print(f"[user_favorites] 상품을 찾을 수 없음: id={product_id}")
-                    except ValueError:
-                        print(f"[user_favorites] 상품 ID 변환 실패: {fav.identifier}")
-                        continue
+                    product_id = int(fav.identifier)
+                    product = Product.objects.filter(id=product_id).first()
+                    
+                    if product:
+                        print(f"[user_favorites] 예금/적금 상품 찾음: {product.name}")
+                        result.append({
+                            'id': product.id,
+                            'type': product.type,
+                            'name': product.name,
+                            'company': product.company,
+                            'interest_rate': product.interest_rate,
+                            'special_rate': product.special_rate,
+                            'term': product.term,
+                            'target': product.target,
+                            'is_liked': True
+                        })
+                    else:
+                        print(f"[user_favorites] 예금/적금 상품을 찾을 수 없음: id={product_id}")
                 except Exception as e:
-                    print(f"[user_favorites] 상품 처리 중 오류: {str(e)}")
+                    print(f"[user_favorites] 예금/적금 상품 처리 중 오류: {str(e)}")
+                    continue
+                    
+            elif fav.type == 'stock':
+                try:
+                    stock_code = fav.identifier
+                    print(f"[user_favorites] 주식 데이터 요청: {stock_code}")
+                    stock_data = fetch_stock_by_code(stock_code)
+                    if stock_data:
+                        print(f"[user_favorites] 주식 상품 찾음: {stock_data.get('name')}")
+                        result.append({
+                            'type': 'stock',
+                            'stock_code': stock_code,
+                            'name': stock_data.get('name'),
+                            'current_price': stock_data.get('current_price'),
+                            'price_change': stock_data.get('price_change'),
+                            'market_cap': stock_data.get('market_cap'),
+                            'trade_volume': stock_data.get('trade_volume'),
+                            'trade_value': stock_data.get('trade_value'),
+                            'is_liked': True
+                        })
+                    else:
+                        print(f"[user_favorites] 주식 데이터를 가져올 수 없음: {stock_code}")
+                except Exception as e:
+                    print(f"[user_favorites] 주식 상품 처리 중 오류: {str(e)}")
+                    continue
+                    
+            elif fav.type == 'etf':
+                try:
+                    etf_code = fav.identifier
+                    print(f"[user_favorites] ETF 데이터 요청: {etf_code}")
+                    etf_data = fetch_etf_by_code(etf_code)
+                    if etf_data:
+                        print(f"[user_favorites] ETF 상품 찾음: {etf_data.get('name')}")
+                        result.append({
+                            'type': 'etf',
+                            'etf_code': etf_code,
+                            'name': etf_data.get('name'),
+                            'current_price': etf_data.get('current_price'),
+                            'price_change': etf_data.get('price_change'),
+                            'market_cap': etf_data.get('market_cap'),
+                            'trade_volume': etf_data.get('trade_volume'),
+                            'trade_value': etf_data.get('trade_value'),
+                            'is_liked': True
+                        })
+                    else:
+                        print(f"[user_favorites] ETF 데이터를 가져올 수 없음: {etf_code}")
+                except Exception as e:
+                    print(f"[user_favorites] ETF 상품 처리 중 오류: {str(e)}")
                     continue
 
         print(f"[user_favorites] 최종 결과 개수: {len(result)}")
@@ -874,5 +925,68 @@ def goods_list(request):
         print(f"Error fetching goods data: {str(e)}")
         return Response(
             {'error': '현물 데이터를 불러오는데 실패했습니다.'},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+@api_view(['POST', 'DELETE', 'GET'])
+@permission_classes([IsAuthenticated])
+def etf_favorite(request, etf_code):
+    """
+    ETF 찜하기/찜해제 토글 API
+    """
+    try:
+        user = request.user
+        print(f"[etf_favorite] User {user.id} accessing ETF {etf_code}")
+
+        if request.method == 'GET':
+            # 찜하기 상태 확인
+            is_hearted = Favorite.objects.filter(
+                user=user,
+                type='etf',
+                identifier=etf_code
+            ).exists()
+            print(f"[etf_favorite] ETF {etf_code} is_hearted: {is_hearted}")
+            return Response({
+                'is_hearted': is_hearted
+            })
+
+        elif request.method == 'POST':
+            # 찜하기 생성
+            favorite, created = Favorite.objects.get_or_create(
+                user=user,
+                type='etf',
+                identifier=etf_code
+            )
+            print(f"[etf_favorite] ETF {etf_code} favorite created: {created}")
+            return Response({
+                'message': '찜하기가 완료되었습니다.',
+                'is_hearted': True
+            })
+
+        elif request.method == 'DELETE':
+            # 찜하기 삭제
+            result = Favorite.objects.filter(
+                user=user,
+                type='etf',
+                identifier=etf_code
+            ).delete()
+            
+            if result[0] > 0:
+                print(f"[etf_favorite] ETF {etf_code} favorite removed")
+                return Response({
+                    'message': '찜하기가 해제되었습니다.',
+                    'is_hearted': False
+                })
+            else:
+                print(f"[etf_favorite] ETF {etf_code} favorite not found")
+                return Response(
+                    {'error': '찜하기가 존재하지 않습니다.'}, 
+                    status=status.HTTP_404_NOT_FOUND
+                )
+
+    except Exception as e:
+        print(f"[etf_favorite] Error: {str(e)}")
+        return Response(
+            {'error': '찜하기 처리 중 오류가 발생했습니다.'}, 
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
