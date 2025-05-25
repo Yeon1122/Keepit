@@ -32,7 +32,7 @@
                             </div>
                             <div class="section-group">
                                 <div class="section-title">상품 비교</div>
-                                <ul class="dropdown-menu">
+                                <ul class="dropdown-menu menu-1">
                                     <li><router-link :to="{ name: 'compare', query: { type: 'deposit' } }">정기 예금</router-link></li>
                                     <li><router-link :to="{ name: 'compare', query: { type: 'saving' } }">적금</router-link></li>
                                 </ul>
@@ -41,7 +41,7 @@
 
                         <!-- 상품안내 섹션 -->
                         <div class="mega-section">
-                            <ul class="dropdown-menu">
+                            <ul class="dropdown-menu menu-2">
                                 <li><router-link :to="{ name: 'savings' }">정기 예금/적금</router-link></li>
                                 <li><router-link :to="{ name: 'goods' }">현물</router-link></li>
                                 <li><router-link :to="{ name: 'stocks' }">주식/ETF</router-link></li>
@@ -50,7 +50,7 @@
 
                         <!-- 커뮤니티 섹션 -->
                         <div class="mega-section">
-                            <ul class="dropdown-menu">
+                            <ul class="dropdown-menu menu-3">
                                 <li><router-link :to="{ name: 'freecommunity' }">자유 게시판</router-link></li>
                                 <li><router-link :to="{ name: 'questioncommunity' }">질문 게시판</router-link></li>
                             </ul>
@@ -171,9 +171,9 @@ const handleLogout = () => {
 /* ✅ 드롭다운 메뉴 */
 .mega-dropdown {
   position: absolute;
-  top: calc(100% + 1px);
-  left: 0; /* 왼쪽 정렬 */
-  transform: translateY(-10px); /* X축 제거 */
+  top: calc(100% + 5px);
+  left: -20px;
+  transform: none;
   width: max-content;
   background: white;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
@@ -187,22 +187,20 @@ const handleLogout = () => {
 .mega-dropdown.show {
   opacity: 1;
   visibility: visible;
-  transform: translateY(0);
 }
 
 .mega-content {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: flex-start;
-  padding: 2rem 1rem;
-  gap: 1rem;  /* ✨ 필요하면 더 조정 가능 */
+  display: grid;
+  grid-template-columns: auto auto auto;
+  column-gap: 1.5rem;
+  padding: 2rem 1.2rem;
+  align-items: start;
 }
 
 .mega-section {
+  min-width: 110px;
   display: flex;
   flex-direction: column;
-  min-width: 160px;  /* ✨ 열 너비 */
 }
 
 .section-group {
@@ -229,8 +227,13 @@ const handleLogout = () => {
   margin: 0.6rem 0;
 }
 
+.menu-2,
+.menu-3 {
+  padding-right: 0.1rem;
+  margin-right: 0;
+}
+
 .dropdown-menu a {
-  font-family: 'MaruBuri', sans-serif;
   font-size: 0.95rem;
   color: #666;
   text-decoration: none;
@@ -247,7 +250,6 @@ const handleLogout = () => {
   gap: 1rem;
 }
 
-/* 로그인/로그아웃 버튼 스타일 */
 .btn-login,
 .btn-logout {
   padding: 0.5rem 1.2rem;
@@ -265,7 +267,6 @@ const handleLogout = () => {
   background-color: #f8f8f8;
 }
 
-/* 회원가입/마이페이지 버튼 스타일 */
 .btn-signup,
 .btn-mypage {
   padding: 0.5rem 1.2rem;
@@ -283,4 +284,21 @@ const handleLogout = () => {
   background-color: #0d3d1d;
   border-color: #0d3d1d;
 }
+
+/* ✅ PC 화면 최적화 (768px 이상일 때 조정) */
+@media (min-width: 769px) {
+  .mega-dropdown {
+    left: -40px; /* 조금 더 오른쪽으로 이동 */
+  }
+
+  .mega-content {
+    column-gap: 2.5rem; /* 열 간격 넓힘 */
+    padding: 2rem 2rem;
+  }
+
+  .mega-section {
+    min-width: 130px; /* PC에선 넓게 */
+  }
+}
 </style>
+

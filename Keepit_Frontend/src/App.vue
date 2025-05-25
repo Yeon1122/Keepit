@@ -21,6 +21,7 @@
         <FloatingButton />
       </div>
     </div>
+    <MessageToast />
   </div>
 </template>
 
@@ -28,6 +29,7 @@
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
 import FloatingButton from '@/components/FloatingButton.vue'
+import MessageToast from '@/components/MessageToast.vue'
 </script>
 
 <style>

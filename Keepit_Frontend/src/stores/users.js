@@ -15,7 +15,7 @@ export const useAccountStore = defineStore('account', () => {
   const userId = ref(accountData.userId || '')
   const isAuthenticated = ref(accountData.isAuthenticated || false)
 
-  const ACCOUNT_API_URL = 'http://127.0.0.1:8000/api/v1/users'
+  const ACCOUNT_API_URL = '/api/v1/users'  // baseURL을 사용하므로 도메인 제거
 
   // axios 인터셉터 설정
   axios.interceptors.response.use(

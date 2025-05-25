@@ -87,7 +87,7 @@ const onDelete = async () => {
   if (!confirm('정말로 탈퇴하시겠습니까? 😥')) return
 
   try {
-    await axios.delete('http://127.0.0.1:8000/api/v1/users/mypage/', {
+    await axios.delete('/api/v1/users/mypage/', {
       headers: {
         Authorization: `Token ${token}`
       }
@@ -103,7 +103,7 @@ const onDelete = async () => {
 
 onMounted(async () => {
   try {
-    const res = await axios.get('http://127.0.0.1:8000/api/v1/users/mypage/', {
+    const res = await axios.get('/api/v1/users/mypage/', {
       headers: {
         Authorization: `Token ${token}`
       }
@@ -128,7 +128,7 @@ onMounted(async () => {
 
 const onUpdate = async () => {
   try {
-    const res = await axios.put('http://127.0.0.1:8000/api/v1/users/mypage/', form.value, {
+    const res = await axios.put('/api/v1/users/mypage/', form.value, {
       headers: {
         Authorization: `Token ${token}`
       }

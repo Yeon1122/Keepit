@@ -122,8 +122,39 @@ def get_test_result(request):
     """사용자의 최신 테스트 결과를 반환합니다."""
     try:
         result = TestResult.objects.filter(user=request.user).latest('created_at')
-        serializer = TestResultSerializer(result)
-        return Response(serializer.data)
+        
+        # 위험 성향에 따른 타입과 설명
+        risk_type_info = {
+            'conservative': {
+                'type': '안정형 투자자',
+                'description': '안정적인 수익을 추구하며 원금 보존을 중요시합니다.',
+                'recommendation': '예금, 적금, 채권 등 안정적인 상품 위주의 투자를 추천합니다.'
+            },
+            'moderate': {
+                'type': '중립형 투자자',
+                'description': '적절한 위험을 감수하며 중위험-중수익을 추구합니다.',
+                'recommendation': '채권형 펀드와 주식형 펀드를 혼합한 투자를 추천합니다.'
+            },
+            'aggressive': {
+                'type': '공격형 투자자',
+                'description': '높은 수익을 위해 적극적인 투자를 선호합니다.',
+                'recommendation': '주식, 해외투자 등 높은 수익을 노릴 수 있는 투자를 추천합니다.'
+            }
+        }
+
+        response_data = {
+            'type': risk_type_info[result.risk_type]['type'],
+            'total_score': result.total_score,
+            'description': risk_type_info[result.risk_type],
+            'q1_age': result.q1_age,
+            'q2_experience': result.q2_experience,
+            'q3_loss_response': result.q3_loss_response,
+            'q4_income': result.q4_income,
+            'q5_expected_return': result.q5_expected_return,
+            'q6_emergency': result.q6_emergency,
+        }
+        
+        return Response(response_data)
     except TestResult.DoesNotExist:
         return Response({
             'error': '테스트 결과가 없습니다.'
@@ -137,3 +168,55 @@ def delete_test_result(request):
     return Response({
         'message': '테스트 결과가 삭제되었습니다.'
     })
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def get_user_test_result(request, userid):
+    """특정 사용자의 최신 테스트 결과를 반환합니다."""
+    try:
+        from django.contrib.auth import get_user_model
+        User = get_user_model()
+        target_user = User.objects.get(userid=userid)
+        
+        result = TestResult.objects.filter(user=target_user).latest('created_at')
+        
+        # 위험 성향에 따른 타입과 설명
+        risk_type_info = {
+            'conservative': {
+                'type': '안정형 투자자',
+                'description': '안정적인 수익을 추구하며 원금 보존을 중요시합니다.',
+                'recommendation': '예금, 적금, 채권 등 안정적인 상품 위주의 투자를 추천합니다.'
+            },
+            'moderate': {
+                'type': '중립형 투자자',
+                'description': '적절한 위험을 감수하며 중위험-중수익을 추구합니다.',
+                'recommendation': '채권형 펀드와 주식형 펀드를 혼합한 투자를 추천합니다.'
+            },
+            'aggressive': {
+                'type': '공격형 투자자',
+                'description': '높은 수익을 위해 적극적인 투자를 선호합니다.',
+                'recommendation': '주식, 해외투자 등 높은 수익을 노릴 수 있는 투자를 추천합니다.'
+            }
+        }
+
+        response_data = {
+            'type': risk_type_info[result.risk_type]['type'],
+            'total_score': result.total_score,
+            'description': risk_type_info[result.risk_type],
+            'q1_age': result.q1_age,
+            'q2_experience': result.q2_experience,
+            'q3_loss_response': result.q3_loss_response,
+            'q4_income': result.q4_income,
+            'q5_expected_return': result.q5_expected_return,
+            'q6_emergency': result.q6_emergency,
+        }
+        
+        return Response(response_data)
+    except User.DoesNotExist:
+        return Response({
+            'error': '존재하지 않는 사용자입니다.'
+        }, status=status.HTTP_404_NOT_FOUND)
+    except TestResult.DoesNotExist:
+        return Response({
+            'error': '테스트 결과가 없습니다.'
+        }, status=status.HTTP_404_NOT_FOUND)

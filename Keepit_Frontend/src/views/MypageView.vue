@@ -50,15 +50,16 @@
           <template v-if="user.test_result">
             <div class="test-result">
               <div class="result-header">
-                <span class="result-type">{{ user.test_result.type }}</span>
-                <span class="result-score">{{ user.test_result.total_score }}점</span>
+                <div class="result-type-text">당신은</div>
+                <div class="result-type">{{ user.test_result.type }}</div>
               </div>
-              <p class="result-description">{{ user.test_result.description }}</p>
+              <div class="result-score">총점: {{ user.test_result.total_score }}점</div>
             </div>
           </template>
           <div v-else class="empty-state">
             <i class="fas fa-chart-line"></i>
-            <p>투자 성향 테스트를 진행해보세요!</p>
+            <p>아직 투자 성향 테스트를 하지 않으셨네요!</p>
+            <p class="sub-text">나의 투자 성향을 알아보고 맞춤 상품을 추천받아보세요.</p>
           </div>
         </div>
       </div>
@@ -67,23 +68,40 @@
       <div class="content-card">
         <div class="card-header">
           <h3>찜한 상품</h3>
+          <button v-if="user.liked_products?.length" class="action-button" @click="goToSavings">
+            전체보기
+          </button>
         </div>
         <div class="card-content">
           <template v-if="user.liked_products?.length">
             <ul class="product-list">
               <li v-for="product in user.liked_products" :key="product.id" class="product-item">
+                <div class="product-info-header">
+                  <span class="product-type">{{ product.type === 'deposit' ? '정기예금' : '적금' }}</span>
+                  <span class="bank-name">{{ product.company }}</span>
+                </div>
                 <div class="product-name">{{ product.name }}</div>
-                <div class="product-info">
-                  <span class="bank">{{ product.bank }}</span>
-                  <span class="rate">{{ product.interest_rate }}% ~ {{ product.special_rate }}%</span>
-                  <span class="term">{{ product.term }}개월</span>
+                <div class="product-details">
+                  <div class="rate-info">
+                    <span class="label">금리</span>
+                    <span class="value">{{ product.interest_rate }}% ~ {{ product.special_rate }}%</span>
+                  </div>
+                  <div class="term-info">
+                    <span class="label">기간</span>
+                    <span class="value">{{ product.term }}개월</span>
+                  </div>
                 </div>
               </li>
             </ul>
           </template>
           <div v-else class="empty-state">
             <i class="fas fa-heart"></i>
-            <p>관심있는 상품을 찜해보세요!</p>
+            <p>아직 찜한 상품이 없습니다.</p>
+            <p class="sub-text">마음에 드는 상품을 찜해보세요!</p>
+            <button class="action-button primary" @click="goToSavings">
+              상품 보러가기
+              <i class="fas fa-arrow-right"></i>
+            </button>
           </div>
         </div>
       </div>
@@ -107,9 +125,6 @@
                     <div class="post-title">{{ post.title }}</div>
                     <div class="post-meta">
                       <span class="post-date">{{ formatDate(post.created_at) }}</span>
-                      <span class="post-likes">
-                        <i class="fas fa-heart"></i> {{ post.likes }}
-                      </span>
                     </div>
                   </li>
                 </ul>
@@ -128,9 +143,6 @@
                     </div>
                     <div class="post-meta">
                       <span class="post-date">{{ formatDate(post.created_at) }}</span>
-                      <span class="post-likes">
-                        <i class="fas fa-heart"></i> {{ post.likes }}
-                      </span>
                     </div>
                   </li>
                 </ul>
@@ -170,6 +182,13 @@ const user = ref({
   region_district: '',
   followers: [],
   following: [],
+  test_result: null,
+  posts_summary: {
+    total_posts: 0,
+    free_posts: 0,
+    question_posts: 0
+  },
+  recent_posts: []
 })
 
 const freePosts = ref([])
@@ -186,7 +205,8 @@ onMounted(async () => {
   }
 
   try {
-    const res = await axios.get('http://127.0.0.1:8000/api/v1/users/mypage/', {
+    // 마이페이지 정보 가져오기
+    const res = await axios.get('/api/v1/users/mypage/', {
       headers: {
         Authorization: `Token ${token}`
       }
@@ -197,7 +217,12 @@ onMounted(async () => {
       ...res.data,
       followers: res.data.followers || [],
       following: res.data.following || [],
+      test_result: res.data.test_result || null  // 테스트 결과도 마이페이지 응답에서 받아옴
     }
+
+    // 최근 게시글 분류
+    freePosts.value = res.data.recent_posts?.filter(post => post.board_type === '자유게시판') || []
+    questionPosts.value = res.data.recent_posts?.filter(post => post.board_type === '질문게시판') || []
 
     // localStorage에 최신 사용자 정보 업데이트
     localStorage.setItem('account', JSON.stringify({
@@ -213,49 +238,10 @@ onMounted(async () => {
       alert('로그인이 만료되었습니다. 다시 로그인해주세요.')
       accountStore.logOut()
       router.push({ name: 'login' })
+    } else {
+      alert('사용자 정보를 불러오는데 실패했습니다.')
     }
   }
-
-  // 더미 게시글 데이터는 유지
-  freePosts.value = [
-    {
-      id: 1,
-      title: '적금 드디어 만기!',
-      content: '2년동안 열심히 모았네요. 다들 화이팅하세요!',
-      created_at: '2024-03-15T10:00:00',
-      likes: 15,
-      comments: [1, 2, 3]
-    },
-    {
-      id: 2,
-      title: '재테크 시작하려고 합니다',
-      content: '첫 직장인이라 재테크 공부중입니다.',
-      created_at: '2024-03-14T15:30:00',
-      likes: 8,
-      comments: [1, 2]
-    }
-  ]
-
-  questionPosts.value = [
-    {
-      id: 1,
-      title: '적금 중도해지 어떻게 하나요?',
-      content: '급하게 돈이 필요한데 중도해지 절차가 궁금합니다.',
-      created_at: '2024-03-13T09:00:00',
-      likes: 5,
-      comments: [1, 2, 3, 4],
-      is_solved: true
-    },
-    {
-      id: 2,
-      title: '주택청약 가입 조건이 어떻게 되나요?',
-      content: '내년에 청약을 하려고 하는데 조건이 궁금합니다.',
-      created_at: '2024-03-12T14:20:00',
-      likes: 12,
-      comments: [1],
-      is_solved: false
-    }
-  ]
 })
 
 const formatDate = (dateString) => {
@@ -286,7 +272,16 @@ const goToTest = () => {
 }
 
 const goToTestResult = () => {
+  if (!user.value.test_result) {
+    alert('테스트 결과가 없습니다. 테스트를 먼저 진행해주세요.')
+    router.push({ name: 'investmenttest' })
+    return
+  }
   router.push({ name: 'testresult' })
+}
+
+const goToSavings = () => {
+  router.push({ name: 'savings' })
 }
 </script>
 
@@ -472,41 +467,106 @@ const goToTestResult = () => {
 .empty-state {
   text-align: center;
   padding: 2rem;
-  color: #868e96;
+  color: #666;
 }
 
 .empty-state i {
-  font-size: 2rem;
+  font-size: 2.5rem;
   margin-bottom: 1rem;
+  color: #145c2b;
+}
+
+.empty-state p {
+  margin: 0.5rem 0;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.empty-state .sub-text {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+
+.empty-state .action-button {
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.empty-state .action-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(20, 92, 43, 0.2);
+}
+
+.empty-state .action-button i {
+  font-size: 1rem;
+  margin: 0;
 }
 
 .test-result {
+  text-align: center;
+  padding: 2rem;
   background: #f8f9fa;
-  padding: 1.5rem;
   border-radius: 8px;
 }
 
 .result-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+  gap: 0.5rem;
   margin-bottom: 1rem;
 }
 
+.result-type-text {
+  font-size: 1.2rem;
+  color: #495057;
+}
+
 .result-type {
+  font-size: 1.5rem;
   font-weight: 700;
   color: #145c2b;
 }
 
 .result-score {
-  color: #495057;
-  font-size: 0.9rem;
+  font-size: 1.1rem;
+  color: #666;
+  margin-bottom: 1rem;
 }
 
-.result-description {
+.like-button {
+  padding: 0.3rem 0.8rem;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  background: white;
   color: #495057;
-  line-height: 1.6;
-  margin: 0;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.like-button:hover {
+  background: #f8f9fa;
+}
+
+.like-button.liked {
+  background: #145c2b;
+  color: white;
+  border-color: #145c2b;
+}
+
+.post-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.post-title {
+  cursor: pointer;
 }
 
 .product-list {
@@ -524,17 +584,56 @@ const goToTestResult = () => {
   border-bottom: none;
 }
 
+.product-info-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.product-type {
+  font-size: 0.8rem;
+  padding: 0.2rem 0.5rem;
+  background-color: #e3f2fd;
+  color: #1976d2;
+  border-radius: 4px;
+}
+
+.bank-name {
+  font-size: 0.9rem;
+  color: #666;
+}
+
 .product-name {
+  font-size: 1.1rem;
   font-weight: 600;
   color: #333;
   margin-bottom: 0.5rem;
 }
 
-.product-info {
+.product-details {
   display: flex;
   gap: 1rem;
   font-size: 0.9rem;
+}
+
+.rate-info, .term-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.label {
   color: #666;
+}
+
+.value {
+  font-weight: 500;
+  color: #333;
+}
+
+.rate-info .value {
+  color: #e64545;
 }
 
 .posts-section {
@@ -567,28 +666,12 @@ const goToTestResult = () => {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-.post-title {
-  font-weight: 500;
-  color: #333;
-  margin-bottom: 0.5rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
 .solved-badge {
   background: #145c2b;
   color: white;
   padding: 0.2rem 0.5rem;
   border-radius: 4px;
   font-size: 0.8rem;
-}
-
-.post-meta {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.85rem;
-  color: #868e96;
 }
 
 @media (max-width: 768px) {

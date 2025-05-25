@@ -12,14 +12,13 @@
       <div v-if="selectedTab === 'stock'" class="search-box" ref="searchBoxRef">
         <input
           type="text"
-          :value="searchKeyword"
-          @input="onInput"
+          v-model="searchKeyword"
           @click="isFocused = true"
           @focus="isFocused = true"
           @blur="() => setTimeout(() => isFocused = false, 100)"
           placeholder="종목명 검색"
         />
-        <ul v-if="filteredSuggestions.length && isFocused">
+        <ul v-if="filteredSuggestions.length && isFocused" class="suggestions">
           <li
             v-for="suggestion in filteredSuggestions"
             :key="suggestion.id"
@@ -33,52 +32,63 @@
   </div>
 
     <div class="content-container">
-      <div class="stock-content" v-if="selectedTab === 'stock'">
-        <div class="header-row">
-          <div class="left">
-            <div class="info">
-              <div v-if="isAuthenticated" class="heart-space"></div>
-              <span>종목</span>
-            </div>
-          </div>
-          <div class="price-block">현재가</div>
-          <div class="volume-block">누적 거래량 · 대금</div>
-          <div class="marketcap-block">시가총액</div>
-        </div>
-
-        <div class="stock-container">
-
-          <StockCard
-            v-for="item in filteredStockData"
-            :key="item.id"
-            :data="item"
-            :show-heart="isAuthenticated"
-            @click="goToDetail(item.stock_code)"
-          />
-        </div>
+      <div v-if="loading" class="loading-state">
+        데이터를 불러오는 중입니다...
       </div>
 
-      <div class="etf-content" v-if="selectedTab === 'etf'">
-        <div class="header-row">
-          <div class="left">
-            <div class="info">
-              <div v-if="isAuthenticated" class="heart-space"></div>
-              <span>종목 · 업종</span>
+      <div v-else-if="error" class="error-state">
+        {{ error }}
+        <button @click="fetchData" class="retry-button">다시 시도</button>
+      </div>
+
+      <template v-else>
+        <div class="stock-content" v-if="selectedTab === 'stock'">
+          <div class="header-row">
+            <div class="left">
+              <div class="info">
+                <div v-if="isAuthenticated" class="heart-space"></div>
+                <span>종목</span>
+              </div>
             </div>
+            <div class="price-block">현재가</div>
+            <div class="volume-block">누적 거래량 · 대금</div>
+            <div class="marketcap-block">시가총액</div>
           </div>
-          <div class="price-block">현재가</div>
-          <div class="marketcap-block">NAV</div>
+
+          <div class="stock-container">
+
+            <StockCard
+              v-for="item in filteredStockData"
+              :key="item.id"
+              :data="item"
+              :show-heart="isAuthenticated"
+              @click="goToDetail(item.stock_code)"
+            />
+          </div>
         </div>
 
-        <div class="etf-container">
-          <EtfCard
-            v-for="etf in etfData"
-            :key="etf.id"
-            :data="etf"
-            :show-heart="isAuthenticated"
-          />
+        <div class="etf-content" v-if="selectedTab === 'etf'">
+          <div class="header-row">
+            <div class="left">
+              <div class="info">
+                <div v-if="isAuthenticated" class="heart-space"></div>
+                <span>종목 · 업종</span>
+              </div>
+            </div>
+            <div class="price-block">현재가</div>
+            <div class="marketcap-block">NAV</div>
+          </div>
+
+          <div class="etf-container">
+            <EtfCard
+              v-for="etf in etfData"
+              :key="etf.id"
+              :data="etf"
+              :show-heart="isAuthenticated"
+            />
+          </div>
         </div>
-      </div>
+      </template>
     </div>
   </div>
 </template>
@@ -98,13 +108,16 @@ const router = useRouter()
 const accountStore = useAccountStore()
 const isAuthenticated = computed(() => accountStore.isAuthenticated)
 
-const searchKeyword = ref('') // 🔧 추가됨
+const searchKeyword = ref('')
 const isFocused = ref(false)
+const loading = ref(true)
+const error = ref(null)
 
-const searchBoxRef = ref(null) // 🔧 DOM 참조
+const searchBoxRef = ref(null)
 
-onMounted(() => {
+onMounted(async () => {
   document.addEventListener('click', handleClickOutside)
+  await fetchData()
 })
 
 onUnmounted(() => {
@@ -117,28 +130,44 @@ const handleClickOutside = (event) => {
   }
 }
 
-const selectTab = (tab) => {
+const fetchData = async () => {
+  loading.value = true
+  error.value = null
+  try {
+    if (selectedTab.value === 'stock') {
+      const response = await axios.get('http://127.0.0.1:8000/api/v1/products/stocks/')
+      stockData.value = response.data
+    } else {
+      const response = await axios.get('http://127.0.0.1:8000/api/v1/products/etfs/')
+      etfData.value = response.data
+    }
+  } catch (err) {
+    console.error('데이터 로딩 실패:', err)
+    error.value = '데이터를 불러오는데 실패했습니다.'
+  } finally {
+    loading.value = false
+  }
+}
+
+const selectTab = async (tab) => {
   selectedTab.value = tab
-  searchKeyword.value = '' // 🔧 검색어 초기화
+  searchKeyword.value = ''
+  await fetchData()
 }
 
 const goToDetail = (stockCode) => {
   router.push({ name: 'stockdetail', params: { stock_code: stockCode } })
 }
 
-// 🔧 input 이벤트 핸들러
 const onInput = (e) => {
   searchKeyword.value = e.target.value
 }
 
-// 🔧 자동완성 클릭 시 값 지정
 const selectSuggestion = (name) => {
   searchKeyword.value = name
   isFocused.value = false
 }
 
-
-// 🔧 필터링된 주식 목록
 const filteredStockData = computed(() => {
   const keyword = searchKeyword.value.toLowerCase()
   if (!keyword) return stockData.value
@@ -147,7 +176,6 @@ const filteredStockData = computed(() => {
   )
 })
 
-// 🔧 자동완성 후보
 const filteredSuggestions = computed(() => {
   const keyword = searchKeyword.value.toLowerCase()
   if (!keyword) return []
@@ -156,55 +184,6 @@ const filteredSuggestions = computed(() => {
   )
 })
 
-onMounted(() => {
-  stockData.value = [
-    {
-      id: 1,
-      type: 'stock',
-      name: '삼성전자',
-      stock_code: '005930',
-      current_price: 68800,
-      base_price: 68900,
-      market_cap: 412500000000000,
-      trade_volume: 10500000,
-      trade_value: 721000000000
-    },
-    {
-      id: 2,
-      type: 'stock',
-      name: '카카오',
-      stock_code: '035720',
-      current_price: 56000,
-      base_price: 55000,
-      market_cap: 42300000000000,
-      trade_volume: 1800000,
-      trade_value: 98700000000
-    }
-  ]
-
-  etfData.value = [
-    {
-      id: 1,
-      type: 'etf',
-      name: 'KODEX 200',
-      current_price: 39350,
-      price_change: 150,
-      sector: '지수',
-      nav: 39380,
-      nav_change: 120
-    },
-    {
-      id: 2,
-      type: 'etf',
-      name: 'TIGER 미국S&P500',
-      current_price: 103050,
-      price_change: -200,
-      sector: '해외지수',
-      nav: 103000,
-      nav_change: -150
-    }
-  ]
-})
 </script>
 
 <style scoped>
@@ -366,6 +345,53 @@ button.active {
 
 .search-box li:hover {
   background-color: #f0f0f0;
+}
+
+.loading-state,
+.error-state {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+}
+
+.error-state {
+  color: #dc3545;
+}
+
+.retry-button {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: #145c2b;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.retry-button:hover {
+  background-color: #0d4420;
+}
+
+.suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+}
+
+.suggestions li {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+.suggestions li:hover {
+  background: #f5f5f5;
 }
 
 </style>

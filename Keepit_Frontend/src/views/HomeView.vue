@@ -298,6 +298,9 @@ onUnmounted(() => {
   .content {
     text-align: center;
     padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;  /* 내용물 중앙 정렬 */
   }
 
   .explain {
@@ -310,12 +313,99 @@ onUnmounted(() => {
     font-size: 2.5rem;
   }
 
+  .go-to-test {
+    margin: 0 auto;  /* 버튼 중앙 정렬 */
+  }
+
   .card {
     padding: 2rem;
   }
 
   .card h2 {
     font-size: 2rem;
+  }
+}
+
+.home-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  text-align: center;
+}
+
+.home-image {
+  width: 200px;
+  height: 200px;
+  margin-bottom: 2rem;
+}
+
+.home-title {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.home-subtitle {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #145c2b;
+  margin-bottom: 1.5rem;
+}
+
+.home-description {
+  color: #666;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.start-button {
+  display: inline-block;
+  padding: 1rem 2rem;
+  background-color: #145c2b;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: bold;
+  transition: background-color 0.2s;
+}
+
+.start-button:hover {
+  background-color: #0d4420;
+}
+
+/* 반응형 디자인 */
+@media (min-width: 768px) {
+  .home-container {
+    padding: 4rem;
+  }
+
+  .home-image {
+    width: 300px;
+    height: 300px;
+  }
+
+  .home-title {
+    font-size: 2.5rem;
+  }
+
+  .home-subtitle {
+    font-size: 3rem;
+  }
+}
+
+/* 작은 화면에서의 버튼 위치 조정 */
+@media (max-width: 767px) {
+  .home-container {
+    padding: 2rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .start-button {
+    margin: 0 auto;  /* 수평 중앙 정렬 */
   }
 }
 </style>

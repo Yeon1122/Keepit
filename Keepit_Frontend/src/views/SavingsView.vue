@@ -3,7 +3,6 @@
     <div class="title-container">
       <h3>정기 예금/적금 상품 안내</h3>
 
-      <!-- ✅ 왼쪽 버튼 + 오른쪽 드롭다운 정렬 -->
       <div class="filter-bar">
         <div class="btn-group">
           <button :class="{ active: selectedType === '정기예금' }" @click="filterByType('정기예금')">정기예금</button>
@@ -18,11 +17,33 @@
     </div>
 
     <div class="saving-container">
-      <SavingCard v-for="product in paginatedProducts" :key="product.id" :product="product" class="saving-card" />
+      <div v-if="loading" class="loading-state">
+        {{ loadingMessage }}
+      </div>
+      <div v-else-if="error" class="error-state">
+        {{ error }}
+        <button @click="fetchProducts" class="retry-button">다시 시도</button>
+      </div>
+      <template v-else>
+        <SavingCard 
+          v-for="product in paginatedProducts" 
+          :key="product.id || product.product_code" 
+          :product="product" 
+          class="saving-card"
+        />
+        <div v-if="products.length === 0" class="no-data">
+          표시할 상품이 없습니다.
+        </div>
+      </template>
     </div>
 
     <div class="pagination">
-      <button v-for="page in totalPages" :key="page" @click="goToPage(page)" :class="{ active: page === currentPage }">
+      <button 
+        v-for="page in totalPages" 
+        :key="page" 
+        @click="goToPage(page)" 
+        :class="{ active: page === currentPage }"
+      >
         {{ page }}
       </button>
     </div>
@@ -34,248 +55,81 @@ import { ref, onMounted, computed } from 'vue'
 import SavingCard from '@/components/SavingCard.vue'
 import axios from 'axios'
 import { useAccountStore } from '@/stores/users'
-import HeartButton from '@/components/HeartButton.vue'
 
-const allProducts = ref([])
+const loading = ref(true)
+const error = ref(null)
 const products = ref([])
-
 const selectedType = ref('정기예금')
 const sortOption = ref('interest')
-
 const currentPage = ref(1)
 const itemsPerPage = 8
+const loadingMessage = ref('데이터를 불러오는 중입니다...')
 
 const accountStore = useAccountStore()
 const isAuthenticated = computed(() => accountStore.isAuthenticated)
 
-// onMounted(async () => {
-//   try {
-//     const res = await axios.get('http://127.0.0.1:8000/api/v1/products/savings/')
-//     console.log("💡 응답 데이터:", res.data)
-//     allProducts.value = res.data.data || []  // 백엔드 응답 구조에 따라 조정
-//     filterByType(selectedType.value)   // ✅ 초기 필터 적용
-//   } catch (err) {
-//     console.error('❌ 상품 데이터를 불러오는 데 실패했습니다.', err)
-//   }
-// })
+const fetchProducts = async () => {
+  loading.value = true
+  error.value = null
+  products.value = []
 
-// ✅ 상품 필터링 + 정렬
-const filterByType = (type) => {
+  const backendType = selectedType.value === '정기예금' ? 'deposits' : 'savings'
+  const url = `/api/v1/products/${backendType}/`
+
+  try {
+    console.log(`[fetchProducts] 요청 URL: ${url}`)
+    const res = await axios.get(url)
+    
+    if (!res.data || (!res.data.data && !Array.isArray(res.data))) {
+      throw new Error('데이터 형식이 올바르지 않습니다.')
+    }
+
+    const productsData = Array.isArray(res.data) ? res.data : res.data.data
+    products.value = sortByOption(productsData.map(product => ({
+      ...product,
+      type: selectedType.value === '정기예금' ? 'deposit' : 'saving'
+    })), sortOption.value)
+
+    currentPage.value = 1
+  } catch (err) {
+    console.error('[fetchProducts] 오류:', err)
+    error.value = '상품 데이터를 불러오지 못했습니다.'
+  } finally {
+    loading.value = false
+  }
+}
+
+const filterByType = async (type) => {
   selectedType.value = type
-  const filtered = allProducts.value.filter(p => p.type === type) // ✅ 선언
-  products.value = sortByOption(filtered, sortOption.value)
-  currentPage.value = 1
+  await fetchProducts()
 }
 
 const sortProducts = () => {
-  const filtered = allProducts.value.filter(p => p.type === selectedType.value) // ✅ 선언
-  products.value = sortByOption(filtered, sortOption.value)
-  currentPage.value = 1
+  products.value = sortByOption([...products.value], sortOption.value)
 }
 
-// ✅ 정렬 함수
 const sortByOption = (list, option) => {
-  const toFloat = (val) => {
-    if (typeof val === 'string') {
-      // "3.8%" 혹은 " 4.0 " 같은 문자열 대비
-      val = val.replace(/[^\d.-]/g, '')
-    }
-    const num = parseFloat(val)
-    return isNaN(num) ? -Infinity : num
-  }
-
   if (option === 'interest') {
-    return [...list].sort((a, b) => toFloat(b.interest_rate) - toFloat(a.interest_rate))
+    return [...list].sort((a, b) => b.interest_rate - a.interest_rate)
   } else if (option === 'special') {
-    return [...list].sort((a, b) => toFloat(b.special_rate) - toFloat(a.special_rate))
+    return [...list].sort((a, b) => b.special_rate - a.special_rate)
   }
-
   return list
 }
 
+const totalPages = computed(() => Math.ceil(products.value.length / itemsPerPage))
 
-// 페이지 수 계산
-const totalPages = computed(() => {
-  return Math.ceil(products.value.length / itemsPerPage)
-})
-
-// 현재 페이지에 해당하는 상품만 보여주기
 const paginatedProducts = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage
-  const end = start + itemsPerPage
-  return products.value.slice(start, end)
+  return products.value.slice(start, start + itemsPerPage)
 })
 
-// 페이지 변경
 const goToPage = (page) => {
   currentPage.value = page
 }
 
-
 onMounted(() => {
-  allProducts.value = [
-    {
-      id: 1,
-      type: "정기예금",
-      name: "국민 튼튼예금",
-      company: "국민은행",
-      interest_rate: 3.2,
-      special_rate: 3.8,
-      term: 12,
-      target: "만 19세 이상 개인"
-    },
-    {
-      id: 3,
-      type: "정기예금",
-      name: "우리예금",
-      company: "우리은행",
-      interest_rate: 3.5,
-      special_rate: 3.7,
-      term: 6,
-      target: "만 19세 이상 개인"
-    },
-    {
-      id: 4,
-      type: "정기예금",
-      name: "test",
-      company: "신한은행",
-      interest_rate: 2.0,
-      special_rate: 4.0,
-      term: 24,
-      target: "만 19세 이상 개인"
-    },
-    {
-      id: 5,
-      type: "정기예금",
-      name: "test",
-      company: "하나은행",
-      interest_rate: 1.8,
-      special_rate: 9.0,
-      term: 36,
-      target: "만 19세 이상 개인"
-    },
-    {
-      id: 6,
-      type: "정기예금",
-      name: "국민 튼튼예금",
-      company: "국민은행",
-      interest_rate: 3.2,
-      special_rate: 3.8,
-      term: 12,
-      target: "만 19세 이상 개인"
-    },
-    {
-      id: 7,
-      type: "정기예금",
-      name: "우리예금",
-      company: "우리은행",
-      interest_rate: 3.5,
-      special_rate: 3.7,
-      term: 6,
-      target: "만 19세 이상 개인"
-    },
-    {
-      id: 8,
-      type: "정기예금",
-      name: "test",
-      company: "신한은행",
-      interest_rate: 2.0,
-      special_rate: 4.0,
-      term: 24,
-      target: "만 19세 이상 개인"
-    },
-    {
-      id: 9,
-      type: "정기예금",
-      name: "test",
-      company: "하나은행",
-      interest_rate: 1.8,
-      special_rate: 9.0,
-      term: 36,
-      target: "만 19세 이상 개인"
-    },
-    {
-      id: 10,
-      type: "정기예금",
-      name: "국민 튼튼예금",
-      company: "국민은행",
-      interest_rate: 3.2,
-      special_rate: 3.8,
-      term: 12,
-      target: "만 19세 이상 개인"
-    },
-    {
-      id: 11,
-      type: "정기예금",
-      name: "우리예금",
-      company: "우리은행",
-      interest_rate: 3.5,
-      special_rate: 3.7,
-      term: 6,
-      target: "만 19세 이상 개인"
-    },
-    {
-      id: 12,
-      type: "정기예금",
-      name: "test",
-      company: "신한은행",
-      interest_rate: 2.0,
-      special_rate: 4.0,
-      term: 24,
-      target: "만 19세 이상 개인"
-    },
-    {
-      id: 13,
-      type: "정기예금",
-      name: "test",
-      company: "하나은행",
-      interest_rate: 1.8,
-      special_rate: 9.0,
-      term: 36,
-      target: "만 19세 이상 개인"
-    },
-    {
-      id: 14,
-      type: "적금",
-      name: "test",
-      company: "하나은행",
-      interest_rate: 1.8,
-      special_rate: 9.0,
-      term: 36,
-      target: "만 19세 이상 개인"
-    },
-    {
-      id: 15,
-      type: "적금",
-      name: "test",
-      company: "국민은행",
-      interest_rate: 3.2,
-      special_rate: 3.8,
-      term: 12,
-      target: "만 19세 이상 개인"
-    },
-    {
-      id: 16,
-      type: "적금",
-      name: "test",
-      company: "우리은행",
-      interest_rate: 3.5,
-      special_rate: 3.7,
-      term: 6,
-      target: "만 19세 이상 개인"
-    },
-    {
-      id: 17,
-      type: "적금",
-      name: "test",
-      company: "신한은행",
-      interest_rate: 2.0,
-      special_rate: 4.0,
-      term: 24,
-      target: "만 19세 이상 개인"
-    },
-  ]
-  filterByType(selectedType.value)
+  fetchProducts()
 })
 </script>
 
@@ -286,22 +140,28 @@ onMounted(() => {
 }
 
 .title-container {
-  margin-top: 1.5rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
 }
 
 h3 {
   color: #145c2b;
   font-weight: bold;
-  font-size: 1.3rem;
-  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
 }
 
-/* ✅ 버튼 + 드롭다운 가로 배치 */
+/* 필터바 스타일링 */
 .filter-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 1rem;
 }
 
 .btn-group {
@@ -309,81 +169,146 @@ h3 {
   gap: 1rem;
 }
 
-/* 기본 버튼 스타일 */
-button {
-  padding: 0.6rem 1.5rem;
+/* 버튼 스타일링 */
+.btn-group button {
+  padding: 0.8rem 2rem;
   border: 2px solid #145c2b;
   background-color: white;
   color: #145c2b;
   font-weight: bold;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.3s ease;
+  border-radius: 8px;
+  font-size: 1rem;
 }
 
-button:hover:not(.active) {
+.btn-group button:hover:not(.active) {
+  background-color: #1a703a;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(20, 92, 43, 0.2);
+}
+
+.btn-group button.active {
   background-color: #145c2b;
   color: white;
+  box-shadow: 0 2px 8px rgba(20, 92, 43, 0.2);
 }
 
-button.active {
-  background-color: #145c2b;
-  color: white;
+/* 드롭다운 스타일링 */
+select {
+  padding: 0.8rem 1.5rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: #333;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
+select:hover {
+  border-color: #145c2b;
+}
+
+select:focus {
+  outline: none;
+  border-color: #145c2b;
+  box-shadow: 0 0 0 2px rgba(20, 92, 43, 0.1);
+}
+
+/* 상품 컨테이너 */
 .saving-container {
   display: flex;
   flex-wrap: wrap;
-  /* ✅ 줄바꿈 허용 */
   justify-content: center;
-  /* ✅ 가운데 정렬 */
   gap: 2rem;
-  /* ✅ 카드 사이 간격 */
   padding: 2rem;
   max-width: 1200px;
-  /* ✅ 전체 최대 너비 제한 */
   margin: 0 auto;
-  /* ✅ 가운데 정렬 */
 }
 
-/* SavingCard.vue의 루트 div 또는 카드 스타일 */
+/* 상품 카드 */
 .saving-card {
   flex: 1 1 300px;
-  /* ✅ 기본 너비 300px, 줄어들고 늘어남 허용 */
-  max-width: 300px;
+  max-width: 350px;
+  min-width: 300px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
+.saving-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* 로딩, 에러, 데이터 없음 상태 */
+.loading-state,
+.error-state,
+.no-data {
+  width: 100%;
+  text-align: center;
+  padding: 3rem;
+  color: #666;
+  font-size: 1.1rem;
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  margin: 2rem auto;
+  max-width: 600px;
+}
+
+.error-state {
+  color: #dc3545;
+  background-color: #fff5f5;
+}
+
+.retry-button {
+  margin-top: 1.5rem;
+  padding: 0.8rem 2rem;
+  background-color: #145c2b;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.retry-button:hover {
+  background-color: #1a703a;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(20, 92, 43, 0.2);
+}
+
+/* 페이지네이션 */
 .pagination {
   display: flex;
   justify-content: center;
-  margin-bottom: 2rem;
+  align-items: center;
+  margin: 2rem 0;
   gap: 0.5rem;
 }
 
 .pagination button {
-  padding: 0.5rem 1rem;
-  border: 1px solid #ccc;
+  padding: 0.6rem 1rem;
+  border: 1px solid #e0e0e0;
   background-color: white;
   color: #145c2b;
   font-weight: bold;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.3s ease;
+  border-radius: 6px;
+  min-width: 40px;
 }
 
 .pagination button:hover {
-  background-color: #f0f0f0;
+  background-color: #f8f9fa;
+  border-color: #145c2b;
 }
 
 .pagination button.active {
   background-color: #145c2b;
   color: white;
   border-color: #145c2b;
-}
-
-.heart-count {
-  color: var(--text-secondary);
-  font-size: 0.9rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  box-shadow: 0 2px 4px rgba(20, 92, 43, 0.2);
 }
 </style>

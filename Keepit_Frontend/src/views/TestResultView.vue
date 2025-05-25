@@ -63,7 +63,7 @@
             <router-link 
               :to="{ name: 'savings' }" 
               class="nav-btn"
-              :class="{ 'highlight': result.type === '안정형' }"
+              :class="{ 'highlight': result.type === '안정형 투자자' }"
               @click="scrollToTop"
             >
               정기예금/적금
@@ -71,7 +71,7 @@
             <router-link 
               :to="{ name: 'goods' }" 
               class="nav-btn"
-              :class="{ 'highlight': result.type === '중립형' }"
+              :class="{ 'highlight': result.type === '중립형 투자자' }"
               @click="scrollToTop"
             >
               현물
@@ -79,7 +79,7 @@
             <router-link 
               :to="{ name: 'stocks' }" 
               class="nav-btn"
-              :class="{ 'highlight': result.type === '공격형' }"
+              :class="{ 'highlight': result.type === '공격형 투자자' }"
               @click="scrollToTop"
             >
               주식
@@ -151,39 +151,27 @@ const scrollToTop = () => {
 }
 
 onMounted(async () => {
-  if (!accountStore.isAuthenticated || !accountStore.token) {
-    alert('로그인이 필요합니다.')
-    router.push({ name: 'login', query: { redirect: '/test/result' } })
+  const token = accountStore.token
+  if (!token) {
+    alert('⚠️ 로그인이 필요한 서비스입니다.')
+    router.push({ name: 'login' })
     return
   }
 
   try {
-    const response = await axios.get('http://127.0.0.1:8000/api/v1/test/result/', {
+    const res = await axios.get('http://127.0.0.1:8000/api/v1/test/result/', {
       headers: {
-        Authorization: `Token ${accountStore.token}`
+        Authorization: `Token ${token}`
       }
     })
-
-    result.value = {
-      type: response.data.risk_type_display,
-      total_score: response.data.total_score,
-      description: response.data.result_description,
-      recommendations: getRecommendations(response.data.risk_type_display),
-      ...response.data
-    }
-
-    console.log('받은 결과 데이터:', response.data)
-    console.log('처리된 결과:', result.value)
-
+    result.value = res.data
   } catch (err) {
-    console.error('결과 불러오기 실패:', err.response?.data || err)
-    if (err.response?.status === 401) {
-      accountStore.logOut()
-      alert('로그인이 만료되었습니다. 다시 로그인해주세요.')
-      router.push({ name: 'login', query: { redirect: '/test/result' } })
-    } else {
-      alert('결과를 불러오는데 실패했습니다.')
+    if (err.response?.status === 404) {
+      alert('테스트 결과가 없습니다. 테스트를 먼저 진행해주세요.')
+      router.push({ name: 'investmenttest' })
+      return
     }
+    console.error('테스트 결과 로딩 실패:', err)
   } finally {
     loading.value = false
   }
