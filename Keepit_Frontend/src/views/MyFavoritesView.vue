@@ -38,6 +38,13 @@
         >
           ETF
         </button>
+        <button 
+          class="filter-button" 
+          :class="{ active: selectedFilter === 'goods' }"
+          @click="selectedFilter = 'goods'"
+        >
+          현물
+        </button>
       </div>
     </div>
 
@@ -89,6 +96,7 @@
             <template v-else-if="product.type === 'etf'">
               <div class="product-info-header">
                 <span class="product-type">ETF</span>
+                <span class="bank-name">{{ product.company }}</span>
               </div>
               <div class="product-name">{{ product.name }}</div>
               <div class="product-details">
@@ -101,6 +109,28 @@
                   <span class="value" :class="getPriceChangeClass(product.price_change)">
                     <i :class="['fas', product.price_change > 0 ? 'fa-caret-up' : 'fa-caret-down']"></i>
                     {{ formatPriceChange(product.price_change) }}원
+                  </span>
+                </div>
+              </div>
+            </template>
+            
+            <!-- 현물 상품 -->
+            <template v-else-if="product.type === 'goods'">
+              <div class="product-info-header">
+                <span class="product-type">현물</span>
+                <span class="bank-name">{{ product.company }}</span>
+              </div>
+              <div class="product-name">{{ product.name }}</div>
+              <div class="product-details">
+                <div class="price-info">
+                  <span class="label">현재가</span>
+                  <span class="value">${{ formatPrice(product.current_price) }} / oz</span>
+                </div>
+                <div class="change-info">
+                  <span class="label">변동가</span>
+                  <span class="value" :class="getPriceChangeClass(product.price_change)">
+                    <i :class="['fas', product.price_change > 0 ? 'fa-caret-up' : 'fa-caret-down']"></i>
+                    ${{ formatPriceChange(product.price_change) }}
                   </span>
                 </div>
               </div>
@@ -144,7 +174,8 @@ const getEmptyStateMessage = computed(() => {
     deposit: '예금',
     saving: '적금',
     stock: '주식',
-    etf: 'ETF'
+    etf: 'ETF',
+    goods: '현물'
   }
   return `찜한 ${typeMap[selectedFilter.value]} 상품이 없습니다.`
 })

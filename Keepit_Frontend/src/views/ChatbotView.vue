@@ -82,45 +82,90 @@ const scrollToBottom = async () => {
 }
 
 const handleQuickButton = async (type) => {
-  showQuickButtons.value = false
-  messages.value.push({ type: 'user', text: type })
-  await sendToChatbot(type)
+  console.log('🔘 Quick button clicked:', type)
+  try {
+    showQuickButtons.value = false
+    messages.value.push({ type: 'user', text: type })
+    await scrollToBottom()
+    await sendToChatbot(type)
+  } catch (error) {
+    console.error('❌ Quick button error:', error)
+    showQuickButtons.value = true // 에러 시 버튼 다시 표시
+  }
 }
 
 const sendMessage = async () => {
-  if (!userInput.value.trim() || isLoading.value) return
+  console.log('📤 Send message clicked, input:', userInput.value)
+  if (!userInput.value.trim() || isLoading.value) {
+    console.log('❌ Message blocked - empty or loading')
+    return
+  }
 
-  const message = userInput.value
-  userInput.value = ''
-  messages.value.push({ type: 'user', text: message })
-  await sendToChatbot(message)
+  try {
+    const message = userInput.value
+    userInput.value = ''
+    messages.value.push({ type: 'user', text: message })
+    await scrollToBottom()
+    await sendToChatbot(message)
+  } catch (error) {
+    console.error('❌ Send message error:', error)
+  }
 }
 
 const sendToChatbot = async (message) => {
+  console.log('🤖 Sending to chatbot:', message)
   isLoading.value = true
   await scrollToBottom()
 
   try {
     let response
     if (!chatSession) {
+      console.log('🆕 Starting new chat session')
+      
+      // 버튼에 따라 카테고리 결정
+      let category = 'product_info' // 기본값
+      if (message === '문의하기') {
+        category = 'page_help'
+      } else if (message === '상품 질문하기') {
+        category = 'product_info'
+      }
+      
       // 채팅 세션 시작
-      response = await axios.post('/api/v1/ai/chatbot/start/', {
-        category: 'general',
-        question: message
+      response = await axios.post('/api/v1/chatbot/start/', {
+        category: category
       })
       chatSession = response.data.session_id
+      console.log('✅ Chat session created:', chatSession, 'with category:', category)
+      
+      // 환영 메시지는 이미 백엔드에서 생성되므로 추가
+      if (response.data.welcome_message) {
+        messages.value.push({ type: 'bot', text: response.data.welcome_message })
+      }
+      
+      // 첫 메시지가 환영 메시지가 아닌 경우에만 사용자 메시지 처리
+      if (message !== '문의하기' && message !== '상품 질문하기') {
+        response = await axios.post(`/api/v1/chatbot/chat/${chatSession}/`, {
+          message: message
+        })
+        messages.value.push({ type: 'bot', text: response.data.response })
+      }
     } else {
+      console.log('💬 Continuing existing session:', chatSession)
       // 기존 세션에 메시지 전송
-      response = await axios.post(`/api/v1/ai/chatbot/chat/${chatSession}/`, {
+      response = await axios.post(`/api/v1/chatbot/chat/${chatSession}/`, {
         message: message
       })
+      console.log('📨 Chatbot response:', response.data)
+      // 챗봇 응답 추가
+      messages.value.push({ type: 'bot', text: response.data.response })
     }
-
-    // 챗봇 응답 추가
-    messages.value.push({ type: 'bot', text: response.data.response })
   } catch (error) {
-    messages.value.push({ type: 'bot', text: '죄송합니다. 오류가 발생했습니다. 잠시 후 다시 시도해주세요.' })
-    console.error('Chatbot error:', error)
+    console.error('❌ Chatbot API error:', error)
+    console.error('❌ Error details:', error.response?.data)
+    messages.value.push({ 
+      type: 'bot', 
+      text: '죄송합니다. 서버 연결에 문제가 있습니다. 잠시 후 다시 시도해주세요.' 
+    })
   }
 
   isLoading.value = false

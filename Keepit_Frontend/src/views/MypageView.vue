@@ -130,7 +130,7 @@
                   </div>
                 </div>
                 <!-- 주식/ETF 상품일 경우 -->
-                <div v-else class="product-details">
+                <div v-else-if="['stock', 'etf'].includes(product.type)" class="product-details">
                   <div class="price-info">
                     <span class="label">현재가</span>
                     <span class="value">{{ formatPrice(product.current_price) }}원</span>
@@ -140,6 +140,20 @@
                     <span class="value" :class="getPriceChangeClass(product.price_change)">
                       <i :class="['fas', product.price_change > 0 ? 'fa-caret-up' : 'fa-caret-down']"></i>
                       {{ formatPriceChange(product.price_change) }}원
+                    </span>
+                  </div>
+                </div>
+                <!-- 현물 상품일 경우 -->
+                <div v-else-if="product.type === 'goods'" class="product-details">
+                  <div class="price-info">
+                    <span class="label">현재가</span>
+                    <span class="value">${{ formatPrice(product.current_price) }} / oz</span>
+                  </div>
+                  <div class="change-info">
+                    <span class="label">변동가</span>
+                    <span class="value" :class="getPriceChangeClass(product.price_change)">
+                      <i :class="['fas', product.price_change > 0 ? 'fa-caret-up' : 'fa-caret-down']"></i>
+                      ${{ formatPriceChange(product.price_change) }}
                     </span>
                   </div>
                 </div>
@@ -279,7 +293,8 @@ const getEmptyStateMessage = computed(() => {
     deposit: '예금',
     saving: '적금',
     stock: '주식',
-    etf: 'ETF'
+    etf: 'ETF',
+    goods: '현물'
   }
   return `찜한 ${typeMap[selectedFilter.value]} 상품이 없습니다.`
 })
@@ -385,8 +400,44 @@ const goToMyPosts = () => {
   router.push({ name: 'myposts' })
 }
 
-const goToTest = () => {
-  router.push({ name: 'investmenttest' })
+const goToTest = async () => {
+  console.log('🎯 마이페이지 - 투자 스타일 테스트 버튼 클릭됨')
+  
+  try {
+    // 기존 검사 결과 확인
+    const response = await axios.get('/api/v1/test/result/')
+    console.log('📊 검사 결과 응답:', response.data)
+    
+    if (response.data && response.data.type) {
+      console.log('✅ 기존 검사 결과 있음:', response.data.type)
+      // 기존 검사 결과가 있는 경우
+      const userChoice = confirm('이미 투자 성향 검사를 받으셨습니다.\n\n다시 검사를 받으시겠습니까?\n\n확인: 새로 검사받기\n취소: 기존 결과 보기')
+      console.log('👤 사용자 선택:', userChoice ? '새로 검사받기' : '기존 결과 보기')
+      
+      if (userChoice) {
+        // 새로 검사받기
+        router.push({ name: 'investmenttest' })
+      } else {
+        // 기존 결과 보기
+        router.push({ name: 'testresult' })
+      }
+    } else {
+      console.log('❌ 검사 결과 없음, 테스트로 이동')
+      // 검사 결과가 없는 경우 바로 테스트로 이동
+      router.push({ name: 'investmenttest' })
+    }
+  } catch (error) {
+    console.error('❌ 검사 결과 확인 중 오류:', error)
+    if (error.response?.status === 404) {
+      console.log('📝 404 오류 - 검사 결과 없음, 테스트로 이동')
+      // 검사 결과가 없는 경우 바로 테스트로 이동
+      router.push({ name: 'investmenttest' })
+    } else {
+      console.error('🚨 기타 오류, 테스트로 이동')
+      // 오류가 발생해도 테스트로 이동
+      router.push({ name: 'investmenttest' })
+    }
+  }
 }
 
 const goToTestResult = () => {
@@ -406,13 +457,14 @@ const goToFavorites = () => {
   router.push({ name: 'myfavorites' })
 }
 
-// 상품 타입 텍스트 변환 함수 추가
+// 상품 타입 텍스트 변환 함수
 const getProductTypeText = (type) => {
   const typeMap = {
     deposit: '예금',
     saving: '적금',
     stock: '주식',
-    etf: 'ETF'
+    etf: 'ETF',
+    goods: '현물'
   }
   return typeMap[type] || type
 }

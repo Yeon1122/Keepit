@@ -26,7 +26,7 @@
                             <div class="section-group">
                                 <div class="section-title">투자 성향 분석</div>
                                 <ul class="dropdown-menu">
-                                    <li><router-link :to="{ name: 'investmenttest' }">투자 스타일 알아보기</router-link></li>
+                                    <li><a href="#" @click.prevent="goToTest">투자 스타일 알아보기</a></li>
                                     <li><router-link :to="{ name: 'testresult' }">투자 성향 결과</router-link></li>
                                 </ul>
                             </div>
@@ -76,6 +76,7 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAccountStore } from '@/stores/users.js'
+import axios from 'axios'
 
 const router = useRouter()
 const accountStore = useAccountStore()
@@ -99,6 +100,60 @@ const goToMypage = () => router.push({ name: 'mypage' })
 const handleLogout = () => {
     accountStore.logOut()
     router.push({ name: 'home' })
+}
+
+const goToTest = async () => {
+  console.log('🎯 헤더 - 투자 스타일 알아보기 클릭됨')
+  
+  // 드롭다운 메뉴 닫기
+  hideDropdown()
+  
+  // 로그인 확인
+  if (!accountStore.isAuthenticated) {
+    console.log('❌ 로그인되지 않음')
+    if (confirm('투자 성향 검사를 받으려면 로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?')) {
+      router.push({ name: 'login' })
+    }
+    return
+  }
+
+  console.log('✅ 로그인 확인됨, 검사 결과 확인 중...')
+
+  try {
+    // 기존 검사 결과 확인
+    const response = await axios.get('/api/v1/test/result/')
+    console.log('📊 검사 결과 응답:', response.data)
+    
+    if (response.data && response.data.type) {
+      console.log('✅ 기존 검사 결과 있음:', response.data.type)
+      // 기존 검사 결과가 있는 경우
+      const userChoice = confirm('이미 투자 성향 검사를 받으셨습니다.\n\n다시 검사를 받으시겠습니까?\n\n확인: 새로 검사받기\n취소: 기존 결과 보기')
+      console.log('👤 사용자 선택:', userChoice ? '새로 검사받기' : '기존 결과 보기')
+      
+      if (userChoice) {
+        // 새로 검사받기
+        router.push({ name: 'investmenttest' })
+      } else {
+        // 기존 결과 보기
+        router.push({ name: 'testresult' })
+      }
+    } else {
+      console.log('❌ 검사 결과 없음, 테스트로 이동')
+      // 검사 결과가 없는 경우 바로 테스트로 이동
+      router.push({ name: 'investmenttest' })
+    }
+  } catch (error) {
+    console.error('❌ 검사 결과 확인 중 오류:', error)
+    if (error.response?.status === 404) {
+      console.log('📝 404 오류 - 검사 결과 없음, 테스트로 이동')
+      // 검사 결과가 없는 경우 바로 테스트로 이동
+      router.push({ name: 'investmenttest' })
+    } else {
+      console.error('🚨 기타 오류, 테스트로 이동')
+      // 오류가 발생해도 테스트로 이동
+      router.push({ name: 'investmenttest' })
+    }
+  }
 }
 </script>
 

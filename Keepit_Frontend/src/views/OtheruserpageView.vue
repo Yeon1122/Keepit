@@ -124,7 +124,7 @@
                   </div>
                 </div>
                 <!-- 주식/ETF 상품일 경우 -->
-                <div v-else class="product-details">
+                <div v-else-if="['stock', 'etf'].includes(product.type)" class="product-details">
                   <div class="price-info">
                     <span class="label">현재가</span>
                     <span class="value">{{ formatPrice(product.current_price) }}원</span>
@@ -134,6 +134,20 @@
                     <span class="value" :class="getPriceChangeClass(product.price_change)">
                       <i :class="['fas', product.price_change > 0 ? 'fa-caret-up' : 'fa-caret-down']"></i>
                       {{ formatPriceChange(product.price_change) }}원
+                    </span>
+                  </div>
+                </div>
+                <!-- 현물 상품일 경우 -->
+                <div v-else-if="product.type === 'goods'" class="product-details">
+                  <div class="price-info">
+                    <span class="label">현재가</span>
+                    <span class="value">${{ formatPrice(product.current_price) }} / oz</span>
+                  </div>
+                  <div class="change-info">
+                    <span class="label">변동가</span>
+                    <span class="value" :class="getPriceChangeClass(product.price_change)">
+                      <i :class="['fas', product.price_change > 0 ? 'fa-caret-up' : 'fa-caret-down']"></i>
+                      ${{ formatPriceChange(product.price_change) }}
                     </span>
                   </div>
                 </div>
@@ -253,7 +267,8 @@ const getEmptyStateMessage = computed(() => {
     deposit: '예금',
     saving: '적금',
     stock: '주식',
-    etf: 'ETF'
+    etf: 'ETF',
+    goods: '현물'
   }
   return `찜한 ${typeMap[selectedFilter.value]} 상품이 없습니다.`
 })
@@ -264,7 +279,8 @@ const getProductTypeText = (type) => {
     deposit: '예금',
     saving: '적금',
     stock: '주식',
-    etf: 'ETF'
+    etf: 'ETF',
+    goods: '현물'
   }
   return typeMap[type] || type
 }

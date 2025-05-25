@@ -26,6 +26,7 @@ urlpatterns = [
     
     # 현물 관련
     path('goods/', views.goods_list, name='goods-list'),
+    path('goods/<int:goods_id>/favorite/', views.goods_favorite, name='goods-favorite'),
     
     # 찜하기 기능
     path('favorites/by-id/<int:product_id>/', views.favorite_by_id, name='favorite-by-id'),
