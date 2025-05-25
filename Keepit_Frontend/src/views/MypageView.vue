@@ -247,11 +247,9 @@ import { useAccountStore } from '@/stores/users.js'
 import { useRouter } from 'vue-router'
 
 const accountStore = useAccountStore()
-
 const router = useRouter()
 
 const user = ref({
-  user_id: '',
   userid: '',
   nickname: '',
   name: '',
@@ -270,7 +268,8 @@ const user = ref({
     question_posts: 0
   },
   recent_posts: [],
-  liked_products: []
+  liked_products: [],
+  my_posts: []
 })
 
 const freePosts = ref([])
@@ -339,7 +338,8 @@ onMounted(async () => {
       test_result: res.data.test_result || null,  // 테스트 결과도 마이페이지 응답에서 받아옴
       liked_products: favoritesRes.data || [],  // 찜한 상품 목록 추가
       posts_summary: res.data.posts_summary || { total_posts: 0, free_posts: 0, question_posts: 0 },
-      recent_posts: res.data.recent_posts || []
+      recent_posts: res.data.recent_posts || [],
+      my_posts: res.data.my_posts || []
     }
 
     // 최근 게시글 분류
