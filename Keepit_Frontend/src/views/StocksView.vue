@@ -58,7 +58,6 @@
           </div>
 
           <div class="stock-container">
-
             <StockCard
               v-for="item in filteredStockData"
               :key="item.id"
@@ -66,6 +65,12 @@
               :show-heart="isAuthenticated"
               @click="goToDetail(item.stock_code)"
             />
+            <div v-if="loadingMore" class="loading-more">
+              추가 데이터를 불러오는 중입니다...
+            </div>
+            <div v-if="!loadingMore && hasMoreStock" class="load-more-button" @click="loadMore">
+              더 보기
+            </div>
           </div>
         </div>
 
@@ -93,7 +98,7 @@
             <div v-if="loadingMore" class="loading-more">
               추가 데이터를 불러오는 중입니다...
             </div>
-            <div v-if="!loadingMore && hasMore" class="load-more-button" @click="loadMoreETFs">
+            <div v-if="!loadingMore && hasMoreEtf" class="load-more-button" @click="loadMore">
               더 보기
             </div>
           </div>
@@ -122,17 +127,16 @@ const searchKeyword = ref('')
 const isFocused = ref(false)
 const loading = ref(false)
 const error = ref(null)
-const loadingStatus = ref({
-  stock: { completed: 0, total: 0, percentage: 0 },
-  etf: { completed: 0, total: 0, percentage: 0 }
-})
+
+// 페이지네이션 관련 상태
+const pageSize = ref(50)  // 한 번에 불러올 개수를 50개로 설정
+const stockPage = ref(1)
+const etfPage = ref(1)
+const hasMoreStock = ref(true)
+const hasMoreEtf = ref(true)
+const loadingMore = ref(false)
 
 const searchBoxRef = ref(null)
-
-const currentPage = ref(1)
-const pageSize = ref(100)
-const hasMore = ref(true)
-const loadingMore = ref(false)
 
 onMounted(async () => {
   document.addEventListener('click', handleClickOutside)
@@ -141,7 +145,10 @@ onMounted(async () => {
   } else {
     await fetchETFData()
   }
-  const container = document.querySelector('.etf-container')
+  
+  const container = document.querySelector(
+    selectedTab.value === 'stock' ? '.stock-container' : '.etf-container'
+  )
   if (container) {
     container.addEventListener('scroll', handleScroll)
   }
@@ -149,7 +156,9 @@ onMounted(async () => {
 
 onUnmounted(() => {
   document.removeEventListener('click', handleClickOutside)
-  const container = document.querySelector('.etf-container')
+  const container = document.querySelector(
+    selectedTab.value === 'stock' ? '.stock-container' : '.etf-container'
+  )
   if (container) {
     container.removeEventListener('scroll', handleScroll)
   }
@@ -161,27 +170,54 @@ const handleClickOutside = (event) => {
   }
 }
 
-const fetchStockData = async () => {
-  loading.value = true
+const fetchStockData = async (isLoadMore = false) => {
+  if (!isLoadMore) {
+    loading.value = true
+  } else {
+    loadingMore.value = true
+  }
   error.value = null
+
   try {
     const headers = {
       'Accept': 'application/json',
       'Content-Type': 'application/json'
     }
-    const response = await axios.get('http://127.0.0.1:8000/api/v1/products/stocks/', { headers })
-    stockData.value = response.data.data
+    const response = await axios.get('http://127.0.0.1:8000/api/v1/products/stocks/', {
+      headers,
+      params: {
+        page: stockPage.value,
+        size: pageSize.value
+      }
+    })
+    
+    if (isLoadMore) {
+      stockData.value = [...stockData.value, ...response.data.data]
+    } else {
+      stockData.value = response.data.data
+    }
+    
+    hasMoreStock.value = response.data.has_more
+    if (response.data.has_more) {
+      stockPage.value += 1
+    }
   } catch (err) {
     console.error('주식 데이터 로딩 실패:', err)
     error.value = '데이터를 불러오는데 실패했습니다.'
   } finally {
     loading.value = false
+    loadingMore.value = false
   }
 }
 
-const fetchETFData = async () => {
-  loading.value = true
+const fetchETFData = async (isLoadMore = false) => {
+  if (!isLoadMore) {
+    loading.value = true
+  } else {
+    loadingMore.value = true
+  }
   error.value = null
+
   try {
     const headers = {
       'Accept': 'application/json',
@@ -190,28 +226,57 @@ const fetchETFData = async () => {
     const response = await axios.get(`http://127.0.0.1:8000/api/v1/products/etfs/`, {
       headers,
       params: {
-        page: 1,
+        page: etfPage.value,
         size: pageSize.value
       }
     })
-    etfData.value = response.data.data
-    hasMore.value = response.data.has_more
-    currentPage.value = 1
+    
+    if (isLoadMore) {
+      etfData.value = [...etfData.value, ...response.data.data]
+    } else {
+      etfData.value = response.data.data
+    }
+    
+    hasMoreEtf.value = response.data.has_more
+    if (response.data.has_more) {
+      etfPage.value += 1
+    }
   } catch (err) {
     console.error('ETF 데이터 로딩 실패:', err)
     error.value = '데이터를 불러오는데 실패했습니다.'
   } finally {
     loading.value = false
+    loadingMore.value = false
   }
 }
 
 const selectTab = async (tab) => {
   selectedTab.value = tab
   searchKeyword.value = ''
+  
+  // 탭 변경 시 스크롤 이벤트 리스너 재설정
+  const oldContainer = document.querySelector(
+    tab === 'stock' ? '.etf-container' : '.stock-container'
+  )
+  if (oldContainer) {
+    oldContainer.removeEventListener('scroll', handleScroll)
+  }
+  
+  // 새로운 탭의 데이터가 없을 때만 로드
   if (tab === 'stock' && stockData.value.length === 0) {
+    stockPage.value = 1
     await fetchStockData()
   } else if (tab === 'etf' && etfData.value.length === 0) {
+    etfPage.value = 1
     await fetchETFData()
+  }
+  
+  // 새 탭의 스크롤 이벤트 리스너 설정
+  const newContainer = document.querySelector(
+    tab === 'stock' ? '.stock-container' : '.etf-container'
+  )
+  if (newContainer) {
+    newContainer.addEventListener('scroll', handleScroll)
   }
 }
 
@@ -244,43 +309,26 @@ const filteredSuggestions = computed(() => {
   )
 })
 
-const loadMoreETFs = async () => {
-  if (loadingMore.value || !hasMore.value) return
-
-  loadingMore.value = true
-  try {
-    const headers = {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    }
-
-    const response = await axios.get(`http://127.0.0.1:8000/api/v1/products/etfs/`, {
-      headers,
-      params: {
-        page: currentPage.value + 1,
-        size: pageSize.value
-      }
-    })
-
-    etfData.value = [...etfData.value, ...response.data.data]
-    hasMore.value = response.data.has_more
-    currentPage.value += 1
-  } catch (err) {
-    console.error('추가 데이터 로딩 실패:', err)
-  } finally {
-    loadingMore.value = false
+const loadMore = async () => {
+  if (loadingMore.value) return
+  
+  if (selectedTab.value === 'stock' && hasMoreStock.value) {
+    await fetchStockData(true)
+  } else if (selectedTab.value === 'etf' && hasMoreEtf.value) {
+    await fetchETFData(true)
   }
 }
 
 const handleScroll = () => {
-  if (selectedTab.value !== 'etf') return
-
-  const container = document.querySelector('.etf-container')
+  const container = selectedTab.value === 'stock' 
+    ? document.querySelector('.stock-container')
+    : document.querySelector('.etf-container')
+    
   if (!container) return
 
   const { scrollTop, scrollHeight, clientHeight } = container
   if (scrollTop + clientHeight >= scrollHeight - 100) {
-    loadMoreETFs()
+    loadMore()
   }
 }
 
@@ -421,6 +469,9 @@ button.active {
 .etf-container {
   max-width: 1200px;
   margin: 0 auto;
+  max-height: 800px;
+  overflow-y: auto;
+  padding-right: 10px;
 }
 
 .top-row {
@@ -525,15 +576,6 @@ button.active {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-/* ETF 카드 컴포넌트에 맞춰 정렬되도록 스타일 추가 */
-.etf-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  max-height: 800px;
-  overflow-y: auto;
-  padding-right: 10px;
 }
 
 .loading-more {
