@@ -13,11 +13,11 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(), name='logout'),
     
     path('mypage/', MyPageView.as_view()),
-    path('favorites/', user_favorites, name='user-favorites'), # 찜한 상품 목록을 실시간으로 불러오는 기능 -> 마이페이지에서 불러올 것?
-    # axios로 호출하면 될듯?
+    path('favorites/', user_favorites, name='user-favorites'),  # 현재 사용자의 찜 목록
+    path('favorites/<str:userid>/', user_favorites, name='user-favorites-detail'),  # 특정 사용자의 찜 목록
 
     path('follow-info/<str:userid>/', FollowListView.as_view(), name='follow_info'),
-    path('<int:user_id>/follow/', FollowToggleView.as_view(), name='follow_toggle'),
+    path('<str:userid>/follow/', FollowToggleView.as_view(), name='follow_toggle'),
     
     path('check-id/', CheckUserIdView.as_view(), name='check_userid'),
     path('check-nickname/', CheckNicknameView.as_view(), name='check_nickname'),

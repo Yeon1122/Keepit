@@ -25,7 +25,7 @@
             <div class="stat-label">팔로워</div>
           </div>
           <div class="stat-item" @click="goToMyPosts">
-            <div class="stat-value">{{ user.my_posts?.length ?? 0 }}</div>
+            <div class="stat-value">{{ user.posts_summary?.total_posts ?? 0 }}</div>
             <div class="stat-label">작성글</div>
           </div>
         </div>
@@ -342,6 +342,22 @@ onMounted(async () => {
       router.push({ name: 'login' })
     } else {
       alert('사용자 정보를 불러오는데 실패했습니다.')
+    }
+  }
+
+  // 투자성향 테스트 결과 가져오기
+  try {
+    const testRes = await axios.get('/api/v1/test/result/', {
+      headers: {
+        Authorization: `Token ${token}`
+      }
+    })
+    user.value.test_result = testRes.data
+  } catch (err) {
+    if (err.response?.status === 404) {
+      user.value.test_result = null
+    } else {
+      console.error('테스트 결과 로딩 실패:', err)
     }
   }
 })

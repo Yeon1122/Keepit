@@ -22,6 +22,7 @@ from django.conf import settings
 import logging
 import json
 import time
+from users.models import User
 
 logger = logging.getLogger(__name__)
 
@@ -532,19 +533,22 @@ def favorite_by_id(request, product_id):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def user_favorites(request):
+def user_favorites(request, userid=None):
     try:
-        favorites = Favorite.objects.filter(user=request.user)
-        result = []
-
+        # userid가 주어진 경우 해당 사용자의 찜 목록을, 아니면 현재 로그인한 사용자의 찜 목록을 가져옴
+        target_user = User.objects.get(userid=userid) if userid else request.user
+        favorites = Favorite.objects.filter(user=target_user)
+        
+        liked_products = []
         for fav in favorites:
-            if fav.type in ['deposit', 'saving']:
-                try:
+            try:
+                if fav.type in ['deposit', 'saving']:
+                    # 예금/적금 상품은 product_id로 조회
                     product_id = int(fav.identifier)
                     product = Product.objects.filter(id=product_id).first()
                     
                     if product:
-                        result.append({
+                        product_data = {
                             'id': product.id,
                             'type': product.type,
                             'name': product.name,
@@ -554,13 +558,11 @@ def user_favorites(request):
                             'term': product.term,
                             'target': product.target,
                             'is_liked': True
-                        })
-                except Exception as e:
-                    print(f"[user_favorites] 예금/적금 상품 처리 중 오류: {str(e)}")
-                    continue
-                    
-            elif fav.type == 'stock':
-                try:
+                        }
+                        liked_products.append(product_data)
+                        
+                elif fav.type == 'stock':
+                    # 주식은 실시간 API로 조회
                     stock_code = fav.identifier.replace("'", "")
                     name_map = load_stock_name_map()
                     stock_data = fetch_stock_by_code(stock_code)
@@ -572,20 +574,23 @@ def user_favorites(request):
                         if not stock_name:
                             stock_name = stock_code
                             
-                        result.append({
+                        product_data = {
+                            'id': f"stock_{stock_code}",
                             'type': 'stock',
                             'name': stock_name,
-                            'stock_code': stock_code,
+                            'company': stock_data.get('company', ''),
+                            'product_code': stock_code,
                             'current_price': stock_data.get('current_price'),
+                            'previous_price': stock_data.get('previous_price'),
                             'price_change': stock_data.get('price_change'),
+                            'fluctuation_rate': stock_data.get('fluctuation_rate'),
+                            'market_cap': stock_data.get('market_cap'),
                             'is_liked': True
-                        })
-                except Exception as e:
-                    print(f"[user_favorites] 주식 상품 처리 중 오류: {str(e)}")
-                    continue
-                    
-            elif fav.type == 'etf':
-                try:
+                        }
+                        liked_products.append(product_data)
+                        
+                elif fav.type == 'etf':
+                    # ETF는 실시간 API로 조회
                     etf_code = fav.identifier.replace("'", "")
                     name_map = load_etf_name_map()
                     etf_data = fetch_etf_by_code(etf_code)
@@ -597,25 +602,31 @@ def user_favorites(request):
                         if not etf_name:
                             etf_name = etf_code
                             
-                        result.append({
+                        product_data = {
+                            'id': f"etf_{etf_code}",
                             'type': 'etf',
                             'name': etf_name,
-                            'etf_code': etf_code,
+                            'company': etf_data.get('company', ''),
+                            'product_code': etf_code,
                             'current_price': etf_data.get('current_price'),
+                            'previous_price': etf_data.get('previous_price'),
                             'price_change': etf_data.get('price_change'),
+                            'fluctuation_rate': etf_data.get('fluctuation_rate'),
+                            'market_cap': etf_data.get('market_cap'),
                             'is_liked': True
-                        })
-                except Exception as e:
-                    print(f"[user_favorites] ETF 상품 처리 중 오류: {str(e)}")
-                    continue
+                        }
+                        liked_products.append(product_data)
+                        
+            except (ValueError, Product.DoesNotExist) as e:
+                print(f"찜한 상품 처리 중 오류 발생: {str(e)}, type={fav.type}, identifier={fav.identifier}")
+                continue
 
-        return Response(result)
+        return Response(liked_products)
+    
+    except User.DoesNotExist:
+        return Response({"message": "사용자를 찾을 수 없습니다."}, status=404)
     except Exception as e:
-        print(f"[user_favorites] 전체 오류: {str(e)}")
-        return Response(
-            {'error': '찜한 상품 목록을 불러오는 중 오류가 발생했습니다.'}, 
-            status=status.HTTP_500_INTERNAL_SERVER_ERROR
-        )
+        return Response({"message": f"오류가 발생했습니다: {str(e)}"}, status=500)
 
 # 예금, 적금 상세 비교
 @api_view(['POST'])

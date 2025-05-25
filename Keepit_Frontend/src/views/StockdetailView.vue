@@ -116,6 +116,22 @@ const loadStockData = async () => {
     const newsRes = await axios.get(`http://127.0.0.1:8000/api/v1/news/stock/${stockCode}/`)
     newsList.value = newsRes.data
 
+    // 투자성향 테스트 결과 가져오기
+    try {
+      const testRes = await axios.get('/api/v1/test/result/', {
+        headers: {
+          Authorization: `Token ${accountStore.token}`
+        }
+      })
+      accountStore.user.test_result = testRes.data
+    } catch (err) {
+      if (err.response?.status === 404) {
+        accountStore.user.test_result = null
+      } else {
+        console.error('테스트 결과 로딩 실패:', err)
+      }
+    }
+
   } catch (err) {
     console.error('데이터 로딩 실패:', err)
     error.value = '주식 데이터를 불러오는데 실패했습니다.'
