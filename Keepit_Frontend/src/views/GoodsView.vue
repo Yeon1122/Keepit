@@ -18,8 +18,9 @@
       <!-- 헤더 -->
       <div class="header-row">
         <div class="left-col"></div>
-        <div class="name-col" style="color: white;">종목</div>
-        <div class="price-col" style="color: white;">현재가</div>
+        <div class="name-col header-text">종목</div>
+        <div class="price-col header-text">현재가</div>
+        <div class="change-col header-text">변동가</div>
       </div>
 
       <div v-if="goods.length === 0" class="no-data">표시할 현물 상품이 없습니다.</div>
@@ -34,7 +35,13 @@
           />
         </div>
         <div class="name-col">{{ item.name }}</div>
-        <div class="price-col">{{ formatPrice(item.current_price) }}원</div>
+        <div class="price-col">
+          ${{ formatPrice(item.current_price) }} / oz
+        </div>
+        <div class="change-col" :class="getPriceChangeClass(item.price_change)">
+          <i :class="['fas', item.price_change > 0 ? 'fa-caret-up' : 'fa-caret-down']"></i>
+          {{ formatPriceChange(item.price_change) }}
+        </div>
       </div>
     </template>
   </div>
@@ -65,7 +72,7 @@ const handleLike = async (id, value) => {
     const method = value ? 'POST' : 'DELETE'
     await axios({
       method,
-      url: `http://127.0.0.1:8000/api/v1/products/goods/${id}/favorite/`,
+      url: `/api/v1/products/goods/${id}/favorite/`,
       headers: { Authorization: `Token ${accountStore.token}` }
     })
 
@@ -82,23 +89,49 @@ const handleLike = async (id, value) => {
 
 const formatPrice = (price) => price?.toLocaleString() || '-'
 
+const formatPriceChange = (change) => {
+  if (!change) return '0'
+  return Math.abs(change).toLocaleString()
+}
+
+const getPriceChangeClass = (change) => {
+  if (change > 0) {
+    return 'positive-change'
+  } else if (change < 0) {
+    return 'negative-change'
+  } else {
+    return ''
+  }
+}
+
 const fetchData = async () => {
   loading.value = true
   error.value = null
 
   try {
     // 현물 상품 데이터 가져오기
-    const goodsRes = await axios.get('http://127.0.0.1:8000/api/v1/products/goods/')
+    const goodsRes = await axios.get('/api/v1/products/goods/')
     goods.value = goodsRes.data
+    console.log('현물 데이터:', goods.value)
 
     // 찜한 상품 목록 가져오기
     if (isAuthenticated.value) {
-      const favRes = await axios.get('http://127.0.0.1:8000/api/v1/users/favorites/', {
-        headers: { Authorization: `Token ${accountStore.token}` }
-      })
-      likedItems.value = favRes.data
-        .filter(item => item.type === 'goods')
-        .map(item => item.id)
+      // 각 현물 상품의 찜하기 상태를 개별적으로 확인
+      const likedIds = []
+      for (const item of goods.value) {
+        try {
+          const favRes = await axios.get(`/api/v1/products/goods/${item.id}/favorite/`, {
+            headers: { Authorization: `Token ${accountStore.token}` }
+          })
+          if (favRes.data.is_liked) {
+            likedIds.push(item.id)
+          }
+        } catch (err) {
+          console.log(`상품 ${item.id} 찜하기 상태 확인 실패:`, err)
+        }
+      }
+      likedItems.value = likedIds
+      console.log('현물 찜한 상품 ID들:', likedItems.value)
     }
   } catch (err) {
     console.error('데이터 로딩 실패:', err)
@@ -138,6 +171,9 @@ h3 {
   margin-bottom: 1rem;
 }
 
+.header-text {
+  color: white !important;
+}
 
 /* 동일한 구조 유지 */
 .data-row {
@@ -172,9 +208,34 @@ h3 {
   flex: 2;
   text-align: center;
   font-weight: bold;
-  color: #145c2b;
-  min-width: 80px;
+  color: #333;
+  min-width: 120px;
   white-space: nowrap;
+}
+
+/* 변동가 영역 */
+.change-col {
+  flex: 2;
+  text-align: center;
+  font-weight: bold;
+  min-width: 100px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+}
+
+.change-col i {
+  font-size: 1.2rem;
+}
+
+.positive-change {
+  color: #dc3545;
+}
+
+.negative-change {
+  color: #007bff;
 }
 
 .no-data {
@@ -203,29 +264,6 @@ h3 {
 .heart-button.hovered {
   background-color: #e272c0;
   color: white;
-}
-
-.item-image {
-  position: relative;
-  width: 100%;
-  padding-bottom: 100%;
-  overflow: hidden;
-}
-
-.item-image img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.heart-button {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  z-index: 1;
 }
 
 .loading-state,

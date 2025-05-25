@@ -29,7 +29,7 @@
           <div class="input-group">
             <label>은행</label>
             <select v-model="selectedBank">
-              <option value="">은행을 선택하세요</option>
+              <option value="전체">전체</option>
               <option v-for="bank in bankList" :key="bank" :value="bank">{{ bank }}</option>
             </select>
           </div>
@@ -56,7 +56,7 @@ const router = useRouter()
 const accountStore = useAccountStore()
 const selectedSido = ref('')
 const selectedSigungu = ref('')
-const selectedBank = ref('')
+const selectedBank = ref('전체')
 let map = null
 let markers = []
 let currentInfoWindow = null  // 현재 열린 정보창을 추적하기 위한 변수
@@ -73,7 +73,7 @@ const sigunguList = computed(() => {
 })
 
 const isSearchable = computed(() => {
-  return selectedSido.value && selectedSigungu.value && selectedBank.value
+  return selectedSido.value && selectedSigungu.value
 })
 
 // 삼성화재 대전유성캠퍼스 좌표
@@ -128,6 +128,7 @@ const closeModal = () => {
 
 const initMap = async () => {
   console.log('📍 initMap 실행됨')
+  console.log('🔍 map container 찾기 시도...')
 
   if (!import.meta.env.VITE_KAKAO_MAP_API_KEY) {
     console.error('카카오맵 API 키가 설정되지 않았습니다.')
@@ -138,20 +139,32 @@ const initMap = async () => {
   try {
     const container = document.getElementById('map')
     if (!container) {
-      console.error('지도를 표시할 div를 찾을 수 없습니다.')
+      console.error('❌ 지도를 표시할 div를 찾을 수 없습니다.')
+      console.log('🔍 DOM 상태:', document.readyState)
+      console.log('🔍 body 내용:', document.body.innerHTML.includes('map'))
       return
     }
+    
+    console.log('✅ map container 찾음:', container)
+    console.log('📏 container 크기:', container.offsetWidth, 'x', container.offsetHeight)
 
     // 초기 중심 좌표 설정
     const center = await getUserLocation()
     console.log('📍 중심 좌표:', center)
 
+    console.log('🗺️ 카카오맵 생성 시도...')
     const options = {
       center: new kakao.maps.LatLng(center.lat, center.lng),
       level: 5
     }
 
     map = new kakao.maps.Map(container, options)
+    console.log('✅ 카카오맵 생성 완료:', map)
+    
+    // 확대/축소 컨트롤 추가
+    const zoomControl = new kakao.maps.ZoomControl()
+    map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT)
+    console.log('🎛️ 확대/축소 컨트롤 추가됨')
     
     // 지도 클릭 시 열린 정보창 닫기
     kakao.maps.event.addListener(map, 'click', () => {
@@ -182,7 +195,8 @@ const initMap = async () => {
       })
     }
   } catch (error) {
-    console.error('지도 초기화 실패:', error)
+    console.error('❌ 지도 초기화 실패:', error)
+    console.error('❌ 에러 스택:', error.stack)
     alert('지도를 불러오는데 실패했습니다. 페이지를 새로고침 해주세요.')
   }
 }
@@ -202,7 +216,11 @@ const searchBanks = () => {
   markers = []
 
   const ps = new kakao.maps.services.Places()
-  const searchKeyword = `${selectedSido.value} ${selectedSigungu.value} ${selectedBank.value}`
+  const searchKeyword = selectedBank.value === '전체' 
+    ? `${selectedSido.value} ${selectedSigungu.value} 은행`
+    : `${selectedSido.value} ${selectedSigungu.value} ${selectedBank.value}`
+
+  console.log('🔍 검색 키워드:', searchKeyword)
 
   ps.keywordSearch(searchKeyword, (data, status) => {
     if (status === kakao.maps.services.Status.OK) {
@@ -258,16 +276,39 @@ const onSidoChange = () => {
 }
 
 onMounted(() => {
+  console.log('🚀 LocationView 마운트됨')
+  console.log('🔑 KAKAO API KEY:', import.meta.env.VITE_KAKAO_MAP_API_KEY ? '설정됨' : '설정되지 않음')
+  
+  if (!import.meta.env.VITE_KAKAO_MAP_API_KEY) {
+    console.error('❌ 카카오맵 API 키가 환경변수에 설정되지 않았습니다.')
+    alert('카카오맵 API 키가 설정되지 않았습니다. .env 파일을 확인해주세요.')
+    return
+  }
+
   const script = document.createElement('script')
   script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${import.meta.env.VITE_KAKAO_MAP_API_KEY}&autoload=false&libraries=services`
   script.async = true
   
   script.onload = () => {
     console.log('✅ 카카오맵 스크립트 로드됨')
+    console.log('🌐 kakao 객체 존재:', typeof kakao !== 'undefined')
+    
+    if (typeof kakao === 'undefined') {
+      console.error('❌ kakao 객체가 정의되지 않았습니다.')
+      alert('카카오맵 스크립트 로딩에 실패했습니다.')
+      return
+    }
+    
     kakao.maps.load(async () => {
       console.log('🗺️ kakao.maps SDK 로딩 완료')
+      console.log('🗺️ kakao.maps 객체:', kakao.maps)
       await initMap()
     })
+  }
+  
+  script.onerror = (error) => {
+    console.error('❌ 카카오맵 스크립트 로딩 실패:', error)
+    alert('카카오맵 스크립트를 불러오는데 실패했습니다. 네트워크 연결을 확인해주세요.')
   }
   
   document.head.appendChild(script)

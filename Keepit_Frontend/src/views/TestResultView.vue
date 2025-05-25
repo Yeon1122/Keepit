@@ -202,9 +202,19 @@ const getRecommendations = (type) => {
   }
 }
 
-const retakeTest = () => {
-  router.push({ name: 'investmenttest' })
-  scrollToTop()
+const retakeTest = async () => {
+  console.log('🎯 테스트 결과 페이지 - 테스트 다시하기 버튼 클릭됨')
+  
+  // 이미 결과가 있다는 것을 알고 있으므로 바로 확인창 표시
+  const userChoice = confirm('이미 투자 성향 검사를 받으셨습니다.\n\n다시 검사를 받으시겠습니까?\n\n확인: 새로 검사받기\n취소: 현재 결과 유지')
+  console.log('👤 사용자 선택:', userChoice ? '새로 검사받기' : '현재 결과 유지')
+  
+  if (userChoice) {
+    // 새로 검사받기
+    router.push({ name: 'investmenttest' })
+    scrollToTop()
+  }
+  // 취소하면 현재 페이지에 그대로 유지
 }
 
 const goToMyPage = () => {

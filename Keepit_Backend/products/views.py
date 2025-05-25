@@ -617,6 +617,57 @@ def user_favorites(request, userid=None):
                         }
                         liked_products.append(product_data)
                         
+                elif fav.type == 'goods':
+                    # 현물은 실시간 API로 조회
+                    goods_id = int(fav.identifier)
+                    
+                    # 현물 데이터 가져오기 (금/은)
+                    try:
+                        headers = {
+                            'x-access-token': os.getenv("GOLD_API_KEY"),
+                            'Content-Type': 'application/json'
+                        }
+
+                        if goods_id == 1:  # 금
+                            gold_res = requests.get('https://www.goldapi.io/api/XAU/USD', headers=headers)
+                            if gold_res.status_code == 200:
+                                gold_data = gold_res.json()
+                                product_data = {
+                                    'id': 1,
+                                    'type': 'goods',
+                                    'name': '금 (Gold)',
+                                    'company': 'GoldAPI.io',
+                                    'current_price': gold_data.get('price'),
+                                    'price_change': gold_data.get('ch'),
+                                    'trade_volume': gold_data.get('vol'),
+                                    'trade_value': gold_data.get('price_gram_24k'),
+                                    'market_cap': None,
+                                    'unit': 'USD per troy ounce',
+                                    'is_liked': True
+                                }
+                                liked_products.append(product_data)
+                        elif goods_id == 2:  # 은
+                            silver_res = requests.get('https://www.goldapi.io/api/XAG/USD', headers=headers)
+                            if silver_res.status_code == 200:
+                                silver_data = silver_res.json()
+                                product_data = {
+                                    'id': 2,
+                                    'type': 'goods',
+                                    'name': '은 (Silver)',
+                                    'company': 'GoldAPI.io',
+                                    'current_price': silver_data.get('price'),
+                                    'price_change': silver_data.get('ch'),
+                                    'trade_volume': silver_data.get('vol'),
+                                    'trade_value': silver_data.get('price_gram_24k'),
+                                    'market_cap': None,
+                                    'unit': 'USD per troy ounce',
+                                    'is_liked': True
+                                }
+                                liked_products.append(product_data)
+                    except Exception as goods_error:
+                        print(f"현물 데이터 조회 중 오류: {str(goods_error)}")
+                        continue
+
             except (ValueError, Product.DoesNotExist) as e:
                 print(f"찜한 상품 처리 중 오류 발생: {str(e)}, type={fav.type}, identifier={fav.identifier}")
                 continue
@@ -994,21 +1045,27 @@ def goods_list(request):
         result = [
             {
                 'id': 1,
-                'name': '금',
+                'name': '금 (Gold)',
+                'company': 'GoldAPI.io',
                 'current_price': gold_data.get('price'),
                 'price_change': gold_data.get('ch'),
                 'trade_volume': gold_data.get('vol'),
                 'trade_value': gold_data.get('price_gram_24k'),
-                'market_cap': None
+                'market_cap': None,
+                'unit': 'USD per troy ounce',
+                'type': 'goods'
             },
             {
                 'id': 2,
-                'name': '은',
+                'name': '은 (Silver)',
+                'company': 'GoldAPI.io',
                 'current_price': silver_data.get('price'),
                 'price_change': silver_data.get('ch'),
                 'trade_volume': silver_data.get('vol'),
                 'trade_value': silver_data.get('price_gram_24k'),
-                'market_cap': None
+                'market_cap': None,
+                'unit': 'USD per troy ounce',
+                'type': 'goods'
             }
         ]
 
@@ -1079,6 +1136,69 @@ def etf_favorite(request, etf_code):
 
     except Exception as e:
         print(f"[etf_favorite] Error: {str(e)}")
+        return Response(
+            {'error': '찜하기 처리 중 오류가 발생했습니다.'}, 
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+@api_view(['POST', 'DELETE', 'GET'])
+@permission_classes([IsAuthenticated])
+def goods_favorite(request, goods_id):
+    """
+    현물 찜하기/찜해제 API
+    """
+    try:
+        user = request.user
+        print(f"[goods_favorite] User {user.id} accessing goods {goods_id}")
+
+        if request.method == 'GET':
+            # 찜하기 상태 확인
+            is_liked = Favorite.objects.filter(
+                user=user,
+                type='goods',
+                identifier=str(goods_id)
+            ).exists()
+            print(f"[goods_favorite] Goods {goods_id} is_liked: {is_liked}")
+            return Response({
+                'is_liked': is_liked
+            })
+
+        elif request.method == 'POST':
+            # 찜하기 생성
+            favorite, created = Favorite.objects.get_or_create(
+                user=user,
+                type='goods',
+                identifier=str(goods_id)
+            )
+            print(f"[goods_favorite] Goods {goods_id} favorite created: {created}")
+            return Response({
+                'message': '찜하기가 완료되었습니다.',
+                'is_liked': True
+            })
+
+        elif request.method == 'DELETE':
+            # 찜하기 삭제
+            result = Favorite.objects.filter(
+                user=user,
+                type='goods',
+                identifier=str(goods_id)
+            ).delete()
+            
+            if result[0] > 0:
+                print(f"[goods_favorite] Goods {goods_id} favorite removed")
+                return Response({
+                    'message': '찜하기가 해제되었습니다.',
+                    'is_liked': False
+                })
+            else:
+                print(f"[goods_favorite] Goods {goods_id} favorite not found")
+                return Response(
+                    {'error': '찜하기가 존재하지 않습니다.'}, 
+                    status=status.HTTP_404_NOT_FOUND
+                )
+
+    except Exception as e:
+        print(f"[goods_favorite] Error: {str(e)}")
         return Response(
             {'error': '찜하기 처리 중 오류가 발생했습니다.'}, 
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
