@@ -750,3 +750,67 @@ def check_favorite(request, identifier):
             {'error': '찜하기 상태 확인 중 오류가 발생했습니다.'}, 
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
+
+@api_view(['POST', 'DELETE', 'GET'])
+@permission_classes([IsAuthenticated])
+def stock_favorite(request, stock_code):
+    """
+    주식 찜하기/취소 API
+    """
+    try:
+        # 작은따옴표 제거
+        stock_code = stock_code.replace("'", "")
+        
+        # GET 요청: 찜하기 상태 확인
+        if request.method == 'GET':
+            is_hearted = Favorite.objects.filter(
+                user=request.user,
+                type='stock',
+                identifier=stock_code
+            ).exists()
+            count = Favorite.objects.filter(
+                type='stock',
+                identifier=stock_code
+            ).count()
+            return Response({
+                'is_hearted': is_hearted,
+                'count': count
+            })
+
+        # POST 요청: 찜하기
+        elif request.method == 'POST':
+            favorite, created = Favorite.objects.get_or_create(
+                user=request.user,
+                type='stock',
+                identifier=stock_code
+            )
+            count = Favorite.objects.filter(
+                type='stock',
+                identifier=stock_code
+            ).count()
+            return Response({
+                'message': '찜하기가 완료되었습니다.',
+                'count': count
+            })
+
+        # DELETE 요청: 찜하기 취소
+        elif request.method == 'DELETE':
+            Favorite.objects.filter(
+                user=request.user,
+                type='stock',
+                identifier=stock_code
+            ).delete()
+            count = Favorite.objects.filter(
+                type='stock',
+                identifier=stock_code
+            ).count()
+            return Response({
+                'message': '찜하기가 취소되었습니다.',
+                'count': count
+            })
+
+    except Exception as e:
+        return Response(
+            {'error': str(e)},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
