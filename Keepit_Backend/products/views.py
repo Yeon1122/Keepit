@@ -1,7 +1,7 @@
 # products/views.py
 from rest_framework import generics, status
 from .models import Product
-from .serializers import SavingsSerializer, StockSerializer, ETFSerializer, ProductCompareSerializer
+from .serializers import SavingsSerializer, StockSerializer, ETFSerializer, ProductCompareSerializer, GoodsSerializer
 
 import os
 import requests
@@ -365,25 +365,28 @@ def favorite_by_id(request, product_id):
     """
     try:
         user = request.user
-        logger.info(f"[favorite_by_id] User {user.id} trying to toggle favorite for product {product_id}")
+        print(f"[favorite_by_id] User {user.id} trying to toggle favorite for product {product_id}")
 
         # 상품 존재 여부 확인
         product = Product.objects.filter(id=product_id).first()
         if not product:
-            logger.error(f"[favorite_by_id] Product not found: {product_id}")
+            print(f"[favorite_by_id] Product not found: {product_id}")
             return Response(
                 {'error': '해당 상품을 찾을 수 없습니다.'}, 
                 status=status.HTTP_404_NOT_FOUND
             )
+
+        # identifier를 product_id로 통일
+        identifier = str(product_id)
 
         if request.method == 'GET':
             # 찜하기 상태 확인
             is_liked = Favorite.objects.filter(
                 user=user,
                 type=product.type,
-                identifier=str(product_id)
+                identifier=identifier
             ).exists()
-            logger.info(f"[favorite_by_id] Product is {'liked' if is_liked else 'not liked'} by user {user.id}")
+            print(f"[favorite_by_id] Product {product_id} is {'liked' if is_liked else 'not liked'} by user {user.id}")
             return Response({
                 'is_liked': is_liked
             })
@@ -393,9 +396,9 @@ def favorite_by_id(request, product_id):
             favorite, created = Favorite.objects.get_or_create(
                 user=user,
                 type=product.type,
-                identifier=str(product_id)
+                identifier=identifier
             )
-            logger.info(f"[favorite_by_id] Favorite {'created' if created else 'already exists'} for user {user.id}")
+            print(f"[favorite_by_id] Favorite {'created' if created else 'already exists'} for product {product_id}")
             return Response({
                 'message': '찜하기가 완료되었습니다.',
                 'is_liked': True
@@ -406,23 +409,23 @@ def favorite_by_id(request, product_id):
             result = Favorite.objects.filter(
                 user=user,
                 type=product.type,
-                identifier=str(product_id)
+                identifier=identifier
             ).delete()
             
             if result[0] > 0:  # 삭제된 항목이 있는 경우
-                logger.info(f"[favorite_by_id] Favorite removed for user {user.id}")
+                print(f"[favorite_by_id] Favorite removed for product {product_id}")
                 return Response({
                     'message': '찜하기가 해제되었습니다.',
                     'is_liked': False
                 })
-            logger.warning(f"[favorite_by_id] Favorite not found for user {user.id}")
+            print(f"[favorite_by_id] Favorite not found for product {product_id}")
             return Response(
                 {'error': '해당 찜하기가 존재하지 않습니다.'}, 
                 status=status.HTTP_404_NOT_FOUND
             )
 
     except Exception as e:
-        logger.error(f"[favorite_by_id] Error: {str(e)}")
+        print(f"[favorite_by_id] Error: {str(e)}")
         return Response(
             {'error': '찜하기 처리 중 오류가 발생했습니다.'}, 
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -436,35 +439,46 @@ def user_favorites(request):
     사용자가 찜한 상품 목록을 반환하는 API
     """
     try:
+        print(f"[user_favorites] 사용자 {request.user.username}의 찜 목록 조회")
         favorites = Favorite.objects.filter(user=request.user)
+        print(f"[user_favorites] 찾은 찜 개수: {favorites.count()}")
         result = []
 
         for fav in favorites:
+            print(f"[user_favorites] 찜 처리 중: type={fav.type}, identifier={fav.identifier}")
             if fav.type in ['deposit', 'saving']:
                 try:
-                    # identifier를 정수로 변환하여 조회
-                    product_id = int(fav.identifier)
-                    product = Product.objects.filter(id=product_id).first()
-                    if product:
-                        result.append({
-                            'id': product.id,
-                            'type': product.type,
-                            'name': product.name,
-                            'company': product.company,
-                            'interest_rate': product.interest_rate,
-                            'special_rate': product.special_rate,
-                            'term': product.term,
-                            'target': product.target,
-                            'is_liked': True  # 찜한 상품이므로 True
-                        })
-                except (ValueError, TypeError):
-                    # identifier가 정수로 변환할 수 없는 경우 무시
-                    logger.warning(f"[user_favorites] Invalid identifier format: {fav.identifier}")
+                    # identifier를 product_id로 사용하여 조회
+                    try:
+                        product_id = int(fav.identifier)
+                        product = Product.objects.filter(id=product_id).first()
+                        
+                        if product:
+                            print(f"[user_favorites] 상품 찾음: {product.name}")
+                            result.append({
+                                'id': product.id,
+                                'type': product.type,
+                                'name': product.name,
+                                'company': product.company,
+                                'interest_rate': product.interest_rate,
+                                'special_rate': product.special_rate,
+                                'term': product.term,
+                                'target': product.target,
+                                'is_liked': True
+                            })
+                        else:
+                            print(f"[user_favorites] 상품을 찾을 수 없음: id={product_id}")
+                    except ValueError:
+                        print(f"[user_favorites] 상품 ID 변환 실패: {fav.identifier}")
+                        continue
+                except Exception as e:
+                    print(f"[user_favorites] 상품 처리 중 오류: {str(e)}")
                     continue
 
+        print(f"[user_favorites] 최종 결과 개수: {len(result)}")
         return Response(result)
     except Exception as e:
-        logger.error(f"[user_favorites] Error: {str(e)}")
+        print(f"[user_favorites] 전체 오류: {str(e)}")
         return Response(
             {'error': '찜한 상품 목록을 불러오는 중 오류가 발생했습니다.'}, 
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -696,8 +710,7 @@ def etf_list(request):
 @api_view(['GET'])
 def goods_list(request):
     products = Product.objects.filter(type='goods')
-    # TODO: GoodsSerializer 만들기
-    serializer = StockSerializer(products, many=True)  # 임시로 StockSerializer 사용
+    serializer = GoodsSerializer(products, many=True)
     return Response(serializer.data)
 
 '''
@@ -812,5 +825,54 @@ def stock_favorite(request, stock_code):
     except Exception as e:
         return Response(
             {'error': str(e)},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+@api_view(['GET'])
+def goods_list(request):
+    try:
+        # 금/은 시세 API 호출
+        headers = {
+            'x-access-token': os.getenv("GOLD_API_KEY"),
+            'Content-Type': 'application/json'
+        }
+
+        gold_res = requests.get('https://www.goldapi.io/api/XAU/USD', headers=headers)
+        silver_res = requests.get('https://www.goldapi.io/api/XAG/USD', headers=headers)
+
+        if gold_res.status_code != 200 or silver_res.status_code != 200:
+            return Response({'error': '현물 시세 조회에 실패했습니다.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        gold_data = gold_res.json()
+        silver_data = silver_res.json()
+
+        # 응답 데이터 구성
+        result = [
+            {
+                'id': 1,
+                'name': '금',
+                'current_price': gold_data.get('price'),
+                'price_change': gold_data.get('ch'),
+                'trade_volume': gold_data.get('vol'),
+                'trade_value': gold_data.get('price_gram_24k'),
+                'market_cap': None
+            },
+            {
+                'id': 2,
+                'name': '은',
+                'current_price': silver_data.get('price'),
+                'price_change': silver_data.get('ch'),
+                'trade_volume': silver_data.get('vol'),
+                'trade_value': silver_data.get('price_gram_24k'),
+                'market_cap': None
+            }
+        ]
+
+        return Response(result)
+
+    except Exception as e:
+        print(f"Error fetching goods data: {str(e)}")
+        return Response(
+            {'error': '현물 데이터를 불러오는데 실패했습니다.'},
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )

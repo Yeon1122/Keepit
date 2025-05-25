@@ -12,6 +12,7 @@ from django.contrib import admin
 from django.contrib.auth import get_user_model
 from community.models import Post
 from django.db.models import Count
+from products.models import Favorite, Product
 
 class SignUpView(APIView):
     def post(self, request):
@@ -78,6 +79,31 @@ class MyPageView(APIView):
             'created_at': post.created_at
         } for post in recent_posts]
 
+        # 찜한 상품 목록 가져오기
+        favorites = Favorite.objects.filter(user=user)
+        liked_products = []
+        
+        for fav in favorites:
+            if fav.type in ['deposit', 'saving']:
+                try:
+                    product_id = int(fav.identifier)
+                    product = Product.objects.filter(id=product_id).first()
+                    
+                    if product:
+                        liked_products.append({
+                            'id': product.id,
+                            'type': product.type,
+                            'name': product.name,
+                            'company': product.company,
+                            'interest_rate': product.interest_rate,
+                            'special_rate': product.special_rate,
+                            'term': product.term,
+                            'target': product.target,
+                            'is_liked': True
+                        })
+                except (ValueError, Product.DoesNotExist):
+                    continue
+
         return Response({
             "user_id": user.id,
             "userid": user.userid,
@@ -97,7 +123,9 @@ class MyPageView(APIView):
                 "free_posts": posts_count['free'],
                 "question_posts": posts_count['question']
             },
-            "recent_posts": recent_posts_data
+            "recent_posts": recent_posts_data,
+            # 찜한 상품 목록 추가
+            "liked_products": liked_products
         })
     
     def put(self, request):

@@ -23,7 +23,7 @@
     <p class="target">가입대상: {{ props.product.target || '해당 없음' }}</p>
 
     <div class="button-container">
-      <button class="icon-button search" @click="goToBank">
+      <button class="icon-button search" @click.stop="goToBank">
         <i class="fas fa-search"></i>
         <span class="tooltip">더보기</span>
       </button>
@@ -36,7 +36,7 @@
         }"
         @mouseenter="isHovered = true"
         @mouseleave="isHovered = false"
-        @click="toggleFavorite"
+        @click.prevent.stop="toggleFavorite"
       >
         <i :class="[isFavorite ? 'fas' : 'far', 'fa-heart']"></i>
         <span class="tooltip">찜하기</span>
@@ -46,7 +46,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import bankLinks from '@/assets/data/bankLinks.json'
 import { useAccountStore } from '@/stores/users.js'
 import { useMessageStore } from '@/stores/message'
@@ -54,7 +54,7 @@ import axios from 'axios'
 
 const accountStore = useAccountStore()
 const messageStore = useMessageStore()
-const { token, isAuthenticated } = accountStore
+const isAuthenticated = computed(() => accountStore.isAuthenticated)
 
 const props = defineProps({
   product: {
@@ -82,68 +82,59 @@ const isFavorite = ref(props.product.is_liked || false)
 const isHovered = ref(false)
 
 const toggleFavorite = async (e) => {
-  e.stopPropagation() // 이벤트 버블링 방지
+  console.log('찜하기 버튼 클릭됨')
+  e.stopPropagation()  // 이벤트 전파 중단
   
-  try {
-    const productId = props.product.id
-    const headers = { 
-      'Authorization': `Token ${token}`,
-      'Content-Type': 'application/json'
-    }
+  if (!isAuthenticated.value) {
+    alert('로그인이 필요한 서비스입니다.')
+    return
+  }
 
+  const productId = props.product.id
+  console.log('상품 ID:', productId)
+  const headers = { Authorization: `Token ${accountStore.token}` }
+
+  try {
     let response
     if (!isFavorite.value) {
+      console.log('찜하기 추가 시도')
       // 찜하기 추가
-      response = await axios.post(`/api/v1/products/favorites/by-id/${productId}/`, {}, { headers })
-      if (response.status === 200 || response.status === 201) {
-        isFavorite.value = true
-        messageStore.showMessage('찜하기가 완료되었습니다.', 'success')
-      }
+      response = await axios.post(`http://127.0.0.1:8000/api/v1/products/favorites/by-id/${productId}/`, {}, { headers })
+      console.log('찜하기 추가 응답:', response.data)
+      isFavorite.value = true
     } else {
-      // 찜하기 취소
-      response = await axios.delete(`/api/v1/products/favorites/by-id/${productId}/`, { headers })
-      if (response.status === 200 || response.status === 204) {
-        isFavorite.value = false
-        messageStore.showMessage('찜하기가 해제되었습니다.', 'success')
-      }
+      console.log('찜하기 삭제 시도')
+      // 찜하기 삭제
+      response = await axios.delete(`http://127.0.0.1:8000/api/v1/products/favorites/by-id/${productId}/`, { headers })
+      console.log('찜하기 삭제 응답:', response.data)
+      isFavorite.value = false
     }
   } catch (err) {
-    console.error('찜하기 오류:', err)
-    let errorMessage = '찜하기 처리 중 오류가 발생했습니다.'
-    if (err.response) {
-      if (err.response.status === 404) {
-        errorMessage = '해당 상품을 찾을 수 없습니다.'
-      } else if (err.response.status === 401) {
-        errorMessage = '로그인이 필요한 서비스입니다.'
-      } else if (err.response.status === 400) {
-        errorMessage = err.response.data.message || '잘못된 요청입니다.'
-      }
-    }
-    messageStore.showMessage(errorMessage, 'error')
+    console.error('찜하기 처리 실패:', err.response || err)
+    alert('찜하기 처리에 실패했습니다.')
   }
 }
 
 const checkFavoriteStatus = async () => {
-  if (!isAuthenticated) return
+  if (!accountStore.isAuthenticated) {
+    isFavorite.value = false
+    return
+  }
+
+  const productId = props.product.id
+  const headers = { Authorization: `Token ${accountStore.token}` }
 
   try {
-    const productId = props.product.id
-    const headers = { 
-      'Authorization': `Token ${token}`,
-      'Content-Type': 'application/json'
-    }
-
-    const response = await axios.get(`/api/v1/products/favorites/by-id/${productId}/`, { headers })
+    const response = await axios.get(`http://127.0.0.1:8000/api/v1/products/favorites/by-id/${productId}/`, { headers })
     isFavorite.value = response.data.is_liked || false
   } catch (err) {
-    console.error('찜하기 상태 확인 오류:', err)
-    // 404나 다른 에러의 경우 찜하지 않은 상태로 간주
+    console.error('찜하기 상태 확인 실패:', err)
     isFavorite.value = false
   }
 }
 
 onMounted(() => {
-  if (isAuthenticated) {
+  if (isAuthenticated.value) {
     checkFavoriteStatus()
   }
 })
