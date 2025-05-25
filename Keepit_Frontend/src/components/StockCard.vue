@@ -45,46 +45,25 @@ const props = defineProps({
   }
 })
 
-const isLiked = ref(false)
+const isLiked = ref(props.data.is_liked || false)
 const isHovered = ref(false)
 
-// 초기 찜하기 상태 확인
-const checkInitialLikeStatus = async () => {
-  const token = accountStore.token
-  console.log('초기 상태 확인 시 토큰:', token)
-  
-  if (!token) return
-  
-  try {
-    const response = await axios({
-      method: 'GET',
-      url: `http://127.0.0.1:8000/api/v1/products/stocks/${props.data.stock_code}/favorite/`,
-      headers: {
-        Authorization: `Token ${token}`
-      }
-    })
-    console.log('초기 상태 응답:', response.data)
-    isLiked.value = response.data.is_liked
-  } catch (err) {
-    console.error('찜하기 상태 확인 오류:', err)
-  }
-}
+// 초기 찜하기 상태는 props에서 받아온 값 사용
+onMounted(() => {
+  isLiked.value = props.data.is_liked || false
+})
 
-// 컴포넌트 마운트 시 찜하기 상태 확인
-onMounted(checkInitialLikeStatus)
-
-const toggleLike = async () => {
+const toggleLike = async (newValue) => {
   try {
     const token = accountStore.token
-    console.log('토글 시 토큰:', token)
     
     if (!token) {
       alert('로그인이 필요한 서비스입니다.')
       return
     }
 
-    const method = isLiked.value ? 'DELETE' : 'POST'
-    console.log('현재 상태:', isLiked.value, '요청 메서드:', method)
+    const method = newValue ? 'POST' : 'DELETE'
+    console.log('찜하기 토글:', newValue, '메서드:', method)
 
     const response = await axios({
       method,
@@ -96,11 +75,7 @@ const toggleLike = async () => {
     console.log('API 응답:', response.data)
     
     // 상태 업데이트
-    if (method === 'POST') {
-      isLiked.value = true
-    } else {
-      isLiked.value = false
-    }
+    isLiked.value = newValue
   } catch (err) {
     console.error('찜하기 오류:', err)
     if (err.response?.status === 401) {
