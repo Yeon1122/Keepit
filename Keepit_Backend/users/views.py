@@ -84,13 +84,14 @@ class MyPageView(APIView):
         liked_products = []
         
         for fav in favorites:
-            if fav.type in ['deposit', 'saving']:
-                try:
+            try:
+                if fav.type in ['deposit', 'saving']:
+                    # 예금/적금 상품은 product_id로 조회
                     product_id = int(fav.identifier)
                     product = Product.objects.filter(id=product_id).first()
                     
                     if product:
-                        liked_products.append({
+                        product_data = {
                             'id': product.id,
                             'type': product.type,
                             'name': product.name,
@@ -100,9 +101,32 @@ class MyPageView(APIView):
                             'term': product.term,
                             'target': product.target,
                             'is_liked': True
-                        })
-                except (ValueError, Product.DoesNotExist):
-                    continue
+                        }
+                        liked_products.append(product_data)
+                        
+                elif fav.type == 'stock':
+                    # 주식은 stock_code로 조회
+                    stock_code = fav.identifier
+                    product = Product.objects.filter(type='stock', product_code=stock_code).first()
+                    
+                    if product:
+                        product_data = {
+                            'id': product.id,
+                            'type': 'stock',
+                            'name': product.name,
+                            'company': product.company,
+                            'product_code': stock_code,
+                            'current_price': getattr(product, 'current_price', None),
+                            'previous_price': getattr(product, 'previous_price', None),
+                            'fluctuation_rate': getattr(product, 'fluctuation_rate', None),
+                            'market_cap': getattr(product, 'market_cap', None),
+                            'is_liked': True
+                        }
+                        liked_products.append(product_data)
+                        print(f"주식 찜하기 추가됨: {product.name} ({stock_code})")
+                        
+            except (ValueError, Product.DoesNotExist) as e:
+                print(f"찜한 상품 처리 중 오류 발생: {str(e)}, type={fav.type}, identifier={fav.identifier}")
 
         return Response({
             "user_id": user.id,
