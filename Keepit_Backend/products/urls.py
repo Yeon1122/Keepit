@@ -15,6 +15,7 @@ urlpatterns = [
     path('stocks/', views.stock_list, name='stock-list'),
     path('etfs/', views.etf_list, name='etf-list'),
     path('stocks/<str:stock_code>/', views.stock_detail, name='stock-detail'),
+    path('stocks/<str:stock_code>/favorite/', views.stock_favorite, name='stock-favorite'),
     
     # 찜하기 기능
     path('favorites/by-id/<int:product_id>/', views.favorite_by_id, name='favorite-by-id'),

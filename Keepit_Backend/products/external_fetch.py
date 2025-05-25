@@ -58,6 +58,9 @@ def get_access_token():
 
 # 주식 정보 불러오기
 def fetch_stock_by_code(stock_code):
+    # 작은따옴표 제거
+    stock_code = stock_code.replace("'", "")
+    
     token = get_access_token()
     url = f"{KIS_BASE_URL}/uapi/domestic-stock/v1/quotations/inquire-price"
     headers = {
@@ -72,17 +75,25 @@ def fetch_stock_by_code(stock_code):
     }
     res = requests.get(url, headers=headers, params=params)
     output = res.json().get("output", {})
+    
+    # 문자열 값을 숫자로 변환하는 함수
+    def safe_convert(value, convert_type=float):
+        try:
+            return convert_type(value) if value is not None else 0
+        except (ValueError, TypeError):
+            return 0
+            
     return {
         'id': None,
         'type': 'stock',
         'name': output.get('hts_kor_isnm'),
         'link': None,
         'stock_code': stock_code,
-        'current_price': output.get('stck_prpr'),
-        'price_change': output.get('prdy_vrss'),
-        'market_cap': output.get('hts_avls'),
-        'trade_volume': output.get('acml_vol'),
-        'trade_value': output.get('acml_tr_pbmn'),
+        'current_price': safe_convert(output.get('stck_prpr')),
+        'price_change': safe_convert(output.get('prdy_vrss')),
+        'market_cap': safe_convert(output.get('hts_avls')),
+        'trade_volume': safe_convert(output.get('acml_vol')),
+        'trade_value': safe_convert(output.get('acml_tr_pbmn')),
     }
 
 # 주식 상세정보 불러오기
@@ -154,18 +165,22 @@ def fetch_etf_by_code(etf_code):
 
     res = requests.get(url, headers=headers, params=params)
     output = res.json().get("output", {})
+    
+    def safe_convert(value, convert_type=float):
+        try:
+            return convert_type(value) if value is not None else 0
+        except (ValueError, TypeError):
+            return 0
 
     return {
         'type': 'etf',
         "etf_code": etf_code,
         "name": output.get("hts_kor_isnm"),
-        "current_price": output.get("stck_prpr"),
-        "price_change": output.get("prdy_vrss"),
-        "market_cap": output.get("hts_avls"),
-        "trade_volume": output.get("acml_vol"),
-        "trade_value": output.get("acml_tr_pbmn"),
-        # "nav": output.get("nav"),  # 순자산가치
-        # "nav_change": output.get("nav_chg_rt"),
+        "current_price": safe_convert(output.get("stck_prpr")),
+        "price_change": safe_convert(output.get("prdy_vrss")),
+        "market_cap": safe_convert(output.get("hts_avls")),
+        "trade_volume": safe_convert(output.get("acml_vol")),
+        "trade_value": safe_convert(output.get("acml_tr_pbmn")),
     }
 
 

@@ -71,12 +71,13 @@ import { useRoute, useRouter } from 'vue-router'
 import NewsCard from '@/components/NewsCard.vue'
 import { useAccountStore } from '@/stores/users'
 import HeartButton from '@/components/HeartButton.vue'
+import axios from 'axios'
 
 const route = useRoute()
 const router = useRouter()
+const accountStore = useAccountStore()
 const stock = ref(null)
 const newsList = ref([])
-const accountStore = useAccountStore()
 const isAuthenticated = computed(() => accountStore.isAuthenticated)
 
 const isHearted = ref(false)
@@ -88,25 +89,23 @@ const close = () => {
   router.back()
 }
 
+const stockCode = route.params.stock_code
 
-onMounted(async () => {
-  const code = route.params.stock_code
-  if (!code) {
-    error.value = '종목 코드가 없습니다.'
-    return
-  }
-
-  loading.value = true
-  error.value = null
-
+const loadStockData = async () => {
   try {
-    // 주식 정보 가져오기
-    const stockRes = await axios.get(`http://127.0.0.1:8000/api/v1/products/stocks/${code}/`)
-    stock.value = stockRes.data
+    const token = accountStore.token
+    const response = await axios({
+      method: 'GET',
+      url: `http://127.0.0.1:8000/api/v1/products/stocks/${stockCode}/`,
+      headers: token ? {
+        Authorization: `Token ${token}`
+      } : {}
+    })
+    stock.value = response.data
 
     // 찜하기 상태 가져오기
     if (isAuthenticated.value) {
-      const favRes = await axios.get(`http://127.0.0.1:8000/api/v1/products/stock/${code}/favorite/`, {
+      const favRes = await axios.get(`http://127.0.0.1:8000/api/v1/products/stocks/${stockCode}/favorite/`, {
         headers: { Authorization: `Token ${accountStore.token}` }
       })
       isHearted.value = favRes.data.is_hearted
@@ -114,16 +113,18 @@ onMounted(async () => {
     }
 
     // 뉴스 데이터 가져오기
-    const newsRes = await axios.get(`http://127.0.0.1:8000/api/v1/news/stock/${code}/`)
+    const newsRes = await axios.get(`http://127.0.0.1:8000/api/v1/news/stock/${stockCode}/`)
     newsList.value = newsRes.data
 
   } catch (err) {
     console.error('데이터 로딩 실패:', err)
-    error.value = '데이터를 불러오는데 실패했습니다.'
+    error.value = '주식 데이터를 불러오는데 실패했습니다.'
   } finally {
     loading.value = false
   }
-})
+}
+
+onMounted(loadStockData)
 
 const handleHeart = async (value) => {
   if (!isAuthenticated.value) {
@@ -132,11 +133,10 @@ const handleHeart = async (value) => {
   }
 
   try {
-    const code = route.params.stock_code
     const method = value ? 'POST' : 'DELETE'
     const response = await axios({
       method,
-      url: `http://127.0.0.1:8000/api/v1/products/stock/${code}/favorite/`,
+      url: `http://127.0.0.1:8000/api/v1/products/stocks/${stockCode}/favorite/`,
       headers: { Authorization: `Token ${accountStore.token}` }
     })
     

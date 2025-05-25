@@ -26,10 +26,12 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { useAccountStore } from '@/stores/users'
 import HeartButton from '@/components/HeartButton.vue'
 import axios from 'axios'
 
+const accountStore = useAccountStore()
 const props = defineProps({
   data: {
     type: Object,
@@ -44,16 +46,57 @@ const props = defineProps({
 const isLiked = ref(false)
 const isHovered = ref(false)
 
+// 초기 찜하기 상태 확인
+const checkInitialLikeStatus = async () => {
+  const token = accountStore.token
+  console.log('초기 상태 확인 시 토큰:', token)
+  
+  if (!token) return
+  
+  try {
+    const response = await axios({
+      method: 'GET',
+      url: `http://127.0.0.1:8000/api/v1/products/stocks/${props.data.stock_code}/favorite/`,
+      headers: {
+        Authorization: `Token ${token}`
+      }
+    })
+    console.log('초기 상태 응답:', response.data)
+    isLiked.value = response.data.is_hearted
+  } catch (err) {
+    console.error('찜하기 상태 확인 오류:', err)
+  }
+}
+
+// 컴포넌트 마운트 시 찜하기 상태 확인
+onMounted(checkInitialLikeStatus)
+
 const toggleLike = async () => {
   try {
-    if (isLiked.value) {
-      await axios.delete(`http://127.0.0.1:8000/api/v1/products/${props.data.id}/unfavorite/`)
-    } else {
-      await axios.post(`http://127.0.0.1:8000/api/v1/products/${props.data.id}/favorite/`)
+    const token = accountStore.token
+    console.log('토글 시 토큰:', token)
+    
+    if (!token) {
+      alert('로그인이 필요한 서비스입니다.')
+      return
     }
+
+    const response = await axios({
+      method: isLiked.value ? 'DELETE' : 'POST',
+      url: `http://127.0.0.1:8000/api/v1/products/stocks/${props.data.stock_code}/favorite/`,
+      headers: {
+        Authorization: `Token ${token}`
+      }
+    })
+    console.log('API 응답:', response.data)
     isLiked.value = !isLiked.value
   } catch (err) {
     console.error('찜하기 오류:', err)
+    if (err.response?.status === 401) {
+      alert('로그인이 필요한 서비스입니다.')
+    } else {
+      alert('찜하기 처리에 실패했습니다.')
+    }
   }
 }
 
@@ -139,7 +182,6 @@ const formatMarketCap = (val) => {
   text-align: right;
 }
 
-
 .volume-block {
   display: flex;
   flex-direction: column;
@@ -147,7 +189,6 @@ const formatMarketCap = (val) => {
   flex: 1.5;
   text-align: right;
 }
-
 
 .marketcap-block {
   display: flex;
