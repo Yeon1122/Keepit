@@ -61,6 +61,11 @@ class ETFSerializer(serializers.ModelSerializer):
             #'nav', 'nav_change'
         ]
 
+class GoodsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = ['id', 'name', 'company', 'product_code', 'created_at', 'updated_at']
+
 '---------------------------------------------------------------------------------'
 
 class ProductCompareSerializer(serializers.ModelSerializer):
@@ -83,3 +88,5 @@ class ProductCompareSerializer(serializers.ModelSerializer):
             return calc_saving_final_amount(monthly_amount, months, obj.interest_rate)
 
         return None
+
+

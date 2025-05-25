@@ -17,6 +17,9 @@ urlpatterns = [
     path('stocks/<str:stock_code>/', views.stock_detail, name='stock-detail'),
     path('stocks/<str:stock_code>/favorite/', views.stock_favorite, name='stock-favorite'),
     
+    # 현물 관련
+    path('goods/', views.goods_list, name='goods-list'),
+    
     # 찜하기 기능
     path('favorites/by-id/<int:product_id>/', views.favorite_by_id, name='favorite-by-id'),
     path('favorites/', views.user_favorites, name='user-favorites'),

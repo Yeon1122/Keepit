@@ -169,7 +169,7 @@ const fetchFavorites = async () => {
     error.value = null
 
     try {
-        const response = await axios.get('/api/v1/products/favorites/', {
+        const response = await axios.get('http://127.0.0.1:8000/api/v1/products/favorites/', {
             headers: { Authorization: `Token ${accountStore.token}` }
         })
         favorites.value = response.data

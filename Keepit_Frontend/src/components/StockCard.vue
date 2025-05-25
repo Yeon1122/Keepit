@@ -1,6 +1,6 @@
 <template>
-  <div class="stock-card">
-    <div class="left">
+  <div class="stock-card" @click="handleClick">
+    <div class="left" @click.stop>
       <HeartButton
         v-if="showHeart"
         :initial-is-hearted="isLiked"
@@ -28,9 +28,11 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useAccountStore } from '@/stores/users'
+import { useRouter } from 'vue-router'
 import HeartButton from '@/components/HeartButton.vue'
 import axios from 'axios'
 
+const router = useRouter()
 const accountStore = useAccountStore()
 const props = defineProps({
   data: {
@@ -100,6 +102,13 @@ const toggleLike = async () => {
   }
 }
 
+const handleClick = () => {
+  router.push({
+    name: 'stockdetail',
+    params: { stock_code: props.data.stock_code }
+  })
+}
+
 const formatNumber = (val) => {
   if (val === null || val === undefined) return '-'
   return Number(val).toLocaleString()
@@ -134,6 +143,7 @@ const formatMarketCap = (val) => {
   font-family: 'Noto Sans KR', sans-serif;
   font-size: 0.95rem;
   transition: box-shadow 0.2s;
+  cursor: pointer;
 }
 
 .stock-card:hover {
