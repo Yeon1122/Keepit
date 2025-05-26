@@ -26,12 +26,20 @@
               </div>
               <h2>{{ stock.name }}</h2>
             </div>
-            <span class="code">{{ stock.stock_code }} / {{ stock.market_type }}</span>
+            <div class="stock-info">
+              <span class="code">{{ stock.stock_code }}</span>
+              <span class="market">{{ stock.market_type }}</span>
+            </div>
           </div>
         </div>
 
         <div class="section">
-          <p><strong>현재가:</strong> {{ formatNumber(stock.current_price) }}원 ({{ formatChange(stock.price_change) }})</p>
+          <div class="price-info">
+            <p class="current-price"><strong>현재가(변동가):</strong> {{ formatNumber(stock.current_price) }}원</p>
+            <p class="price-change" :class="({ 'up': stock.price_change > 0, 'down': stock.price_change < 0 })">
+              ({{ stock.price_change_str || '-원' }})
+            </p>
+          </div>
           <p><strong>업종:</strong> {{ stock.sector }}</p>
         </div>
 
@@ -40,18 +48,18 @@
         </div>
 
         <div class="section">
-          <p><strong>시가:</strong> {{ formatNumber(stock.open_price) }} / 고가: {{ formatNumber(stock.high_price) }} / 저가: {{ formatNumber(stock.low_price) }}</p>
-          <p><strong>52주 최고:</strong> {{ formatNumber(stock.high_52w) }} ({{ stock.high_52w_date }})</p>
-          <p><strong>52주 최저:</strong> {{ formatNumber(stock.low_52w) }} ({{ stock.low_52w_date }})</p>
+          <p><strong>시가:</strong> {{ formatNumber(stock.open_price) }}원  <strong>고가:</strong> {{ formatNumber(stock.high_price) }}원  <strong>저가:</strong> {{ formatNumber(stock.low_price) }}원</p>
+          <p><strong>52주 최고:</strong> {{ formatNumber(stock.high_52w) }}원 ({{ stock.high_52w_date }})</p>
+          <p><strong>52주 최저:</strong> {{ formatNumber(stock.low_52w) }}원 ({{ stock.low_52w_date }})</p>
         </div>
 
         <div class="section">
-          <p><strong>PER:</strong> {{ stock.per }} / <strong>PBR:</strong> {{ stock.pbr }} / <strong>EPS:</strong> {{ stock.eps }} / <strong>BPS:</strong> {{ stock.bps }}</p>
-          <p><strong>시가총액:</strong> {{ formatNumber(stock.market_cap) }} / <strong>상장주식수:</strong> {{ formatNumber(stock.listed_shares) }}</p>
+          <p><strong>PER:</strong> {{ stock.per }}배 | <strong>PBR:</strong> {{ stock.pbr }}배 | <strong>EPS:</strong> {{ formatNumber(stock.eps) }}원 | <strong>BPS:</strong> {{ formatNumber(stock.bps) }}원</p>
+          <p><strong>시가총액:</strong> {{ formatMarketCap(stock.market_cap) }} | <strong>상장 주식 수:</strong> {{ formatNumber(stock.listed_shares) }}주</p>
         </div>
 
         <div class="section">
-          <p><strong>외국인 보유율:</strong> {{ stock.foreign_ownership }}%</p>
+          <p><strong>외국인 보유율:</strong> {{ ((stock.foreign_ownership / stock.listed_shares) * 100).toFixed(2) }}%</p>
           <p><strong>공매도 허용:</strong> {{ stock.short_selling_allowed ? '허용' : '불가' }}</p>
         </div>
 
@@ -164,7 +172,26 @@ const handleHeart = async (value) => {
 }
 
 const formatNumber = (val) => val == null ? '-' : Number(val).toLocaleString()
-const formatChange = (val) => val > 0 ? `+${val}` : val < 0 ? `${val}` : '0'
+
+// 시가총액 포맷팅 (조, 억 단위)
+const formatMarketCap = (val) => {
+  if (val == null) return '-'
+  const num = Number(val)
+  if (isNaN(num)) return '-'
+  
+  // 이미 억 단위로 들어오는 값
+  // 1조 = 10000억
+  const cho = Math.floor(num / 10000)  // 조 단위
+  const uk = num % 10000  // 억 단위 (1조 미만)
+  
+  if (cho > 0) {
+    return uk > 0 ? `${cho.toLocaleString()}조 ${uk.toLocaleString()}억` : `${cho.toLocaleString()}조`
+  } else if (uk > 0) {
+    return `${uk.toLocaleString()}억`
+  } else {
+    return '1억 미만'
+  }
+}
 </script>
 
 <style scoped>
@@ -233,30 +260,47 @@ const formatChange = (val) => val > 0 ? `+${val}` : val < 0 ? `${val}` : '0'
 }
 
 .title-section {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.title-section h2 {
-  color: #333;
-  margin: 0;
+  margin-bottom: 1.5rem;
 }
 
 .title-with-heart {
   display: flex;
   align-items: center;
   gap: 1rem;
+  margin-bottom: 0.5rem;
 }
 
-.heart-count {
-  color: var(--text-secondary);
-  font-size: 0.9rem;
+.title-with-heart h2 {
+  font-size: 1.8rem;
+  margin: 0;
+  color: #145c2b;
 }
 
-.code {
+.stock-info {
+  display: flex;
+  gap: 1rem;
   color: #666;
-  font-size: 0.9rem;
+}
+
+.code, .market {
+  font-size: 1rem;
+}
+
+.price-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.current-price {
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+.price-change {
+  margin: 0;
+  &.up { color: #d60000; }
+  &.down { color: #0051c7; }
 }
 
 .loading-state {

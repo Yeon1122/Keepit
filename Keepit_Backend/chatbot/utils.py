@@ -1,8 +1,12 @@
 from openai import OpenAI
 from django.conf import settings
+import httpx
 
 # OpenAI 클라이언트 초기화
-client = OpenAI(api_key=settings.OPENAI_API_KEY)
+client = OpenAI(
+    api_key=settings.OPENAI_API_KEY,
+    http_client=httpx.Client()
+)
 
 def get_chatbot_response(category, message, chat_history=None):
     """OpenAI API를 사용하여 챗봇 응답을 생성합니다."""

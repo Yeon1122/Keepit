@@ -2,6 +2,7 @@ import os
 import requests
 import time
 from dotenv import load_dotenv
+from .utils.stock_code_loader import load_stock_name_map
 
 load_dotenv()
 API_KEY = os.getenv("FSS_API_KEY")
@@ -130,6 +131,10 @@ def fetch_stock_detail_by_code(stock_code):
     if not token:
         return None
 
+    # 주식 코드로 실제 회사명 가져오기
+    stock_name_map = load_stock_name_map()
+    company_name = stock_name_map.get(stock_code)
+
     url = f"{KIS_BASE_URL}/uapi/domestic-stock/v1/quotations/inquire-price"
     headers = {
         "authorization": f"Bearer {token}",
@@ -147,12 +152,48 @@ def fetch_stock_detail_by_code(stock_code):
         res.raise_for_status()  # HTTP 에러 체크
         output = res.json().get("output", {})
         
-        # 회사명 가져오기 - stck_shrn_iscd가 있으면 이것이 실제 종목 코드
-        company_name = None
-        if output.get('stck_shrn_iscd'):
-            company_name = output.get('bstp_kor_isnm', '').split('/')[0].strip()
-            if not company_name:
-                company_name = f"{stock_code} 주식"
+        # 매핑된 이름이 없으면 API 응답의 hts_kor_isnm 사용
+        if not company_name:
+            company_name = output.get('hts_kor_isnm', '')
+        if not company_name:
+            company_name = f"{stock_code} 주식"
+        
+        # 업종명은 bstp_kor_isnm에서 가져오되, '/' 구분자가 있으면 마지막 부분을 사용
+        sector = output.get('bstp_kor_isnm', '')
+        if '/' in sector:
+            sector = sector.split('/')[-1].strip()
+
+        def safe_convert(value, convert_type=float):
+            try:
+                return convert_type(value) if value is not None else None
+            except (ValueError, TypeError):
+                return None
+
+        # 가격 변동 방향 표시 (▲, ▼)와 변동가를 함께 표시
+        price_change = safe_convert(output.get('prdy_vrss'))
+        price_change_str = ''
+        if price_change:
+            direction = '▲' if price_change > 0 else '▼' if price_change < 0 else ''
+            # 변동가가 있을 때만 방향과 함께 표시하고 '원' 단위 추가
+            if direction:
+                price_change_str = f"{direction} {abs(price_change):,.0f}원"
+            else:
+                price_change_str = f"{price_change:,.0f}원"
+
+        # 날짜 형식 변환 (YYYYMMDD -> YYYY년 MM월 DD일)
+        def format_date(date_str):
+            if not date_str or len(date_str) != 8:
+                return None
+            try:
+                year = date_str[:4]
+                month = date_str[4:6]
+                day = date_str[6:8]
+                return f"{year}년 {month}월 {day}일"
+            except:
+                return None
+
+        high_52w_date = format_date(output.get('w52_hgpr_date'))
+        low_52w_date = format_date(output.get('w52_lwpr_date'))
         
         return {
             'id': None,
@@ -161,31 +202,32 @@ def fetch_stock_detail_by_code(stock_code):
             'link': None,
             'stock_code': stock_code,
             'market_type': output.get('rprs_mrkt_kor_name'),
-            'current_price': output.get('stck_prpr'),
-            'price_change': output.get('prdy_vrss'),
-            'sector': output.get('bstp_kor_isnm'),
+            'current_price': safe_convert(output.get('stck_prpr')),  # 현재가
+            'price_change': price_change,  # 전일 대비 (숫자)
+            'price_change_str': price_change_str,  # 전일 대비 (방향 포함, 예: "▲ 1,000")
+            'sector': sector,
             'warning_info': output.get('stck_rsk_yn'),
-            'high_price': output.get('stck_hgpr'),
-            'low_price': output.get('stck_lwpr'),
-            'base_price': output.get('stck_sdpr'),
-            'weighted_avg_price': output.get('wghn_avrg_stck_prc'),
-            'high_52w': output.get('w52_hgpr'),
-            'high_52w_date': output.get('w52_hgpr_date'),
-            'low_52w': output.get('w52_lwpr'),
-            'low_52w_date': output.get('w52_lwpr_date'),
-            'per': output.get('per'),
-            'pbr': output.get('pbr'),
-            'eps': output.get('eps'),
-            'bps': output.get('bps'),
-            'market_cap': output.get('hts_avls'),
-            'listed_shares': output.get('lstn_stcn'),
-            'settlement_month': output.get('stac_month'),
-            'per_value': output.get('per'),
-            'trade_volume': output.get('acml_vol'),
-            'trade_value': output.get('acml_tr_pbmn'),
-            'foreign_ownership': output.get('frgn_hldn_qty'),
-            'short_selling_allowed': output.get('short_over_yn'),
-            'short_selling_volume': output.get('short_over_prc'),
+            'open_price': safe_convert(output.get('stck_oprc')),  # 시가
+            'high_price': safe_convert(output.get('stck_hgpr')),  # 고가
+            'low_price': safe_convert(output.get('stck_lwpr')),  # 저가
+            'base_price': safe_convert(output.get('stck_sdpr')),  # 기준가
+            'weighted_avg_price': safe_convert(output.get('wghn_avrg_stck_prc')),  # 가중평균
+            'high_52w': safe_convert(output.get('w52_hgpr')),  # 52주 최고
+            'high_52w_date': high_52w_date,  # 52주 최고일 (YYYY년 MM월 DD일)
+            'low_52w': safe_convert(output.get('w52_lwpr')),  # 52주 최저
+            'low_52w_date': low_52w_date,  # 52주 최저일 (YYYY년 MM월 DD일)
+            'per': safe_convert(output.get('per')),  # PER
+            'pbr': safe_convert(output.get('pbr')),  # PBR
+            'eps': safe_convert(output.get('eps')),  # EPS
+            'bps': safe_convert(output.get('bps')),  # BPS
+            'market_cap': safe_convert(output.get('hts_avls')),  # 시가총액
+            'listed_shares': safe_convert(output.get('lstn_stcn')),  # 상장주식수
+            'settlement_month': output.get('stac_month'),  # 결산월
+            'trade_volume': safe_convert(output.get('acml_vol')),  # 거래량
+            'trade_value': safe_convert(output.get('acml_tr_pbmn')),  # 거래대금
+            'foreign_ownership': safe_convert(output.get('frgn_hldn_qty')),  # 외국인보유량
+            'short_selling_allowed': output.get('short_over_yn'),  # 공매도가능여부
+            'short_selling_volume': safe_convert(output.get('short_over_prc')),  # 공매도수량
         }
     except Exception as e:
         print(f"주식 상세 정보 조회 중 오류 발생: {e}")
