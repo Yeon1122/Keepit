@@ -1,50 +1,41 @@
 <template>
-  <div class="myposts-container">
-    <h1 class="page-title">내가 쓴 글</h1>
-    
-    <div class="posts-summary">
-      <div class="summary-item">
-        <span class="summary-label">전체 게시글</span>
-        <span class="summary-value">{{ postsCount.total }}</span>
+  <div class="my-posts-container">
+    <div class="content-card">
+      <div class="card-header">
+        <h3>{{ pageTitle }}</h3>
       </div>
-      <div class="summary-item">
-        <span class="summary-label">자유게시판</span>
-        <span class="summary-value">{{ postsCount.free }}</span>
-      </div>
-      <div class="summary-item">
-        <span class="summary-label">질문게시판</span>
-        <span class="summary-value">{{ postsCount.question }}</span>
-      </div>
-    </div>
-
-    <div class="posts-container">
-      <div v-if="loading" class="loading">
-        게시글을 불러오는 중입니다...
-      </div>
-      
+      <template v-if="loading">
+        <div class="loading-state">
+          <i class="fas fa-spinner fa-spin"></i>
+          <p>게시글을 불러오는 중...</p>
+        </div>
+      </template>
       <template v-else>
-        <div v-if="posts.length === 0" class="empty-state">
-          <i class="fas fa-pen"></i>
-          <p>아직 작성한 게시글이 없습니다.</p>
-          <div class="action-buttons">
-            <router-link :to="{ name: 'freepostcreate' }" class="write-button">
-              자유게시판 글쓰기
-            </router-link>
-            <router-link :to="{ name: 'questioncreate' }" class="write-button">
-              질문게시판 글쓰기
-            </router-link>
+        <div class="posts-summary">
+          <div class="summary-item">
+            <span class="label">전체</span>
+            <span class="value">{{ postsCount.total }}</span>
+          </div>
+          <div class="summary-item">
+            <span class="label">자유게시판</span>
+            <span class="value">{{ postsCount.free }}</span>
+          </div>
+          <div class="summary-item">
+            <span class="label">질문게시판</span>
+            <span class="value">{{ postsCount.question }}</span>
           </div>
         </div>
-
+        <div v-if="posts.length === 0" class="empty-state">
+          <i class="fas fa-file-alt"></i>
+          <p>{{ isCurrentUser ? '아직 작성한 글이 없습니다.' : `${authorInfo.nickname}님이 작성한 글이 없습니다.` }}</p>
+        </div>
         <div v-else class="posts-list">
-          <div v-for="post in posts" :key="post.id" class="post-item" 
-               @click="goToPost(post.board_type, post.id)">
+          <div v-for="post in posts" :key="post.id" class="post-item" @click="goToPost(post.board_type, post.id)">
             <div class="post-header">
               <span class="board-type" :class="post.board_type">
                 {{ post.board_type === 'free' ? '자유게시판' : '질문게시판' }}
               </span>
-              <span v-if="post.board_type === 'question' && post.is_solved" 
-                    class="solved-badge">해결</span>
+              <span v-if="post.board_type === 'question' && post.is_solved" class="solved-badge">해결</span>
             </div>
             <div class="post-title">{{ post.title }}</div>
             <div class="post-meta">
@@ -66,12 +57,13 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, onMounted, computed } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { useAccountStore } from '@/stores/users'
 import axios from 'axios'
 
 const router = useRouter()
+const route = useRoute()
 const accountStore = useAccountStore()
 
 const loading = ref(true)
@@ -80,6 +72,22 @@ const postsCount = ref({
   total: 0,
   free: 0,
   question: 0
+})
+
+const authorInfo = ref({
+  userid: '',
+  nickname: ''
+})
+
+const isCurrentUser = computed(() => {
+  return route.query.userid === accountStore.userId
+})
+
+const pageTitle = computed(() => {
+  if (isCurrentUser.value) {
+    return '내가 작성한 글'
+  }
+  return `${authorInfo.value.nickname}님의 게시글`
 })
 
 onMounted(async () => {
@@ -91,7 +99,10 @@ onMounted(async () => {
   }
 
   try {
-    const response = await axios.get('/api/v1/community/my-posts/', {
+    const userid = route.query.userid
+    const endpoint = userid ? `/api/v1/community/user-posts/${userid}/` : '/api/v1/community/my-posts/'
+
+    const response = await axios.get(endpoint, {
       headers: {
         Authorization: `Token ${token}`
       }
@@ -101,191 +112,165 @@ onMounted(async () => {
       throw new Error('데이터가 없습니다.')
     }
 
-    posts.value = response.data.posts || []
+    posts.value = response.data.posts
     postsCount.value = {
-      total: response.data.total_posts || 0,
-      free: response.data.posts_count?.free || 0,
-      question: response.data.posts_count?.question || 0
+      total: response.data.total_posts,
+      ...response.data.posts_count
     }
-  } catch (error) {
-    console.error('게시글 로딩 실패:', error)
-    if (error.response) {
-      // 서버에서 응답이 왔지만 에러인 경우
-      if (error.response.status === 401) {
-        alert('로그인이 필요한 서비스입니다.')
-        router.push({ name: 'login' })
-      } else if (error.response.status === 404) {
-        alert('요청한 페이지를 찾을 수 없습니다.')
-      } else {
-        alert(`서버 오류가 발생했습니다. (${error.response.status})`)
-      }
-    } else if (error.request) {
-      // 요청은 보냈지만 응답이 없는 경우
-      alert('서버에 연결할 수 없습니다. 서버가 실행 중인지 확인해주세요.')
-    } else {
-      // 요청 자체를 보내지 못한 경우
-      alert('요청을 보내는 중 오류가 발생했습니다.')
+
+    if (response.data.author) {
+      authorInfo.value = response.data.author
     }
-  } finally {
+
+    loading.value = false
+  } catch (err) {
+    console.error('게시글 조회 실패:', err)
+    alert('게시글을 불러오는데 실패했습니다.')
     loading.value = false
   }
 })
 
 const formatDate = (dateString) => {
-  if (!dateString) return ''
   const date = new Date(dateString)
-  return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
 }
 
-const goToPost = (type, postId) => {
-  const routeName = type === 'free' ? 'freepostdetail' : 'questiondetail'
-  router.push({ name: routeName, params: { id: postId } })
+const goToPost = (boardType, postId) => {
+  router.push({
+    name: boardType === 'free' ? 'freepostdetail' : 'questionpostdetail',
+    params: { postId }
+  })
 }
 </script>
 
 <style scoped>
-.myposts-container {
+.my-posts-container {
   max-width: 1200px;
   margin: 2rem auto;
   padding: 0 1rem;
+  font-family: 'Pretendard', sans-serif;
 }
 
-.page-title {
+.content-card {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid #eee;
+}
+
+.card-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
   color: #333;
-  margin-bottom: 2rem;
-  text-align: center;
 }
 
 .posts-summary {
   display: flex;
   justify-content: center;
   gap: 2rem;
-  margin-bottom: 2rem;
-  padding: 1rem;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  background: #f8f9fa;
+  border-bottom: 1px solid #eee;
 }
 
 .summary-item {
   text-align: center;
 }
 
-.summary-label {
+.summary-item .label {
   display: block;
   color: #666;
   font-size: 0.9rem;
   margin-bottom: 0.5rem;
 }
 
-.summary-value {
+.summary-item .value {
+  display: block;
   font-size: 1.5rem;
   font-weight: 700;
   color: #145c2b;
 }
 
-.posts-container {
-  background: white;
-  border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.loading {
-  text-align: center;
-  padding: 2rem;
-  color: #666;
-}
-
+.loading-state,
 .empty-state {
   text-align: center;
   padding: 3rem 1rem;
   color: #666;
 }
 
+.loading-state i,
 .empty-state i {
   font-size: 2rem;
-  margin-bottom: 1rem;
   color: #145c2b;
+  margin-bottom: 1rem;
 }
 
-.action-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-top: 1.5rem;
-}
-
-.write-button {
-  padding: 0.8rem 1.5rem;
-  border-radius: 6px;
-  background: #145c2b;
-  color: white;
-  text-decoration: none;
-  transition: all 0.2s;
-}
-
-.write-button:hover {
-  background: #0d4420;
-  transform: translateY(-2px);
+.loading-state p,
+.empty-state p {
+  margin: 0;
+  font-size: 1.1rem;
 }
 
 .posts-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  padding: 1.5rem;
 }
 
 .post-item {
-  padding: 1.5rem;
-  border: 1px solid #eee;
+  padding: 1.2rem;
   border-radius: 8px;
+  background: #f8f9fa;
+  margin-bottom: 1rem;
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .post-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background: #f1f9f3;
+  transform: translateX(4px);
 }
 
 .post-header {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
+  gap: 0.8rem;
+  margin-bottom: 0.8rem;
 }
 
 .board-type {
-  font-size: 0.8rem;
-  padding: 0.2rem 0.5rem;
-  border-radius: 4px;
-  background: #e9ecef;
-  color: #495057;
+  font-size: 0.85rem;
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  font-weight: 600;
 }
 
 .board-type.free {
-  background: #e3f2fd;
-  color: #1976d2;
+  background: #e7f5ec;
+  color: #145c2b;
 }
 
 .board-type.question {
-  background: #fbe9e7;
-  color: #d84315;
+  background: #fff3cd;
+  color: #856404;
 }
 
 .solved-badge {
-  font-size: 0.8rem;
-  padding: 0.2rem 0.5rem;
-  border-radius: 4px;
-  background: #e8f5e9;
-  color: #2e7d32;
+  font-size: 0.85rem;
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  background: #d4edda;
+  color: #155724;
+  font-weight: 600;
 }
 
 .post-title {
   font-size: 1.1rem;
   color: #333;
-  margin: 0.5rem 0;
+  margin-bottom: 0.8rem;
   font-weight: 500;
 }
 
@@ -293,13 +278,8 @@ const goToPost = (type, postId) => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 0.5rem;
   font-size: 0.9rem;
   color: #666;
-}
-
-.post-date {
-  color: #888;
 }
 
 .post-stats {
@@ -307,12 +287,22 @@ const goToPost = (type, postId) => {
   gap: 1rem;
 }
 
+.post-stats span {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.post-stats i {
+  font-size: 0.9rem;
+}
+
 .likes i {
-  color: #e91e63;
+  color: #dc3545;
 }
 
 .comments i {
-  color: #2196f3;
+  color: #145c2b;
 }
 
 @media (max-width: 768px) {
@@ -320,13 +310,22 @@ const goToPost = (type, postId) => {
     flex-direction: column;
     gap: 1rem;
   }
-  
-  .action-buttons {
-    flex-direction: column;
+
+  .summary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    background: white;
+    border-radius: 8px;
   }
-  
-  .write-button {
-    width: 100%;
+
+  .summary-item .label {
+    margin: 0;
+  }
+
+  .summary-item .value {
+    font-size: 1.2rem;
   }
 }
-</style> 
+</style>

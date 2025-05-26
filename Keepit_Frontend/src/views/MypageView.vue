@@ -17,15 +17,16 @@
         </div>
         <div class="profile-stats">
           <div class="stat-item" @click="goToFollow">
-            <div class="stat-value">{{ user.following?.length ?? 0 }}</div>
+            <div class="stat-value">{{ user.following && user.following.length ? user.following.length : 0 }}</div>
             <div class="stat-label">팔로우</div>
           </div>
           <div class="stat-item" @click="goToFollow">
-            <div class="stat-value">{{ user.followers?.length ?? 0 }}</div>
+            <div class="stat-value">{{ user.followers && user.followers.length ? user.followers.length : 0 }}</div>
             <div class="stat-label">팔로워</div>
           </div>
           <div class="stat-item" @click="goToMyPosts">
-            <div class="stat-value">{{ user.posts_summary?.total_posts ?? 0 }}</div>
+            <div class="stat-value">{{ user.posts_summary && user.posts_summary.total_posts ?
+              user.posts_summary.total_posts : 0 }}</div>
             <div class="stat-label">작성글</div>
           </div>
         </div>
@@ -60,12 +61,8 @@
               <div class="recommendations-preview">
                 <h4>추천 투자 상품</h4>
                 <div class="recommendation-chips">
-                  <div 
-                    v-for="(isRecommended, type) in user.test_result.recommendations" 
-                    :key="type"
-                    class="recommendation-chip"
-                    :class="{ 'recommended': isRecommended }"
-                  >
+                  <div v-for="(isRecommended, type) in user.test_result.recommendations" :key="type"
+                    class="recommendation-chip" :class="{ 'recommended': isRecommended }">
                     {{ getProductTypeDisplay(type) }}
                   </div>
                 </div>
@@ -87,46 +84,26 @@
         </div>
         <div class="filter-section">
           <div class="filter-buttons">
-            <button 
-              class="filter-button" 
-              :class="{ active: selectedFilter === 'all' }"
-              @click="selectedFilter = 'all'"
-            >
+            <button class="filter-button" :class="{ active: selectedFilter === 'all' }" @click="selectedFilter = 'all'">
               전체
             </button>
-            <button 
-              class="filter-button" 
-              :class="{ active: selectedFilter === 'deposit' }"
-              @click="selectedFilter = 'deposit'"
-            >
+            <button class="filter-button" :class="{ active: selectedFilter === 'deposit' }"
+              @click="selectedFilter = 'deposit'">
               예금
             </button>
-            <button 
-              class="filter-button" 
-              :class="{ active: selectedFilter === 'saving' }"
-              @click="selectedFilter = 'saving'"
-            >
+            <button class="filter-button" :class="{ active: selectedFilter === 'saving' }"
+              @click="selectedFilter = 'saving'">
               적금
             </button>
-            <button 
-              class="filter-button" 
-              :class="{ active: selectedFilter === 'goods' }"
-              @click="selectedFilter = 'goods'"
-            >
+            <button class="filter-button" :class="{ active: selectedFilter === 'goods' }"
+              @click="selectedFilter = 'goods'">
               현물
             </button>
-            <button 
-              class="filter-button" 
-              :class="{ active: selectedFilter === 'stock' }"
-              @click="selectedFilter = 'stock'"
-            >
+            <button class="filter-button" :class="{ active: selectedFilter === 'stock' }"
+              @click="selectedFilter = 'stock'">
               주식
             </button>
-            <button 
-              class="filter-button" 
-              :class="{ active: selectedFilter === 'etf' }"
-              @click="selectedFilter = 'etf'"
-            >
+            <button class="filter-button" :class="{ active: selectedFilter === 'etf' }" @click="selectedFilter = 'etf'">
               ETF
             </button>
           </div>
@@ -180,14 +157,12 @@
                     </span>
                   </div>
                 </div>
+                <button v-if="filteredProducts.length > 1" class="view-more-button" @click="goToFavorites">
+                  더보기
+                  <i class="fas fa-chevron-right"></i>
+                </button>
               </div>
               <div class="product-divider"></div>
-            </div>
-            <div v-if="filteredProducts.length > 1" class="view-more-section">
-              <button class="view-more-button" @click="goToFavorites">
-                더보기
-                <i class="fas fa-chevron-right"></i>
-              </button>
             </div>
           </template>
           <div v-else class="empty-state">
@@ -209,48 +184,63 @@
           <button class="action-button" @click="goToMyPosts">전체보기</button>
         </div>
         <div class="card-content">
-          <div v-if="freePosts.length || questionPosts.length">
-            <div class="posts-grid">
-              <!-- 자유 게시판 -->
-              <div v-if="freePosts.length" class="posts-section">
-                <h4>자유게시판</h4>
-                <ul class="posts-list">
-                  <li v-for="post in freePosts.slice(0, 3)" :key="post.id" 
-                      @click="goToPost('free', post.id)" 
-                      class="post-item">
-                    <div class="post-title">{{ post.title }}</div>
-                    <div class="post-meta">
-                      <span class="post-date">{{ formatDate(post.created_at) }}</span>
+          <div v-if="freePosts.length || questionPosts.length" class="posts-grid">
+            <!-- 자유 게시판 -->
+            <div class="posts-section">
+              <h4>자유게시판</h4>
+              <ul class="posts-list">
+                <li v-for="post in freePosts.slice(0, 2)" :key="post.id" @click="goToPost('free', post.id)"
+                  class="post-item">
+                  <div class="post-title">{{ post.title }}</div>
+                  <div class="post-meta">
+                    <span class="post-date">{{ formatDate(post.created_at) }}</span>
+                    <div class="post-stats">
+                      <span class="likes">
+                        <i class="fas fa-thumbs-up"></i> {{ post.likes_count }}
+                      </span>
+                      <span class="comments">
+                        <i class="fas fa-comment"></i> {{ Array.isArray(post.comments) ? post.comments.length : 0 }}
+                      </span>
                     </div>
-                  </li>
-                </ul>
-              </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
 
-              <!-- 질문 게시판 -->
-              <div v-if="questionPosts.length" class="posts-section">
-                <h4>질문게시판</h4>
-                <ul class="posts-list">
-                  <li v-for="post in questionPosts.slice(0, 3)" :key="post.id" 
-                      @click="goToPost('question', post.id)"
-                      class="post-item">
-                    <div class="post-title">
-                      {{ post.title }}
-                      <span v-if="post.is_solved" class="solved-badge">해결</span>
+            <!-- 질문 게시판 -->
+            <div class="posts-section">
+              <h4>질문게시판</h4>
+              <ul class="posts-list">
+                <li v-for="post in questionPosts.slice(0, 2)" :key="post.id" @click="goToPost('question', post.id)"
+                  class="post-item">
+                  <div class="post-title">
+                    {{ post.title }}
+                    <span v-if="post.is_solved" class="solved-badge">해결</span>
+                  </div>
+                  <div class="post-meta">
+                    <span class="post-date">{{ formatDate(post.created_at) }}</span>
+                    <div class="post-stats">
+                      <span class="likes">
+                        <i class="fas fa-thumbs-up"></i> {{ post.likes_count }}
+                      </span>
+                      <span class="comments">
+                        <i class="fas fa-comment"></i> {{ Array.isArray(post.comments) ? post.comments.length : 0 }}
+                      </span>
                     </div>
-                    <div class="post-meta">
-                      <span class="post-date">{{ formatDate(post.created_at) }}</span>
-                    </div>
-                  </li>
-                </ul>
-              </div>
+                  </div>
+                </li>
+              </ul>
             </div>
           </div>
+
+          <!-- 게시글이 없을 때 -->
           <div v-else class="empty-state">
             <i class="fas fa-pen"></i>
             <p>첫 게시글을 작성해보세요!</p>
           </div>
         </div>
       </div>
+
     </div>
   </div>
 </template>
@@ -353,15 +343,18 @@ onMounted(async () => {
       followers: res.data.followers || [],
       following: res.data.following || [],
       test_result: res.data.test_result || null,
-      liked_products: favoritesRes.data || [],  // 찜한 상품 목록 추가
-      posts_summary: res.data.posts_summary || { total_posts: 0, free_posts: 0, question_posts: 0 },
-      recent_posts: res.data.recent_posts || [],
-      my_posts: res.data.my_posts || []
+      liked_products: favoritesRes.data || [],
+      posts_summary: res.data.posts_summary || { total_posts: 0, free_posts: 0, question_posts: 0 }
     }
 
     // 최근 게시글 분류
-    freePosts.value = res.data.recent_posts?.filter(post => post.board_type === '자유게시판') || []
-    questionPosts.value = res.data.recent_posts?.filter(post => post.board_type === '질문게시판') || []
+    if (Array.isArray(res.data.recent_posts)) {
+      freePosts.value = res.data.recent_posts.filter(post => post && post.board_type === '자유게시판') || []
+      questionPosts.value = res.data.recent_posts.filter(post => post && post.board_type === '질문게시판') || []
+    } else {
+      freePosts.value = []
+      questionPosts.value = []
+    }
 
     // localStorage에 최신 사용자 정보 업데이트
     localStorage.setItem('account', JSON.stringify({
@@ -425,18 +418,18 @@ const goToMyPosts = () => {
 
 const goToTest = async () => {
   console.log('🎯 마이페이지 - 투자 스타일 테스트 버튼 클릭됨')
-  
+
   try {
     // 기존 검사 결과 확인
     const response = await axios.get('/api/v1/test/result/')
     console.log('📊 검사 결과 응답:', response.data)
-    
+
     if (response.data && response.data.type) {
       console.log('✅ 기존 검사 결과 있음:', response.data.type)
       // 기존 검사 결과가 있는 경우
       const userChoice = confirm('이미 투자 성향 검사를 받으셨습니다.\n\n다시 검사를 받으시겠습니까?\n\n확인: 새로 검사받기\n취소: 기존 결과 보기')
       console.log('👤 사용자 선택:', userChoice ? '새로 검사받기' : '기존 결과 보기')
-      
+
       if (userChoice) {
         // 새로 검사받기
         router.push({ name: 'investmenttest' })
@@ -661,7 +654,8 @@ const getProductTypeDisplay = (type) => {
 
 
 .content-card:last-child {
-  grid-column: 1 / -1;  /* 마지막 카드(최근 작성글)가 전체 너비를 차지하도록 설정 */
+  grid-column: 1 / -1;
+  /* 마지막 카드(최근 작성글)가 전체 너비를 차지하도록 설정 */
 }
 
 .content-card {
@@ -669,10 +663,13 @@ const getProductTypeDisplay = (type) => {
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-
   min-height: 320px;
   display: flex;
   flex-direction: column;
+}
+
+.content-card:last-child {
+  grid-column: 1 / -1;
 }
 
 .card-header {
@@ -720,13 +717,27 @@ const getProductTypeDisplay = (type) => {
   background: #0d4420;
 }
 
+.card-content {
+  flex: 1;
+  /* card-header를 제외한 나머지 공간을 차지하도록 설정 */
+  display: flex;
+  align-items: center;
+  /* 수직 중앙 정렬 */
+  justify-content: center;
+  /* 수평 중앙 정렬 */
+  padding: 2rem;
+}
+
 .card-content .posts-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 2rem;
+  width: 100%;
+  /* 그리드가 전체 너비를 사용하도록 설정 */
 }
 
 .empty-state {
+  width: 100%;
   text-align: center;
   padding: 2rem;
   color: #666;
@@ -799,6 +810,7 @@ const getProductTypeDisplay = (type) => {
 }
 
 .test-result {
+  width: 100%;
   text-align: center;
   padding: 2rem;
   background: hwb(0 100% 0%);
@@ -894,10 +906,14 @@ const getProductTypeDisplay = (type) => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  font-size: 0.85rem;
+  color: #666;
 }
 
 .post-title {
-  cursor: pointer;
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 0.5rem;
 }
 
 .product-list {
@@ -1053,18 +1069,24 @@ const getProductTypeDisplay = (type) => {
 .view-more-button {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  border: none;
-  background: none;
-  color: #145c2b;
-  font-weight: 600;
+  padding: 0.6rem;
+  margin-top: 1rem;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  background: white;
+  color: #495057;
   cursor: pointer;
+  font-size: 0.9rem;
   transition: all 0.2s;
+  width: 100%;
 }
 
 .view-more-button:hover {
-  opacity: 0.8;
+  background: #f8f9fa;
+  color: #145c2b;
+  border-color: #145c2b;
 }
 
 .view-more-button i {
@@ -1087,20 +1109,24 @@ const getProductTypeDisplay = (type) => {
   }
 
   .content-grid {
-    grid-template-columns: 1fr;  /* 모바일에서는 카드들을 세로로 쌓습니다 */
+    grid-template-columns: 1fr;
+    /* 모바일에서는 카드들을 세로로 쌓습니다 */
   }
 
   .content-card:last-child {
-    grid-column: auto;  /* 모바일에서는 전체 너비 설정을 해제합니다 */
+    grid-column: auto;
+    /* 모바일에서는 전체 너비 설정을 해제합니다 */
   }
 
   .card-content .posts-grid {
-    grid-template-columns: 1fr;  /* 모바일에서는 게시판을 세로로 배치합니다 */
+    grid-template-columns: 1fr;
+    /* 모바일에서는 게시판을 세로로 배치합니다 */
     gap: 1.5rem;
   }
 
   .card-header {
-    flex-direction: row;  /* 모바일에서도 가로 배치 유지 */
+    flex-direction: row;
+    /* 모바일에서도 가로 배치 유지 */
     align-items: center;
     padding: 1rem;
   }
@@ -1119,24 +1145,28 @@ const getProductTypeDisplay = (type) => {
   }
 
   .card-actions {
-    gap: 0.25rem;  /* 모바일에서는 버튼 간격 줄임 */
+    gap: 0.25rem;
+    /* 모바일에서는 버튼 간격 줄임 */
   }
 
   .action-button {
-    padding: 0.4rem 0.8rem;  /* 모바일에서는 버튼 크기 줄임 */
+    padding: 0.4rem 0.8rem;
+    /* 모바일에서는 버튼 크기 줄임 */
     font-size: 0.85rem;
   }
 }
 
 .product-card {
-  padding: 0.8rem 1.5rem;  /* 상하 패딩 줄임 */
+  width: 100%;
+  padding: 0.8rem 1.5rem;
 }
 
 .product-header {
   display: flex;
   align-items: center;
   gap: 1rem;
-  margin-bottom: 0.8rem;  /* 하단 마진 줄임 */
+  margin-bottom: 0.8rem;
+  /* 하단 마진 줄임 */
 }
 
 .product-type {
@@ -1156,7 +1186,8 @@ const getProductTypeDisplay = (type) => {
 
 .product-details {
   display: grid;
-  gap: 0.4rem;  /* 상세 정보 간격 줄임 */
+  gap: 0.4rem;
+  /* 상세 정보 간격 줄임 */
 }
 
 .rate-info,
@@ -1198,7 +1229,8 @@ const getProductTypeDisplay = (type) => {
 }
 
 .product-divider {
-  margin: 0.8rem -1.5rem;  /* 구분선 위아래 마진 줄임 */
+  margin: 0.8rem -1.5rem;
+  /* 구분선 위아래 마진 줄임 */
   height: 1px;
   background-color: #eee;
 }
@@ -1235,5 +1267,88 @@ const getProductTypeDisplay = (type) => {
   display: grid;
   gap: 0.4rem;
 }
-</style>
 
+.posts-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+}
+
+.posts-section {
+  margin-bottom: 2rem;
+}
+
+.posts-section h4 {
+  font-size: 1rem;
+  color: #495057;
+  margin-bottom: 1rem;
+}
+
+.posts-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.post-item {
+  padding: 1rem;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.post-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.post-title {
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.post-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.post-date {
+  color: #666;
+}
+
+.post-stats {
+  display: flex;
+  gap: 1rem;
+}
+
+.likes,
+.comments {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.likes i {
+  color: #e74c3c;
+}
+
+.comments i {
+  color: #145c2b;
+}
+
+.solved-badge {
+  background: #145c2b;
+  color: white;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  margin-left: 0.5rem;
+}
+</style>

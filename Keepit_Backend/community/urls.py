@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import PostViewSet, CommentViewSet, get_my_posts
+from .views import PostViewSet, CommentViewSet, get_my_posts, get_user_posts
 
 router = DefaultRouter()
 
@@ -53,4 +53,5 @@ urlpatterns = [
          CommentViewSet.as_view({'post': 'like'}), 
          name='comment-like'),
     path('my-posts/', get_my_posts, name='my-posts'),
+    path('user-posts/<str:userid>/', get_user_posts, name='user-posts'),
 ] 
