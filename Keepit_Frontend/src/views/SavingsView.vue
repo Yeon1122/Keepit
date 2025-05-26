@@ -144,12 +144,15 @@ onMounted(() => {
   margin-bottom: 2rem;
 }
 
+
+
 h3 {
   color: #145c2b;
   font-weight: bold;
   font-size: 1.5rem;
+  margin-left: 1rem;
   margin-bottom: 1.5rem;
-  text-align: center;
+  text-align: left;
 }
 
 /* 필터바 스타일링 */
