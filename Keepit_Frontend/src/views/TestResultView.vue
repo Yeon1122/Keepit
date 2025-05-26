@@ -302,8 +302,8 @@ const goToTest = () => {
 }
 
 .recommendation-item.recommended {
-  border-color: #3498db;
-  background-color: #ebf5fb;
+  border-color: #145c2b;
+  background-color: #f1fcf4;
 }
 
 .recommendation-item.recommended:hover {
@@ -329,7 +329,7 @@ const goToTest = () => {
 }
 
 .recommendation-status.recommended {
-  color: #3498db;
+  color: #145c2b;
 }
 
 .product-description {
@@ -346,7 +346,7 @@ const goToTest = () => {
 
 .retake-button,
 .take-test-button {
-  background-color: #3498db;
+  background-color: #145c2b;
   color: white;
   padding: 1rem 2rem;
   border: none;
@@ -358,7 +358,7 @@ const goToTest = () => {
 
 .retake-button:hover,
 .take-test-button:hover {
-  background-color: #2980b9;
+  background-color: #145c2b;
 }
 
 .no-result {
