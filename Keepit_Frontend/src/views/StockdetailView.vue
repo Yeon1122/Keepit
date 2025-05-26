@@ -95,11 +95,13 @@ const stockCode = route.params.stock_code
 
 const loadStockData = async () => {
   try {
+    console.log('주식 데이터 로딩 시작')
     const token = accountStore.token
     const response = await axios.get(
       `http://127.0.0.1:8000/api/v1/products/stocks/${stockCode}/`,
       token ? { headers: { Authorization: `Token ${token}` } } : {}
     )
+    console.log('주식 데이터 응답:', response.data)
     stock.value = response.data
 
     // 찜 여부
@@ -112,12 +114,25 @@ const loadStockData = async () => {
       heartCount.value = favRes.data.count
     }
 
-    // 뉴스 (200 OK + 빈 배열 대응)
-    const newsRes = await axios.get(`http://127.0.0.1:8000/api/v1/news/stock/${stockCode}/`)
-    newsList.value = newsRes.data
+    // 뉴스 데이터 가져오기
+    try {
+      console.log('뉴스 데이터 요청 시작:', stockCode)
+      const newsRes = await axios.get(`http://127.0.0.1:8000/api/v1/news/stock/${stockCode}/`)
+      console.log('뉴스 데이터 응답:', newsRes.data)
+      if (Array.isArray(newsRes.data)) {
+        console.log('뉴스 데이터 개수:', newsRes.data.length)
+        newsList.value = newsRes.data
+      } else {
+        console.error('뉴스 데이터가 배열이 아님:', newsRes.data)
+        newsList.value = []
+      }
+    } catch (newsErr) {
+      console.error('뉴스 데이터 로딩 실패:', newsErr.response || newsErr)
+      newsList.value = []
+    }
 
   } catch (err) {
-    console.error('데이터 로딩 실패:', err)
+    console.error('데이터 로딩 실패:', err.response || err)
     error.value = '주식 데이터를 불러오는데 실패했습니다.'
   } finally {
     loading.value = false
