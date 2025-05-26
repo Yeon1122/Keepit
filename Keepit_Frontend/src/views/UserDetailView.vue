@@ -1,569 +1,3 @@
-<!-- <template>
-  <div class="user-detail-container">
-
-    <div class="content-card">
-      <div class="card-header">
-        <h3>프로필 정보</h3>
-      </div>
-      <div class="card-content">
-        <div class="profile-info">
-          <div class="profile-header">
-            <h2 class="nickname">{{ user.nickname }}</h2>
-            <span class="userid">@{{ user.userid }}</span>
-          </div>
-          <div class="profile-stats">
-            <div class="stat-item">
-              <span class="stat-label">팔로워</span>
-              <span class="stat-value">{{ user.followers?.length || 0 }}</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-label">팔로잉</span>
-              <span class="stat-value">{{ user.following?.length || 0 }}</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-label">게시글</span>
-              <span class="stat-value">{{ user.posts_summary?.total_posts || 0 }}</span>
-            </div>
-          </div>
-          <div class="post-stats">
-            <div class="post-stat">
-              <span class="post-type">자유게시판</span>
-              <span class="post-count">{{ user.posts_summary?.free_posts || 0 }}개</span>
-            </div>
-            <div class="post-stat">
-              <span class="post-type">질문게시판</span>
-              <span class="post-count">{{ user.posts_summary?.question_posts || 0 }}개</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="content-grid">
-
-      <div class="content-card">
-        <div class="card-header">
-          <h3>투자 성향 분석</h3>
-        </div>
-        <div class="card-content">
-          <template v-if="user.test_result">
-            <div class="test-result">
-              <div class="risk-type-content">
-                <div class="risk-type-badge" :class="user.test_result.risk_type">
-                  {{ getRiskTypeDisplay(user.test_result.risk_type) }}
-                </div>
-                <p class="risk-type-description">
-                  {{ getRiskTypeDescription(user.test_result.risk_type) }}
-                </p>
-              </div>
-            </div>
-          </template>
-          <div v-else class="empty-state">
-            <i class="fas fa-chart-line"></i>
-            <p>{{ user.nickname }}님은 아직 투자 성향 테스트를 하지 않으셨네요!</p>
-          </div>
-        </div>
-      </div>
-
-
-      <div class="content-card">
-        <div class="card-header">
-          <h3>찜한 상품</h3>
-        </div>
-        <div class="filter-section">
-          <div class="filter-buttons">
-            <button v-for="type in filterTypes" :key="type.value"
-              class="filter-button"
-              :class="{ active: selectedFilter === type.value }"
-              @click="selectedFilter = type.value">
-              {{ type.label }}
-            </button>
-          </div>
-        </div>
-        <div class="card-content">
-          <template v-if="limitedFilteredProducts.length">
-            <div class="product-card" v-for="product in limitedFilteredProducts" :key="product.id">
-              <div class="product-info">
-                <div class="product-header">
-                  <div class="product-type-name">
-                    <span class="product-type" :class="product.type">
-                      {{ getProductTypeText(product.type) }}
-                    </span>
-                    <span class="product-title">{{ getProductName(product) }}</span>
-                  </div>
-                </div>
-   
-                <div v-if="['deposit', 'saving'].includes(product.type)" class="product-details">
-                  <div class="rate-info">
-                    <span class="label">금리</span>
-                    <span class="value">{{ product.interest_rate }}% ~ {{ product.special_rate }}%</span>
-                  </div>
-                  <div class="term-info">
-                    <span class="label">기간</span>
-                    <span class="value">{{ product.term }}개월</span>
-                  </div>
-                </div>
-                <div v-else-if="['stock', 'etf'].includes(product.type)" class="product-details">
-                  <div class="price-info">
-                    <span class="label">현재가</span>
-                    <span class="value">{{ formatPrice(product.current_price) }}원</span>
-                  </div>
-                  <div class="change-info">
-                    <span class="label">변동가</span>
-                    <span class="value" :class="getPriceChangeClass(product.price_change)">
-                      <i :class="['fas', product.price_change > 0 ? 'fa-caret-up' : 'fa-caret-down']"></i>
-                      {{ formatPriceChange(product.price_change) }}원
-                    </span>
-                  </div>
-                </div>
-                <div v-else-if="product.type === 'goods'" class="product-details">
-                  <div class="price-info">
-                    <span class="label">현재가</span>
-                    <span class="value">${{ formatPrice(product.current_price) }} / oz</span>
-                  </div>
-                  <div class="change-info">
-                    <span class="label">변동가</span>
-                    <span class="value" :class="getPriceChangeClass(product.price_change)">
-                      <i :class="['fas', product.price_change > 0 ? 'fa-caret-up' : 'fa-caret-down']"></i>
-                      ${{ formatPriceChange(product.price_change) }}
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <div class="product-divider"></div>
-            </div>
-            <div v-if="filteredProducts.length > 3" class="view-more-section">
-              <button class="view-more-button" @click="goToFavorites">
-                더보기
-                <i class="fas fa-chevron-right"></i>
-              </button>
-            </div>
-          </template>
-          <div v-else class="empty-state">
-            <i class="fas fa-heart"></i>
-            <p>{{ getEmptyStateMessage }}</p>
-            <p class="sub-text">마음에 드는 상품을 찜해보세요!</p>
-            <button class="action-button primary" @click="goToSavings">
-              상품 보러가기
-              <i class="fas fa-arrow-right"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
-
-<script setup>
-import { ref, computed, onMounted } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
-import axios from 'axios'
-import { useAccountStore } from '@/stores/users.js'
-
-const router = useRouter()
-const route = useRoute()
-const accountStore = useAccountStore()
-
-const user = ref({
-  userid: '',
-  nickname: '',
-  test_result: null,
-  liked_products: [],
-  followers: [],
-  following: [],
-  posts_summary: {}
-})
-
-const selectedFilter = ref('all')
-
-const filterTypes = [
-  { label: '전체', value: 'all' },
-  { label: '예금', value: 'deposit' },
-  { label: '적금', value: 'saving' },
-  { label: '현물', value: 'goods' },
-  { label: '주식', value: 'stock' },
-  { label: 'ETF', value: 'etf' },
-]
-
-const filteredProducts = computed(() => {
-  if (selectedFilter.value === 'all') return user.value.liked_products || []
-  return (user.value.liked_products || []).filter(p => p.type === selectedFilter.value)
-})
-
-const limitedFilteredProducts = computed(() => filteredProducts.value.slice(0, 3))
-
-const getProductName = (product) => product.name || '이름 없음'
-
-const getProductTypeText = (type) => {
-  const map = {
-    deposit: '정기예금',
-    saving: '적금',
-    stock: '주식',
-    etf: 'ETF',
-    goods: '현물'
-  }
-  return map[type] || type
-}
-
-const formatPrice = (val) => Number(val).toLocaleString()
-const formatPriceChange = (val) => Math.abs(Number(val)).toLocaleString()
-const getPriceChangeClass = (val) => val > 0 ? 'up' : val < 0 ? 'down' : 'neutral'
-
-const getEmptyStateMessage = computed(() => {
-  if (selectedFilter.value === 'all') return '아직 찜한 상품이 없습니다.'
-  return `${getProductTypeText(selectedFilter.value)} 찜한 상품이 없습니다.`
-})
-
-const getRiskTypeDisplay = (type) => ({
-  conservative: '안정형',
-  moderate: '중립형',
-  aggressive: '공격형'
-})[type] || type
-
-const getRiskTypeDescription = (type) => ({
-  conservative: '원금 손실을 최소화하려는 성향으로, 안정적인 수익을 추구합니다.',
-  moderate: '적절한 위험을 감수하며 중위험-중수익을 추구합니다.',
-  aggressive: '높은 수익을 위해 적극적인 투자를 선호합니다.'
-})[type] || ''
-
-const goToFavorites = () => {
-  router.push({ name: 'favorites', query: { userid: route.params.userid } })
-}
-
-const goToSavings = () => {
-  router.push({ name: 'savings' })
-}
-
-onMounted(async () => {
-  const userId = route.params.userid
-  const token = accountStore.token
-
-  if (!token) {
-    alert('로그인이 필요한 서비스입니다.')
-    router.push({ name: 'login' })
-    return
-  }
-
-  try {
-    const userRes = await axios.get(`/api/v1/users/${userId}/`, {
-      headers: { Authorization: `Token ${token}` }
-    })
-
-    const favoritesRes = await axios.get(`/api/v1/products/favorites/${userId}/`, {
-      headers: { Authorization: `Token ${token}` }
-    })
-
-    user.value = {
-      ...userRes.data,
-      test_result: null,
-      liked_products: favoritesRes.data
-    }
-
-    try {
-      const testRes = await axios.get(`/api/v1/test/result/${userId}/`, {
-        headers: { Authorization: `Token ${token}` }
-      })
-      user.value.test_result = testRes.data
-    } catch (e) {
-      if (e.response?.status === 404) user.value.test_result = null
-    }
-  } catch (err) {
-    if (err.response?.status === 401) {
-      alert('로그인이 필요합니다.')
-      router.push({ name: 'login' })
-    } else if (err.response?.status === 404) {
-      alert('존재하지 않는 사용자입니다.')
-      router.push({ name: 'home' })
-    } else {
-      alert('사용자 정보를 불러오지 못했습니다.')
-    }
-  }
-})
-</script>
-
-<style scoped>
-.user-detail-container {
-  max-width: 1200px;
-  margin: 2rem auto;
-  padding: 0 1rem;
-}
-
-.content-card {
-  background: white;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  margin-bottom: 2rem;
-}
-
-.card-header {
-  padding: 1.5rem;
-  border-bottom: 1px solid #eee;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.card-header h3 {
-  margin: 0;
-  font-size: 1.2rem;
-  color: #333;
-}
-
-.action-button {
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  border: 1px solid #dee2e6;
-  background: white;
-  color: #495057;
-  cursor: pointer;
-  font-size: 0.9rem;
-  transition: all 0.2s;
-}
-
-.action-button:hover {
-  background: #e9ecef;
-}
-
-.card-content {
-  padding: 1.5rem;
-}
-
-.product-info-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.5rem;
-}
-
-.product-type {
-  font-size: 0.8rem;
-  padding: 0.2rem 0.5rem;
-  background-color: #e3f2fd;
-  color: #1976d2;
-  border-radius: 4px;
-}
-
-.bank-name {
-  font-size: 0.9rem;
-  color: #666;
-}
-
-.product-name {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 0.5rem;
-}
-
-.product-details {
-  display: flex;
-  gap: 1rem;
-  font-size: 0.9rem;
-}
-
-.rate-info, .term-info {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.label {
-  color: #666;
-}
-
-.value {
-  font-weight: 500;
-  color: #333;
-}
-
-.rate-info .value {
-  color: #e64545;
-}
-
-.empty-state {
-  text-align: center;
-  padding: 2rem;
-  color: #666;
-}
-
-.empty-state i {
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
-  color: #145c2b;
-}
-
-.empty-state p {
-  margin: 0.5rem 0;
-  font-size: 1.1rem;
-  color: #333;
-}
-
-.empty-state .sub-text {
-  font-size: 0.9rem;
-  color: #666;
-  margin-bottom: 1.5rem;
-}
-
-.product-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.product-item {
-  padding: 1rem;
-  border-bottom: 1px solid #eee;
-}
-
-.product-item:last-child {
-  border-bottom: none;
-}
-
-.test-result {
-  text-align: center;
-  padding: 2rem;
-  background: #f8f9fa;
-  border-radius: 8px;
-}
-
-.risk-type-content {
-  text-align: center;
-  margin-bottom: 1.5rem;
-}
-
-.risk-type-badge {
-  display: inline-block;
-  padding: 0.5rem 2rem;
-  border-radius: 20px;
-  font-size: 1.2rem;
-  font-weight: bold;
-  margin-bottom: 1rem;
-  color: white;
-}
-
-.risk-type-badge.conservative {
-  background-color: #3498db;
-}
-
-.risk-type-badge.moderate {
-  background-color: #f1c40f;
-}
-
-.risk-type-badge.aggressive {
-  background-color: #e74c3c;
-}
-
-.risk-type-description {
-  color: #666;
-  font-size: 0.9rem;
-  line-height: 1.4;
-}
-
-.recommendations-preview {
-  margin-top: 1.5rem;
-}
-
-.recommendations-preview h4 {
-  color: #2c3e50;
-  font-size: 1rem;
-  margin-bottom: 1rem;
-}
-
-.recommendation-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  justify-content: center;
-}
-
-.recommendation-chip {
-  padding: 0.3rem 1rem;
-  border-radius: 15px;
-  font-size: 0.9rem;
-  background-color: #f8f9fa;
-  color: #666;
-  border: 1px solid #ddd;
-}
-
-.recommendation-chip.recommended {
-  background-color: #ebf5fb;
-  border-color: #3498db;
-  color: #3498db;
-}
-
-.profile-info {
-  padding: 1rem;
-}
-
-.profile-header {
-  margin-bottom: 1.5rem;
-  text-align: center;
-}
-
-.nickname {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #333;
-  margin: 0;
-}
-
-.userid {
-  font-size: 1rem;
-  color: #666;
-}
-
-.profile-stats {
-  display: flex;
-  justify-content: center;
-  gap: 2rem;
-  margin-bottom: 1.5rem;
-  padding: 1rem 0;
-  border-top: 1px solid #eee;
-  border-bottom: 1px solid #eee;
-}
-
-.stat-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.stat-label {
-  font-size: 0.9rem;
-  color: #666;
-}
-
-.stat-value {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #333;
-}
-
-.post-stats {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.post-stat {
-  display: flex;
-  justify-content: space-between;
-  padding: 0.5rem;
-  background-color: #f8f9fa;
-  border-radius: 6px;
-}
-
-.post-type {
-  color: #495057;
-}
-
-.post-count {
-  font-weight: 500;
-  color: #333;
-}
-</style> -->
 <template>
   <div class="user-detail-container">
     <!-- 프로필 정보 카드 -->
@@ -576,6 +10,13 @@ onMounted(async () => {
           <div class="profile-header">
             <h2 class="nickname">{{ user.nickname }}</h2>
             <span class="userid">@{{ user.userid }}</span>
+            <button 
+              v-if="isAuthenticated && user.userid !== currentUser.userid"
+              @click="toggleFollow"
+              :class="['follow-button', { 'following': user.is_following }]"
+            >
+              {{ user.is_following ? '팔로잉' : '팔로우' }}
+            </button>
           </div>
           <div class="profile-stats">
             <div class="stat-item">
@@ -655,7 +96,7 @@ onMounted(async () => {
                     <span class="product-type" :class="product.type">
                       {{ getProductTypeText(product.type) }}
                     </span>
-                    <span class="product-title">{{ product.name }}</span>
+                    <span class="product-title">{{ getProductName(product) }}</span>
                   </div>
                 </div>
                 <div v-if="['deposit', 'saving'].includes(product.type)" class="product-details">
@@ -741,6 +182,9 @@ const user = ref({
 
 const selectedFilter = ref('all')
 
+const isAuthenticated = computed(() => accountStore.isAuthenticated)
+const currentUser = computed(() => accountStore.user)
+
 const filterTypes = [
   { label: '전체', value: 'all' },
   { label: '예금', value: 'deposit' },
@@ -797,6 +241,33 @@ const goToFavorites = () => {
 
 const goToSavings = () => {
   router.push({ name: 'savings' })
+}
+
+const toggleFollow = async () => {
+  if (!isAuthenticated.value) {
+    alert('로그인이 필요한 서비스입니다.')
+    router.push({ name: 'login' })
+    return
+  }
+
+  try {
+    const method = user.value.is_following ? 'DELETE' : 'POST'
+    const response = await axios({
+      method,
+      url: `http://127.0.0.1:8000/api/v1/users/follow/${user.value.userid}/`,
+      headers: {
+        Authorization: `Token ${accountStore.token}`
+      }
+    })
+
+    // 팔로우 상태 및 카운트 업데이트
+    user.value.is_following = response.data.data.is_following
+    user.value.followers = response.data.data.followers
+    user.value.following = response.data.data.following
+  } catch (err) {
+    console.error('팔로우 토글 실패:', err)
+    alert('팔로우 처리에 실패했습니다.')
+  }
 }
 
 onMounted(async () => {

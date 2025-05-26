@@ -160,7 +160,7 @@ const validations = ref({
 })
 
 // 생년월일 데이터
-const birthYears = ref(birthData.years)
+const birthYears = ref(birthData.years.slice().reverse())
 const birthMonths = ref(birthData.months)
 const birthDays = ref(birthData.days)
 

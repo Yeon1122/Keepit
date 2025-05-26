@@ -9,7 +9,7 @@
       <div class="right">
         <div class="content">
           <p class="subtitle">내 손 안의 금융비서</p>
-          <h1 class="title">킵잇</h1>
+          <h1 class="title">Keepit</h1>
           <p class="explain">간단한 테스트로 나에게 맞는 투자 성향과 금융 상품을 추천해드려요. <br> 나에게 꼭 맞는 금융 루틴, 지금 바로 시작해보세요!</p>
           <button class="go-to-test" @click="goToTest">
             투자 스타일 알아보기
@@ -258,7 +258,7 @@ onUnmounted(() => {
   overflow: hidden;
   width: 100%;
   max-width: 1200px;
-  margin: 4rem auto;
+  margin: 4rem auto 0.5rem;
   border-radius: 16px;
   position: relative;
 }
