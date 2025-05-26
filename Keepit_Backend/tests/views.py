@@ -250,15 +250,9 @@ def get_user_test_result(request, userid):
         }
 
         response_data = {
-            'type': risk_type_info[result.risk_type]['type'],
-            'total_score': result.total_score,
+            'risk_type': result.risk_type,
             'description': risk_type_info[result.risk_type],
-            'q1_age': result.q1_age,
-            'q2_experience': result.q2_experience,
-            'q3_loss_response': result.q3_loss_response,
-            'q4_income': result.q4_income,
-            'q5_expected_return': result.q5_expected_return,
-            'q6_emergency': result.q6_emergency,
+            'recommendations': result.recommendations if hasattr(result, 'recommendations') else {}
         }
         
         return Response(response_data)
@@ -271,3 +265,5 @@ def get_user_test_result(request, userid):
         # return Response({
         #     'error': '테스트 결과가 없습니다.'
         # }, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({'error': str(e)}, status=500)

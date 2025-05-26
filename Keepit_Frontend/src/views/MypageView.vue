@@ -183,7 +183,7 @@
               </div>
               <div class="product-divider"></div>
             </div>
-            <div v-if="filteredProducts.length > 4" class="view-more-section">
+            <div v-if="filteredProducts.length > 1" class="view-more-section">
               <button class="view-more-button" @click="goToFavorites">
                 더보기
                 <i class="fas fa-chevron-right"></i>
@@ -302,9 +302,9 @@ const filteredProducts = computed(() => {
   return products.filter(product => product.type === selectedFilter.value)
 })
 
-// 필터링된 상품 목록에서 최대 4개만 보여주는 computed 속성
+// 필터링된 상품 목록에서 최대 1개만 보여주는 computed 속성
 const limitedFilteredProducts = computed(() => {
-  return filteredProducts.value.slice(0, 4)
+  return filteredProducts.value.slice(0, 1)
 })
 
 // 빈 상태 메시지를 동적으로 생성하는 computed 속성
@@ -659,6 +659,7 @@ const getProductTypeDisplay = (type) => {
   gap: 2rem;
 }
 
+
 .content-card:last-child {
   grid-column: 1 / -1;  /* 마지막 카드(최근 작성글)가 전체 너비를 차지하도록 설정 */
 }
@@ -668,6 +669,10 @@ const getProductTypeDisplay = (type) => {
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
 }
 
 .card-header {
@@ -713,10 +718,6 @@ const getProductTypeDisplay = (type) => {
 
 .action-button.primary:hover {
   background: #0d4420;
-}
-
-.card-content {
-  padding: 1.5rem;
 }
 
 .card-content .posts-grid {
@@ -800,7 +801,7 @@ const getProductTypeDisplay = (type) => {
 .test-result {
   text-align: center;
   padding: 2rem;
-  background: #f8f9fa;
+  background: hwb(0 100% 0%);
   border-radius: 8px;
 }
 
@@ -864,9 +865,9 @@ const getProductTypeDisplay = (type) => {
 }
 
 .recommendation-chip.recommended {
-  background-color: #ebf5fb;
-  border-color: #3498db;
-  color: #3498db;
+  background-color: #f1fcf4;
+  border-color: #145c2b;
+  color: #145c2b;
 }
 
 .like-button {
