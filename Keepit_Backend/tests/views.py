@@ -156,9 +156,10 @@ def get_test_result(request):
         
         return Response(response_data)
     except TestResult.DoesNotExist:
-        return Response({
-            'error': '테스트 결과가 없습니다.'
-        }, status=status.HTTP_404_NOT_FOUND)
+        return Response(None, status=200)
+        # return Response({
+        #     'error': '테스트 결과가 없습니다.'
+        # }, status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['DELETE'])
 @permission_classes([permissions.IsAuthenticated])
@@ -217,6 +218,7 @@ def get_user_test_result(request, userid):
             'error': '존재하지 않는 사용자입니다.'
         }, status=status.HTTP_404_NOT_FOUND)
     except TestResult.DoesNotExist:
-        return Response({
-            'error': '테스트 결과가 없습니다.'
-        }, status=status.HTTP_404_NOT_FOUND)
+        return Response(None, status=200)
+        # return Response({
+        #     'error': '테스트 결과가 없습니다.'
+        # }, status=status.HTTP_404_NOT_FOUND)
