@@ -147,26 +147,32 @@ def fetch_stock_detail_by_code(stock_code):
         res.raise_for_status()  # HTTP 에러 체크
         output = res.json().get("output", {})
         
+        # 회사명 가져오기 - stck_shrn_iscd가 있으면 이것이 실제 종목 코드
+        company_name = None
+        if output.get('stck_shrn_iscd'):
+            company_name = output.get('bstp_kor_isnm', '').split('/')[0].strip()
+            if not company_name:
+                company_name = f"{stock_code} 주식"
+        
         return {
             'id': None,
             'type': 'stock',
-            'name': output.get('hts_kor_isnm'),
+            'name': company_name,
             'link': None,
             'stock_code': stock_code,
-            'market_type': output.get('mksc_shrn_iscd'),
+            'market_type': output.get('rprs_mrkt_kor_name'),
             'current_price': output.get('stck_prpr'),
             'price_change': output.get('prdy_vrss'),
             'sector': output.get('bstp_kor_isnm'),
             'warning_info': output.get('stck_rsk_yn'),
-            'open_price': output.get('stck_oprc'),
             'high_price': output.get('stck_hgpr'),
             'low_price': output.get('stck_lwpr'),
             'base_price': output.get('stck_sdpr'),
             'weighted_avg_price': output.get('wghn_avrg_stck_prc'),
-            'high_52w': output.get('h52w_prc'),
-            'high_52w_date': output.get('h52w_prc_dt'),
-            'low_52w': output.get('l52w_prc'),
-            'low_52w_date': output.get('l52w_prc_dt'),
+            'high_52w': output.get('w52_hgpr'),
+            'high_52w_date': output.get('w52_hgpr_date'),
+            'low_52w': output.get('w52_lwpr'),
+            'low_52w_date': output.get('w52_lwpr_date'),
             'per': output.get('per'),
             'pbr': output.get('pbr'),
             'eps': output.get('eps'),
