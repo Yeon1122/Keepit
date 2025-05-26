@@ -19,11 +19,9 @@ def get_stock_news(request, stock_code):
             print("No stock info found")
             return Response([], status=status.HTTP_200_OK)
             
-        # hts_kor_isnm을 사용하여 회사명 가져오기
-        company_name = stock_info.get('name')  # 'name' 필드로 변경
-        if not company_name:
-            company_name = stock_info.get('hts_kor_isnm')  # 백업으로 hts_kor_isnm 사용
-            
+        # 회사명 가져오기
+        company_name = stock_info.get('name')
+        
         if not company_name:
             print("No company name found")
             return Response([], status=status.HTTP_200_OK)

@@ -41,6 +41,11 @@ const formatDate = (dateStr) => {
   background-color: #f1f1f1;
 }
 
+.news-card a {
+  text-decoration: none;
+  color: inherit;
+}
+
 .news-title {
   margin: 0;
   font-size: 0.95rem;
