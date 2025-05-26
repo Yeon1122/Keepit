@@ -4,8 +4,11 @@ from rest_framework.decorators import api_view, permission_classes, action
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from .models import Post, Comment
+from django.contrib.auth import get_user_model
 from .serializers import PostSerializer, CommentSerializer
 from django.db.models import Count
+
+User = get_user_model()
 
 # Create your views here.
 
@@ -126,3 +129,35 @@ def get_my_posts(request):
         'posts_count': posts_count,
         'posts': serializer.data
     })
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def get_user_posts(request, userid):
+    """특정 사용자가 작성한 게시글 목록을 반환합니다."""
+    try:
+        user = get_object_or_404(User, userid=userid)
+        posts = Post.objects.filter(author=user).select_related('author').prefetch_related('likes', 'comments')
+        
+        # 게시판 별 게시글 수 계산
+        posts_by_type = posts.values('board_type').annotate(count=Count('id'))
+        posts_count = {
+            'free': 0,
+            'question': 0
+        }
+        for item in posts_by_type:
+            posts_count[item['board_type']] = item['count']
+        
+        # 게시글 목록 직렬화
+        serializer = PostSerializer(posts, many=True, context={'request': request})
+        
+        return Response({
+            'total_posts': posts.count(),
+            'posts_count': posts_count,
+            'posts': serializer.data,
+            'author': {
+                'userid': user.userid,
+                'nickname': user.nickname
+            }
+        })
+    except User.DoesNotExist:
+        return Response({'error': '사용자를 찾을 수 없습니다.'}, status=404)

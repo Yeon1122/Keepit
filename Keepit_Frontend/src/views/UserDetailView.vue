@@ -1,53 +1,41 @@
 <template>
   <div class="user-detail-container">
-    <!-- 프로필 정보 카드 -->
-    <div class="content-card">
-      <div class="card-header">
-        <h3>프로필 정보</h3>
-      </div>
-      <div class="card-content">
-        <div class="profile-info">
-          <div class="profile-header">
-            <h2 class="nickname">{{ user.nickname }}</h2>
-            <span class="userid">@{{ user.userid }}</span>
-            <button 
-              v-if="isAuthenticated && user.userid !== currentUser.userid"
-              @click="toggleFollow"
-              :class="['follow-button', { 'following': user.is_following }]"
-            >
+    <!-- 프로필 섹션 -->
+    <div class="profile-card">
+      <div class="profile-header">
+        <div class="profile-main">
+          <div class="profile-image">
+            <img src="/images/images_momo/momo_happy.png" alt="프로필 이미지" />
+          </div>
+          <div class="profile-info">
+            <h2 class="user-name">{{ user.nickname }}</h2>
+            <p class="user-id">@{{ user.userid }}</p>
+            <button v-if="isAuthenticated && !isCurrentUser" @click="toggleFollow"
+              :class="['follow-button', { 'following': user.is_following }]">
+              <i class="fas" :class="user.is_following ? 'fa-user-check' : 'fa-user-plus'"></i>
               {{ user.is_following ? '팔로잉' : '팔로우' }}
             </button>
           </div>
-          <div class="profile-stats">
-            <div class="stat-item">
-              <span class="stat-label">팔로워</span>
-              <span class="stat-value">{{ user.followers?.length || 0 }}</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-label">팔로잉</span>
-              <span class="stat-value">{{ user.following?.length || 0 }}</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-label">게시글</span>
-              <span class="stat-value">{{ user.posts_summary?.total_posts || 0 }}</span>
-            </div>
+        </div>
+        <div class="profile-stats">
+          <div class="stat-item" @click="goToFollow">
+            <div class="stat-value">{{ user.following?.length || 0 }}</div>
+            <div class="stat-label">팔로우</div>
           </div>
-          <div class="post-stats">
-            <div class="post-stat">
-              <span class="post-type">자유게시판</span>
-              <span class="post-count">{{ user.posts_summary?.free_posts || 0 }}개</span>
-            </div>
-            <div class="post-stat">
-              <span class="post-type">질문게시판</span>
-              <span class="post-count">{{ user.posts_summary?.question_posts || 0 }}개</span>
-            </div>
+          <div class="stat-item" @click="goToFollow">
+            <div class="stat-value">{{ user.followers?.length || 0 }}</div>
+            <div class="stat-label">팔로워</div>
+          </div>
+          <div class="stat-item" @click="goToUserPosts('all')">
+            <div class="stat-value">{{ user.posts_summary?.total_posts || 0 }}</div>
+            <div class="stat-label">작성글</div>
           </div>
         </div>
       </div>
     </div>
 
     <div class="content-grid">
-      <!-- 투자 성향 분석 -->
+      <!-- 투자 성향 분석 카드 -->
       <div class="content-card">
         <div class="card-header">
           <h3>투자 성향 분석</h3>
@@ -79,42 +67,66 @@
         </div>
         <div class="filter-section">
           <div class="filter-buttons">
-            <button v-for="type in filterTypes" :key="type.value"
-              class="filter-button"
-              :class="{ active: selectedFilter === type.value }"
-              @click="selectedFilter = type.value">
-              {{ type.label }}
+            <button class="filter-button" :class="{ active: selectedFilter === 'all' }" @click="selectedFilter = 'all'">
+              전체
+            </button>
+            <button class="filter-button" :class="{ active: selectedFilter === 'deposit' }"
+              @click="selectedFilter = 'deposit'">
+              예금
+            </button>
+            <button class="filter-button" :class="{ active: selectedFilter === 'saving' }"
+              @click="selectedFilter = 'saving'">
+              적금
+            </button>
+            <button class="filter-button" :class="{ active: selectedFilter === 'goods' }"
+              @click="selectedFilter = 'goods'">
+              현물
+            </button>
+            <button class="filter-button" :class="{ active: selectedFilter === 'stock' }"
+              @click="selectedFilter = 'stock'">
+              주식
+            </button>
+            <button class="filter-button" :class="{ active: selectedFilter === 'etf' }" @click="selectedFilter = 'etf'">
+              ETF
             </button>
           </div>
         </div>
         <div class="card-content">
-          <template v-if="limitedFilteredProducts.length">
-            <div class="product-card" v-for="product in limitedFilteredProducts" :key="product.id">
+          <div v-if="loading" class="loading-state">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>상품을 불러오는 중...</p>
+          </div>
+          <div v-else-if="filteredProducts.length === 0" class="empty-state">
+            <i class="fas fa-heart"></i>
+            <p>{{ getEmptyStateMessage }}</p>
+          </div>
+          <div v-else class="products-grid">
+            <div v-for="product in limitedFilteredProducts" :key="product.id" class="product-card">
               <div class="product-info">
                 <div class="product-header">
                   <div class="product-type-name">
-                    <span class="product-type" :class="product.type">
-                      {{ getProductTypeText(product.type) }}
-                    </span>
+                    <span class="product-type" :class="product.type">{{ getProductTypeText(product.type) }}</span>
                     <span class="product-title">{{ getProductName(product) }}</span>
                   </div>
                 </div>
+                <!-- 예금/적금 상품일 경우 -->
                 <div v-if="['deposit', 'saving'].includes(product.type)" class="product-details">
-                  <div class="rate-info">
+                  <div class="detail-item">
                     <span class="label">금리</span>
-                    <span class="value">{{ product.interest_rate }}% ~ {{ product.special_rate }}%</span>
+                    <span class="value">{{ product.interest_rate }}%</span>
                   </div>
-                  <div class="term-info">
-                    <span class="label">기간</span>
-                    <span class="value">{{ product.term }}개월</span>
+                  <div class="detail-item" v-if="product.special_rate">
+                    <span class="label">우대금리</span>
+                    <span class="value">{{ product.special_rate }}%</span>
                   </div>
                 </div>
+                <!-- 주식/ETF 상품일 경우 -->
                 <div v-else-if="['stock', 'etf'].includes(product.type)" class="product-details">
-                  <div class="price-info">
+                  <div class="detail-item">
                     <span class="label">현재가</span>
                     <span class="value">{{ formatPrice(product.current_price) }}원</span>
                   </div>
-                  <div class="change-info">
+                  <div class="detail-item">
                     <span class="label">변동가</span>
                     <span class="value" :class="getPriceChangeClass(product.price_change)">
                       <i :class="['fas', product.price_change > 0 ? 'fa-caret-up' : 'fa-caret-down']"></i>
@@ -122,37 +134,86 @@
                     </span>
                   </div>
                 </div>
+                <!-- 현물 상품일 경우 -->
                 <div v-else-if="product.type === 'goods'" class="product-details">
-                  <div class="price-info">
+                  <div class="detail-item">
                     <span class="label">현재가</span>
-                    <span class="value">${{ formatPrice(product.current_price) }} / oz</span>
+                    <span class="value">{{ formatPrice(product.current_price) }} {{ product.unit }}</span>
                   </div>
-                  <div class="change-info">
+                  <div class="detail-item">
                     <span class="label">변동가</span>
                     <span class="value" :class="getPriceChangeClass(product.price_change)">
                       <i :class="['fas', product.price_change > 0 ? 'fa-caret-up' : 'fa-caret-down']"></i>
-                      ${{ formatPriceChange(product.price_change) }}
+                      {{ formatPriceChange(product.price_change) }}
                     </span>
                   </div>
                 </div>
               </div>
-              <div class="product-divider"></div>
             </div>
-            <div v-if="filteredProducts.length > 3" class="view-more-section">
+            <div v-if="filteredProducts.length > 1" class="view-more-section">
               <button class="view-more-button" @click="goToFavorites">
                 더보기
                 <i class="fas fa-chevron-right"></i>
               </button>
             </div>
-          </template>
-          <div v-else class="empty-state">
-            <i class="fas fa-heart"></i>
-            <p>{{ getEmptyStateMessage }}</p>
-            <p class="sub-text">마음에 드는 상품을 찜해보세요!</p>
-            <button class="action-button primary" @click="goToSavings">
-              상품 보러가기
-              <i class="fas fa-arrow-right"></i>
-            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 작성 글 카드 -->
+      <div class="content-card">
+        <div class="card-header">
+          <h3>최근 작성글</h3>
+          <button class="action-button" @click="goToUserPosts('all')">전체보기</button>
+        </div>
+        <div class="card-content">
+          <div class="posts-grid">
+            <!-- 자유 게시판 -->
+            <div class="posts-section">
+              <h4>자유게시판</h4>
+              <ul class="posts-list">
+                <li v-for="post in freePosts.slice(0, 2)" :key="post.id" @click="goToPost('free', post.id)"
+                  class="post-item">
+                  <div class="post-title">{{ post.title }}</div>
+                  <div class="post-meta">
+                    <span class="post-date">{{ formatDate(post.created_at) }}</span>
+                    <div class="post-stats">
+                      <span class="likes">
+                        <i class="fas fa-thumbs-up"></i> {{ post.likes_count }}
+                      </span>
+                      <span class="comments">
+                        <i class="fas fa-comment"></i> {{ post.comments.length }}
+                      </span>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+            <!-- 질문 게시판 -->
+            <div class="posts-section">
+              <h4>질문게시판</h4>
+              <ul class="posts-list">
+                <li v-for="post in questionPosts.slice(0, 2)" :key="post.id" @click="goToPost('question', post.id)"
+                  class="post-item">
+                  <div class="post-title">
+                    {{ post.title }}
+                    <span v-if="post.is_solved" class="solved-badge">해결</span>
+                  </div>
+                  <div class="post-meta">
+                    <span class="post-date">{{ formatDate(post.created_at) }}</span>
+                    <div class="post-stats">
+                      <span class="likes">
+                        <i class="fas fa-thumbs-up"></i> {{ post.likes_count }}
+                      </span>
+                      <span class="comments">
+                        <i class="fas fa-comment"></i> {{ post.comments.length }}
+                      </span>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
@@ -180,10 +241,14 @@ const user = ref({
   posts_summary: {}
 })
 
+const loading = ref(true)
+const likedProducts = ref([])
 const selectedFilter = ref('all')
+const freePosts = ref([])
+const questionPosts = ref([])
 
 const isAuthenticated = computed(() => accountStore.isAuthenticated)
-const currentUser = computed(() => accountStore.user)
+const isCurrentUser = computed(() => user.value.userid === accountStore.userId)
 
 const filterTypes = [
   { label: '전체', value: 'all' },
@@ -195,11 +260,15 @@ const filterTypes = [
 ]
 
 const filteredProducts = computed(() => {
-  if (selectedFilter.value === 'all') return user.value.liked_products || []
-  return (user.value.liked_products || []).filter(p => p.type === selectedFilter.value)
+  if (selectedFilter.value === 'all') {
+    return likedProducts.value
+  }
+  return likedProducts.value.filter(product => product.type === selectedFilter.value)
 })
 
-const limitedFilteredProducts = computed(() => filteredProducts.value.slice(0, 3))
+const limitedFilteredProducts = computed(() => {
+  return filteredProducts.value.slice(0, 1)
+})
 
 const getProductName = (product) => product.name || '이름 없음'
 
@@ -219,8 +288,17 @@ const formatPriceChange = (val) => Math.abs(Number(val)).toLocaleString()
 const getPriceChangeClass = (val) => val > 0 ? 'up' : val < 0 ? 'down' : 'neutral'
 
 const getEmptyStateMessage = computed(() => {
-  if (selectedFilter.value === 'all') return '아직 찜한 상품이 없습니다.'
-  return `${getProductTypeText(selectedFilter.value)} 찜한 상품이 없습니다.`
+  if (selectedFilter.value === 'all') {
+    return `${user.value.nickname}님이 찜한 상품이 없습니다.`
+  }
+  const typeMap = {
+    deposit: '예금',
+    saving: '적금',
+    stock: '주식',
+    etf: 'ETF',
+    goods: '현물'
+  }
+  return `찜한 ${typeMap[selectedFilter.value]} 상품이 없습니다.`
 })
 
 const getRiskTypeDisplay = (type) => ({
@@ -236,11 +314,28 @@ const getRiskTypeDescription = (type) => ({
 })[type] || ''
 
 const goToFavorites = () => {
-  router.push({ name: 'favorites', query: { userid: route.params.userid } })
+  router.push({ name: 'favorites', query: { userid: user.value.userid } })
 }
 
 const goToSavings = () => {
   router.push({ name: 'savings' })
+}
+
+const goToUserPosts = (type) => {
+  router.push({
+    name: 'myposts',
+    query: {
+      userid: user.value.userid,
+      type: type
+    }
+  })
+}
+
+const goToFollow = () => {
+  router.push({
+    name: 'follow',
+    params: { userid: user.value.userid }
+  })
 }
 
 const toggleFollow = async () => {
@@ -254,19 +349,24 @@ const toggleFollow = async () => {
     const method = user.value.is_following ? 'DELETE' : 'POST'
     const response = await axios({
       method,
-      url: `http://127.0.0.1:8000/api/v1/users/follow/${user.value.userid}/`,
+      url: `/api/v1/users/${user.value.userid}/follow/`,
       headers: {
         Authorization: `Token ${accountStore.token}`
       }
     })
 
-    // 팔로우 상태 및 카운트 업데이트
-    user.value.is_following = response.data.data.is_following
-    user.value.followers = response.data.data.followers
-    user.value.following = response.data.data.following
+    if (response.data.data) {
+      user.value.is_following = response.data.data.is_following
+      user.value.followers = response.data.data.followers
+      user.value.following = response.data.data.following
+    }
   } catch (err) {
     console.error('팔로우 토글 실패:', err)
-    alert('팔로우 처리에 실패했습니다.')
+    if (err.response?.data?.message) {
+      alert(err.response.data.message)
+    } else {
+      alert('팔로우 처리에 실패했습니다.')
+    }
   }
 }
 
@@ -280,12 +380,28 @@ onMounted(async () => {
     return
   }
 
+  // 현재 접근하는 userid가 로그인한 사용자의 userid와 같은 경우 마이페이지로 리다이렉트
+  if (userId === accountStore.userId) {
+    console.log('본인 페이지 접근 감지 - 마이페이지로 리다이렉트')
+    router.push({ name: 'mypage' })
+    return
+  }
+
   try {
     const userRes = await axios.get(`/api/v1/users/${userId}/`, {
       headers: { Authorization: `Token ${token}` }
     })
 
-    const favoritesRes = await axios.get(`/api/v1/products/favorites/${userId}/`, {
+    if (!userRes.data || !userRes.data.userid) {
+      throw new Error('유효하지 않은 사용자 데이터')
+    }
+
+    const favoritesRes = await axios.get(`/api/v1/users/favorites/${userId}/`, {
+      headers: { Authorization: `Token ${token}` }
+    })
+
+    // 최근 게시글 가져오기
+    const postsRes = await axios.get(`/api/v1/community/user-posts/${userId}/`, {
       headers: { Authorization: `Token ${token}` }
     })
 
@@ -293,6 +409,12 @@ onMounted(async () => {
       ...userRes.data,
       test_result: null,
       liked_products: favoritesRes.data
+    }
+
+    // 게시글 분류
+    if (postsRes.data && postsRes.data.posts) {
+      freePosts.value = postsRes.data.posts.filter(post => post.board_type === 'free')
+      questionPosts.value = postsRes.data.posts.filter(post => post.board_type === 'question')
     }
 
     try {
@@ -303,7 +425,11 @@ onMounted(async () => {
     } catch (e) {
       if (e.response?.status === 404) user.value.test_result = null
     }
+
+    likedProducts.value = favoritesRes.data
+    loading.value = false
   } catch (err) {
+    console.error('사용자 정보 로딩 실패:', err)
     if (err.response?.status === 401) {
       alert('로그인이 필요합니다.')
       router.push({ name: 'login' })
@@ -313,8 +439,22 @@ onMounted(async () => {
     } else {
       alert('사용자 정보를 불러오지 못했습니다.')
     }
+    loading.value = false
   }
 })
+
+const formatDate = (dateString) => {
+  if (!dateString) return ''
+  const date = new Date(dateString)
+  return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`
+}
+
+const goToPost = (type, postId) => {
+  router.push({
+    name: type === 'free' ? 'freepostdetail' : 'questionpostdetail',
+    params: { postId }
+  })
+}
 </script>
 
 <style scoped>
@@ -325,123 +465,190 @@ onMounted(async () => {
   font-family: 'Pretendard', sans-serif;
 }
 
-/* 카드 공통 */
-.content-card {
-  background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+.profile-card {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
   margin-bottom: 2rem;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-
-.card-header {
-  padding: 1.2rem 1.5rem;
-  border-bottom: 1px solid #eee;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.card-header h3 {
-  font-size: 1.2rem;
-  color: #333;
-  margin: 0;
-}
-
-.card-content {
-  padding: 1.5rem;
-}
-
-/* 프로필 섹션 */
-.profile-info {
-  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .profile-header {
-  margin-bottom: 1.5rem;
-}
-
-.nickname {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-  color: #333;
-}
-
-.userid {
-  font-size: 1rem;
-  color: #888;
-}
-
-.profile-stats {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
+  align-items: flex-start;
   gap: 2rem;
-  margin: 1rem 0;
-  border-top: 1px solid #eee;
-  border-bottom: 1px solid #eee;
-  padding: 1rem 0;
 }
 
-.stat-item {
-  text-align: center;
+.profile-main {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
 }
 
-.stat-label {
-  font-size: 0.9rem;
-  color: #666;
+.profile-image {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #f0f0f0;
+  border: 4px solid white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.stat-value {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #145c2b;
+.profile-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-/* 게시글 요약 */
-.post-stats {
-  margin-top: 1rem;
+.profile-info {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
-.post-stat {
+.user-name {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0;
+  color: #333;
+}
+
+.user-id {
+  font-size: 1rem;
+  color: #666;
+  margin: 0;
+}
+
+.follow-button {
+  align-self: flex-start;
+  padding: 0.6rem 1.2rem;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border: 2px solid #145c2b;
+  background: white;
+  color: #145c2b;
+  cursor: pointer;
+  transition: all 0.2s;
   display: flex;
-  justify-content: space-between;
-  background: #f9f9f9;
-  padding: 0.6rem 1rem;
-  border-radius: 6px;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.follow-button i {
   font-size: 0.9rem;
 }
 
-.post-type {
-  color: #444;
+.follow-button:hover {
+  background: #f1f9f3;
 }
 
-.post-count {
-  font-weight: 600;
+.follow-button.following {
+  background: #145c2b;
+  color: white;
+}
+
+.follow-button.following:hover {
+  background: #0d4420;
+  border-color: #0d4420;
+}
+
+.profile-stats {
+  display: flex;
+  gap: 2rem;
+  margin-left: auto;
+}
+
+.stat-item {
+  text-align: center;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  min-width: 100px;
+  transition: transform 0.2s;
+}
+
+.stat-item:hover {
+  transform: translateY(-2px);
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
   color: #145c2b;
 }
 
-/* 투자 성향 */
-.test-result {
-  background: #f8f9fa;
+.stat-label {
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: 0.2rem;
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+}
+
+.content-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+}
+
+.content-card:last-child {
+  grid-column: 1 / -1;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid #eee;
+}
+
+.card-header h3 {
+  margin: 0;
+  color: #333;
+  font-size: 1.25rem;
+}
+
+.card-content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 2rem;
-  border-radius: 8px;
+}
+
+.test-result {
+  width: 100%;
   text-align: center;
+  padding: 2rem;
+  background: #fff;
+  border-radius: 8px;
+}
+
+.risk-type-content {
+  text-align: center;
+  margin-bottom: 1.5rem;
 }
 
 .risk-type-badge {
   display: inline-block;
-  padding: 0.5rem 1.5rem;
-  border-radius: 999px;
-  font-size: 1.1rem;
+  padding: 0.5rem 2rem;
+  border-radius: 20px;
+  font-size: 1.2rem;
   font-weight: bold;
-  color: white;
   margin-bottom: 1rem;
+  color: white;
 }
 
 .risk-type-badge.conservative {
@@ -458,35 +665,233 @@ onMounted(async () => {
 
 .risk-type-description {
   color: #666;
-  font-size: 0.95rem;
-  line-height: 1.5;
+  font-size: 0.9rem;
+  line-height: 1.4;
 }
 
-/* 찜한 상품 필터 */
+.empty-state {
+  width: 100%;
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+}
+
+.empty-state i {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: #145c2b;
+}
+
+.empty-state p {
+  margin: 0.5rem 0;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.empty-state .sub-text {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+
+.products-grid {
+  width: 100%;
+  display: grid;
+  gap: 1rem;
+}
+
+.product-card {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.product-card:hover {
+  background: #f1f9f3;
+  transform: translateX(4px);
+}
+
+.product-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.product-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.product-type-name {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.product-type {
+  padding: 0.3rem 0.8rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: white;
+  background-color: #145c2b;
+  white-space: nowrap;
+}
+
+.product-title {
+  font-size: 1.1rem;
+  color: #333;
+  font-weight: 500;
+}
+
+.product-details {
+  margin-top: 0.8rem;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.label {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.value {
+  font-weight: 500;
+  color: #333;
+}
+
+.value.up {
+  color: #d63031;
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.value.down {
+  color: #0984e3;
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.posts-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+}
+
+.posts-section {
+  margin-bottom: 2rem;
+}
+
+.posts-section h4 {
+  font-size: 1rem;
+  color: #495057;
+  margin-bottom: 1rem;
+}
+
+.posts-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.post-item {
+  padding: 1rem;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.post-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.post-title {
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.post-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.post-date {
+  color: #666;
+}
+
+.post-stats {
+  display: flex;
+  gap: 1rem;
+}
+
+.likes,
+.comments {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.likes i {
+  color: #e74c3c;
+}
+
+.comments i {
+  color: #145c2b;
+}
+
+.solved-badge {
+  background: #145c2b;
+  color: white;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  margin-left: 0.5rem;
+}
+
 .filter-section {
-  border-bottom: 1px solid #eee;
   padding: 1rem 1.5rem;
+  border-bottom: 1px solid #eee;
 }
 
 .filter-buttons {
   display: flex;
-  flex-wrap: wrap;
   gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .filter-button {
   padding: 0.4rem 1rem;
+  border: 1px solid #dee2e6;
   border-radius: 20px;
-  font-size: 0.9rem;
-  border: 1px solid #ccc;
   background: white;
-  color: #444;
+  color: #495057;
   cursor: pointer;
-  transition: 0.2s;
+  font-size: 0.9rem;
+  transition: all 0.2s;
 }
 
 .filter-button:hover {
-  background: #f2f2f2;
+  background: #f8f9fa;
 }
 
 .filter-button.active {
@@ -495,152 +900,61 @@ onMounted(async () => {
   border-color: #145c2b;
 }
 
-/* 찜한 상품 */
-.product-card {
-  padding: 1rem 0;
-  border-bottom: 1px solid #eee;
-}
-
-.product-card:last-child {
-  border-bottom: none;
-}
-
-.product-header {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 0.5rem;
-}
-
-.product-type {
-  font-size: 0.85rem;
-  background-color: #145c2b;
-  color: white;
-  padding: 0.3rem 0.8rem;
-  border-radius: 4px;
-}
-
-.product-title {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #333;
-}
-
-.product-details {
-  margin-top: 0.5rem;
-  display: grid;
-  gap: 0.4rem;
-  font-size: 0.9rem;
-}
-
-.label {
-  color: #666;
-}
-
-.value {
-  font-weight: 500;
-  color: #333;
-}
-
-.price-up {
-  color: #e74c3c;
-}
-
-.price-down {
-  color: #3498db;
-}
-
-.product-divider {
-  margin-top: 1rem;
-  height: 1px;
-  background-color: #eee;
-}
-
-/* 비어있는 상태 */
-.empty-state {
-  text-align: center;
-  padding: 2rem;
-  color: #666;
-}
-
-.empty-state i {
-  font-size: 2rem;
-  margin-bottom: 1rem;
-  color: #145c2b;
-}
-
-.empty-state p {
-  font-size: 1.1rem;
-  margin: 0.3rem 0;
-  color: #333;
-}
-
-.empty-state .sub-text {
-  font-size: 0.9rem;
-  margin-bottom: 1rem;
-}
-
-/* 버튼 */
-.action-button {
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  border: 1px solid #ccc;
-  background-color: white;
-  color: #145c2b;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.action-button:hover {
-  background-color: #f1f3f5;
-}
-
-.action-button.primary {
-  background-color: #145c2b;
-  color: white;
-  border-color: #145c2b;
-}
-
-.action-button.primary:hover {
-  background-color: #0d4420;
-}
-
-/* 더보기 버튼 */
 .view-more-section {
   text-align: center;
   margin-top: 1rem;
 }
 
 .view-more-button {
+  padding: 0.6rem 1rem;
+  border: 1px solid #145c2b;
+  border-radius: 4px;
   background: none;
-  border: none;
   color: #145c2b;
-  font-weight: 600;
   cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  font-size: 0.95rem;
+  transition: all 0.2s;
 }
 
-/* 반응형 */
 @media (max-width: 768px) {
+  .profile-header {
+    flex-direction: column;
+  }
+
+  .profile-stats {
+    width: 100%;
+    justify-content: space-around;
+    margin-top: 1.5rem;
+    margin-left: 0;
+  }
+
+  .stat-item {
+    min-width: auto;
+  }
+
   .content-grid {
     grid-template-columns: 1fr;
   }
 
-  .profile-stats {
-    flex-direction: column;
-    gap: 1rem;
+  .content-card:last-child {
+    grid-column: auto;
   }
 
-  .card-header {
+  .posts-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .profile-main {
     flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
+    text-align: center;
+  }
+
+  .profile-info {
+    align-items: center;
+  }
+
+  .follow-button {
+    align-self: center;
   }
 }
 </style>
-
-
