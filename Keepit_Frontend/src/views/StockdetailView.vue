@@ -3,17 +3,14 @@
     <div class="modal">
       <button class="close-btn" @click="close">&times;</button>
 
-      <!-- 로딩 상태 -->
       <div v-if="loading" class="loading-state">
         데이터를 불러오는 중입니다...
       </div>
 
-      <!-- 에러 상태 -->
       <div v-else-if="error" class="error-state">
         {{ error }}
       </div>
 
-      <!-- 데이터 표시 -->
       <template v-else-if="stock">
         <div class="header">
           <div class="title-section">
@@ -32,29 +29,36 @@
             <span class="code">{{ stock.stock_code }} / {{ stock.market_type }}</span>
           </div>
         </div>
+
         <div class="section">
           <p><strong>현재가:</strong> {{ formatNumber(stock.current_price) }}원 ({{ formatChange(stock.price_change) }})</p>
           <p><strong>업종:</strong> {{ stock.sector }}</p>
         </div>
+
         <div class="section warning" v-if="stock.warning_info">
           <p><strong>⚠️ 주의정보:</strong> {{ stock.warning_info }}</p>
         </div>
+
         <div class="section">
           <p><strong>시가:</strong> {{ formatNumber(stock.open_price) }} / 고가: {{ formatNumber(stock.high_price) }} / 저가: {{ formatNumber(stock.low_price) }}</p>
           <p><strong>52주 최고:</strong> {{ formatNumber(stock.high_52w) }} ({{ stock.high_52w_date }})</p>
           <p><strong>52주 최저:</strong> {{ formatNumber(stock.low_52w) }} ({{ stock.low_52w_date }})</p>
         </div>
+
         <div class="section">
           <p><strong>PER:</strong> {{ stock.per }} / <strong>PBR:</strong> {{ stock.pbr }} / <strong>EPS:</strong> {{ stock.eps }} / <strong>BPS:</strong> {{ stock.bps }}</p>
           <p><strong>시가총액:</strong> {{ formatNumber(stock.market_cap) }} / <strong>상장주식수:</strong> {{ formatNumber(stock.listed_shares) }}</p>
         </div>
+
         <div class="section">
           <p><strong>외국인 보유율:</strong> {{ stock.foreign_ownership }}%</p>
           <p><strong>공매도 허용:</strong> {{ stock.short_selling_allowed ? '허용' : '불가' }}</p>
         </div>
+
         <div class="section">
           <h3>관련 뉴스</h3>
-          <NewsCard v-for="(news, i) in newsList" :key="i" :news="news" />
+          <p v-if="newsList.length === 0" class="empty">관련 뉴스가 없습니다.</p>
+          <NewsCard v-else v-for="(news, i) in newsList" :key="i" :news="news" />
         </div>
       </template>
 
@@ -76,61 +80,41 @@ import axios from 'axios'
 const route = useRoute()
 const router = useRouter()
 const accountStore = useAccountStore()
+
 const stock = ref(null)
 const newsList = ref([])
 const isAuthenticated = computed(() => accountStore.isAuthenticated)
-
 const isHearted = ref(false)
 const heartCount = ref(0)
 const loading = ref(true)
 const error = ref(null)
 
-const close = () => {
-  router.back()
-}
+const close = () => router.back()
 
 const stockCode = route.params.stock_code
 
 const loadStockData = async () => {
   try {
     const token = accountStore.token
-    const response = await axios({
-      method: 'GET',
-      url: `http://127.0.0.1:8000/api/v1/products/stocks/${stockCode}/`,
-      headers: token ? {
-        Authorization: `Token ${token}`
-      } : {}
-    })
+    const response = await axios.get(
+      `http://127.0.0.1:8000/api/v1/products/stocks/${stockCode}/`,
+      token ? { headers: { Authorization: `Token ${token}` } } : {}
+    )
     stock.value = response.data
 
-    // 찜하기 상태 가져오기
+    // 찜 여부
     if (isAuthenticated.value) {
-      const favRes = await axios.get(`http://127.0.0.1:8000/api/v1/products/stocks/${stockCode}/favorite/`, {
-        headers: { Authorization: `Token ${accountStore.token}` }
-      })
+      const favRes = await axios.get(
+        `http://127.0.0.1:8000/api/v1/products/stocks/${stockCode}/favorite/`,
+        { headers: { Authorization: `Token ${accountStore.token}` } }
+      )
       isHearted.value = favRes.data.is_liked
       heartCount.value = favRes.data.count
     }
 
-    // 뉴스 데이터 가져오기
+    // 뉴스 (200 OK + 빈 배열 대응)
     const newsRes = await axios.get(`http://127.0.0.1:8000/api/v1/news/stock/${stockCode}/`)
     newsList.value = newsRes.data
-
-    // 투자성향 테스트 결과 가져오기
-    try {
-      const testRes = await axios.get('/api/v1/test/result/', {
-        headers: {
-          Authorization: `Token ${accountStore.token}`
-        }
-      })
-      accountStore.user.test_result = testRes.data
-    } catch (err) {
-      if (err.response?.status === 404) {
-        accountStore.user.test_result = null
-      } else {
-        console.error('테스트 결과 로딩 실패:', err)
-      }
-    }
 
   } catch (err) {
     console.error('데이터 로딩 실패:', err)
@@ -155,7 +139,7 @@ const handleHeart = async (value) => {
       url: `http://127.0.0.1:8000/api/v1/products/stocks/${stockCode}/favorite/`,
       headers: { Authorization: `Token ${accountStore.token}` }
     })
-    
+
     isHearted.value = value
     heartCount.value = response.data.count
   } catch (err) {
@@ -214,10 +198,7 @@ const formatChange = (val) => val > 0 ? `+${val}` : val < 0 ? `${val}` : '0'
   color: #333;
 }
 
-.section p {
-  color: #333;
-}
-
+.section p,
 .section strong {
   color: #333;
 }

@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'tests',      # 금융 성향 결과 테스트, 결과 조회
     'regions',    # 지도 지역 설정
     'chatbot',    # 챗봇 
+    'news',       # 뉴스
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
