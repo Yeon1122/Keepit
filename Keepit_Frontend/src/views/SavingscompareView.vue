@@ -302,6 +302,7 @@ button.active {
     flex: 0 0 400px;
     max-height: 85vh;
     overflow-y: auto;
+    padding-left: 3px;
     padding-right: 8px;
 }
 
