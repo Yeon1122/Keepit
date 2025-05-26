@@ -127,7 +127,7 @@ const route = useRoute()
 const loading = ref(true)
 const error = ref(null)
 const products = ref([])
-const selectedType = ref('정기예금')
+const selectedType = ref(route.query.type === 'saving' ? '적금' : '정기예금')
 const sortOption = ref('interest')
 const currentPage = ref(1)
 const itemsPerPage = 8

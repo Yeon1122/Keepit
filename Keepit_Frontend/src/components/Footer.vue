@@ -4,7 +4,7 @@
       <div class="footer-section company-info">
         <img src="@/assets/images/logo_Keepit.png" alt="Keepit Logo" class="footer-logo">
         <p class="company-description">
-          더 나은 금융 생활을 위한 현명한 선택, 킵잇
+          내 손 안의 금융비서, 킵잇
         </p>
         <div class="social-links">
           <a href="#" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
@@ -87,7 +87,7 @@
 }
 
 .footer-logo {
-  height: 40px;
+  height: 60px;
   margin-bottom: 1rem;
 }
 

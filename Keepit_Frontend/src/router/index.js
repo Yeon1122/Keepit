@@ -56,6 +56,11 @@ const router = createRouter({
       component: SavingsView,
     },
     {
+      path: '/products/deposits',
+      name: 'deposits',
+      component: SavingsView,
+    },
+    {
       path: '/users/mypage',
       name: 'mypage',
       component: MypageView,
@@ -160,6 +165,10 @@ const router = createRouter({
       meta: { requiresAuth: true }
     },
   ],
+  scrollBehavior(to, from, savedPosition) {
+    // 항상 페이지 최상단으로 스크롤
+    return { top: 0 }
+  }
 })
 
 // 인증이 필요한 페이지 목록

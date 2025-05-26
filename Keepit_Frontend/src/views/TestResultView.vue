@@ -22,7 +22,7 @@
         <div class="answers-grid">
           <div v-for="(value, key) in testResult.test_data" :key="key" class="answer-item">
             <span class="answer-label">{{ getQuestionLabel(key) }}</span>
-            <span class="answer-value">{{ value }}</span>
+            <span class="answer-value">{{ formatAnswerValue(key, value) }}</span>
           </div>
         </div>
       </section>
@@ -140,8 +140,8 @@ const getQuestionLabel = (key) => {
   const labels = {
     age: '나이',
     gender: '성별',
-    income: '연간 소득',
-    assets: '총 자산',
+    income: '연간 소득 (만원)',
+    assets: '총 자산 (만원)',
     risk_tolerance: '위험 성향',
     financial_knowledge: '금융 지식',
     investment_experience: '투자 경험',
@@ -178,10 +178,10 @@ const goToProductPage = (type) => {
   if (!testResult.value.recommendations[type]) return
 
   const routes = {
-    deposit: { name: 'savings' },
-    saving: { name: 'savings' },
+    deposit: { name: 'deposits' },
+    saving: { name: 'savings', query: { type: 'saving' } },
     stock: { name: 'stocks' },
-    etf: { name: 'stocks' },
+    etf: { name: 'stocks', query: { type: 'etf' } },
     goods: { name: 'goods' }
   }
 
@@ -196,6 +196,20 @@ const retakeTest = () => {
 
 const goToTest = () => {
   router.push({ name: 'investmenttest' })
+}
+
+// 숫자에 천단위 구분기호 추가하는 함수
+const formatNumber = (value) => {
+  if (!value) return '0'
+  return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+}
+
+// 답변 값 포맷팅
+const formatAnswerValue = (key, value) => {
+  if (key === 'income' || key === 'assets') {
+    return formatNumber(value)
+  }
+  return value
 }
 </script>
 

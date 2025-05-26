@@ -1,10 +1,12 @@
 <template>
   <div class="investment-test">
     <div class="test-container">
-      <h1 class="test-title">투자 성향 테스트</h1>
-      <p class="test-description">
-        아래 문항들에 답변해주시면 고객님께 맞는 투자 상품을 추천해드립니다.
-      </p>
+      <div class="test-header">
+        <h1 class="test-title">투자 성향 테스트</h1>
+        <p class="test-description">
+          아래 문항들에 답변해주시면 고객님께 맞는 투자 상품을 추천해드립니다.
+        </p>
+      </div>
 
       <form @submit.prevent="submitTest" class="test-form">
         <div v-for="question in questions" :key="question.id" class="question-item">
@@ -44,6 +46,7 @@
 
         <button type="submit" class="submit-button">
           테스트 결과 확인하기
+          <i class="fas fa-arrow-right"></i>
         </button>
       </form>
     </div>
@@ -138,56 +141,140 @@ export default {
   padding: 2rem;
 }
 
+.test-container {
+  background-color: white;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.test-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
 .test-title {
-  font-size: 2rem;
-  color: #2c3e50;
+  font-size: 2.5rem;
+  color: #145c2b;
   margin-bottom: 1rem;
+  font-weight: 700;
 }
 
 .test-description {
   color: #666;
-  margin-bottom: 2rem;
+  font-size: 1.1rem;
+  line-height: 1.6;
 }
 
 .question-item {
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  padding: 2rem;
   margin-bottom: 2rem;
+  transition: transform 0.2s ease;
+}
+
+.question-item:hover {
+  transform: translateY(-2px);
 }
 
 .question-label {
   display: block;
-  font-size: 1.1rem;
-  margin-bottom: 0.5rem;
-  color: #2c3e50;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  color: #333;
+  font-weight: 600;
 }
 
 .input-field,
 .select-field {
   width: 100%;
-  padding: 0.8rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 1rem;
+  padding: 1rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  background-color: white;
+  transition: all 0.2s ease;
+  color: #333;
 }
 
 .input-field:focus,
 .select-field:focus {
   outline: none;
   border-color: #145c2b;
+  box-shadow: 0 0 0 3px rgba(20, 92, 43, 0.1);
+}
+
+/* 드롭다운 옵션 스타일링 */
+.select-field option {
+  font-size: 1.1rem;
+  padding: 1rem;
+  background-color: white;
+}
+
+/* 드롭다운 호버 효과 */
+.select-field option:hover,
+.select-field option:focus {
+  background-color: rgba(20, 92, 43, 0.1) !important;
+  color: #145c2b;
+}
+
+/* 선택된 옵션 스타일링 */
+.select-field option:checked {
+  background-color: #145c2b;
+  color: white;
 }
 
 .submit-button {
   background-color: #145c2b;
   color: white;
-  padding: 1rem 2rem;
+  padding: 1.2rem 2.5rem;
   border: none;
-  border-radius: 4px;
-  font-size: 1.1rem;
+  border-radius: 12px;
+  font-size: 1.2rem;
+  font-weight: 600;
   cursor: pointer;
   width: 100%;
   margin-top: 2rem;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
 }
 
 .submit-button:hover {
-  background-color: #2980b9;
+  background-color: #0d4420;
+  transform: translateY(-2px);
+}
+
+.submit-button i {
+  transition: transform 0.3s ease;
+}
+
+.submit-button:hover i {
+  transform: translateX(5px);
+}
+
+@media (max-width: 768px) {
+  .investment-test {
+    padding: 1rem;
+  }
+
+  .test-container {
+    padding: 1.5rem;
+  }
+
+  .test-title {
+    font-size: 2rem;
+  }
+
+  .question-item {
+    padding: 1.5rem;
+  }
+
+  .question-label {
+    font-size: 1.1rem;
+  }
 }
 </style>

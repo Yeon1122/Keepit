@@ -110,18 +110,20 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import axios from 'axios'
 import StockCard from '@/components/StockCard.vue'
 import EtfCard from '@/components/EtfCard.vue'
 import { useAccountStore } from '@/stores/users'
 
-const selectedTab = ref('stock')
-const stockData = ref([])
-const etfData = ref([])
 const router = useRouter()
+const route = useRoute()
 const accountStore = useAccountStore()
 const isAuthenticated = computed(() => accountStore.isAuthenticated)
+
+const selectedTab = ref(route.query.type === 'etf' ? 'etf' : 'stock')
+const stockData = ref([])
+const etfData = ref([])
 
 const searchKeyword = ref('')
 const isFocused = ref(false)

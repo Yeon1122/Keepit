@@ -124,7 +124,7 @@ input:focus, select:focus, textarea:focus {
   background-color: #ffffff;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  /* gap: 0.1rem; */
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
   border-radius: 8px;
 }
