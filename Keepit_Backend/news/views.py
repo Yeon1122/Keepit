@@ -50,3 +50,4 @@ def get_stock_news(request, stock_code):
         print(f"Traceback: {traceback.format_exc()}")
         return Response([], status=status.HTTP_200_OK)  # 에러가 나도 빈 배열 반환
 
+

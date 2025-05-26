@@ -1,6 +1,9 @@
 from openai import OpenAI
 from django.conf import settings
 
+# OpenAI 클라이언트 초기화
+client = OpenAI(api_key=settings.OPENAI_API_KEY)
+
 def get_chatbot_response(category, message, chat_history=None):
     """OpenAI API를 사용하여 챗봇 응답을 생성합니다."""
     
@@ -10,9 +13,6 @@ def get_chatbot_response(category, message, chat_history=None):
             return "안녕하세요! Keepit 웹사이트 도우미입니다. 현재 OpenAI API가 설정되지 않아 기본 응답을 제공하고 있습니다. 웹사이트 사용에 대해 궁금한 점이 있으시면 언제든 문의해주세요!"
         else:  # product_info
             return "안녕하세요! 금융 상품 전문가입니다. 현재 OpenAI API가 설정되지 않아 기본 응답을 제공하고 있습니다. 예금, 적금, 주식, ETF 등 다양한 금융 상품에 대해 궁금한 점이 있으시면 언제든 문의해주세요!"
-    
-    # OpenAI 클라이언트 초기화
-    client = OpenAI(api_key=settings.OPENAI_API_KEY)
     
     # 시스템 메시지 설정
     if category == 'page_help':
@@ -45,4 +45,5 @@ def get_chatbot_response(category, message, chat_history=None):
         )
         return response.choices[0].message.content
     except Exception as e:
+        print("❌ OpenAI 오류:", e)
         return f"죄송합니다. 응답을 생성하는 중에 오류가 발생했습니다: {str(e)}" 

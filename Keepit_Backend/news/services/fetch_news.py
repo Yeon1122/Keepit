@@ -2,10 +2,12 @@ import requests
 import re
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+
+
 import os
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv()  # .env 파일 로드
 
 NAVER_CLIENT_ID = os.getenv("NAVER_CLIENT_ID")
 NAVER_CLIENT_SECRET = os.getenv("NAVER_CLIENT_SECRET")
@@ -17,6 +19,7 @@ def remove_similar_news(news_list, threshold=0.85):
     if not news_list:
         return []
     texts = [news["description"] for news in news_list]
+
     tfidf = TfidfVectorizer().fit_transform(texts)
     sim_matrix = cosine_similarity(tfidf)
     seen = set()
@@ -32,6 +35,7 @@ def remove_similar_news(news_list, threshold=0.85):
     return unique_news
 
 def fetch_unique_stock_news(stock_name, max_results=5):
+
     if not NAVER_CLIENT_ID or not NAVER_CLIENT_SECRET:
         print("Error: Naver API credentials not found")
         return []
@@ -82,3 +86,4 @@ def fetch_unique_stock_news(stock_name, max_results=5):
     except Exception as e:
         print(f"Error fetching news: {str(e)}")
         return [] 
+
