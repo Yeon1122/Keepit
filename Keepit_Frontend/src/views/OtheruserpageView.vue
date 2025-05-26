@@ -88,6 +88,13 @@
             </button>
             <button 
               class="filter-button" 
+              :class="{ active: selectedFilter === 'goods' }"
+              @click="selectedFilter = 'goods'"
+            >
+              현물
+            </button>
+            <button 
+              class="filter-button" 
               :class="{ active: selectedFilter === 'stock' }"
               @click="selectedFilter = 'stock'"
             >

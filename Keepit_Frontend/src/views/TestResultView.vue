@@ -164,12 +164,17 @@ onMounted(async () => {
         Authorization: `Token ${token}`
       }
     })
+    // 응답이 null 이거나 빈 객체면 리디렉션
+    if (!res.data || Object.keys(res.data).length === 0) {
+      alert('테스트 결과가 없습니다. 테스트를 먼저 진행해주세요.')
+      router.push({ name: 'investmenttest' })
+      return  // 꼭 return 해줘야 템플릿 렌더링 안됨
+    }
     result.value = res.data
   } catch (err) {
     if (err.response?.status === 404) {
       alert('테스트 결과가 없습니다. 테스트를 먼저 진행해주세요.')
-      router.push({ name: 'investmenttest' })
-      return
+      return router.push({ name: 'investmenttest' })
     }
     console.error('테스트 결과 로딩 실패:', err)
   } finally {
