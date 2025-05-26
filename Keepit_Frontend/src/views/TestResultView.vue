@@ -1,427 +1,373 @@
 <template>
-  <div class="result-container">
-    <div v-if="loading" class="loading">
-      결과를 불러오는 중입니다...
-    </div>
+  <div class="test-result">
+    <div v-if="testResult" class="result-container">
+      <h1 class="result-title">투자 성향 분석 결과</h1>
 
-    <div v-else-if="result" class="result-content">
-      <h1 class="result-title">투자 성향 테스트 결과</h1>
-      
-      <div class="result-box">
-        <div class="result-type">
-          <h2>{{ result.type }}</h2>
-          <div class="score">총점: {{ result.total_score }}점</div>
+      <!-- 투자 성향 -->
+      <section class="result-section risk-type">
+        <h2>투자 성향</h2>
+        <div class="risk-type-content">
+          <div class="risk-type-badge" :class="testResult.risk_type">
+            {{ getRiskTypeDisplay(testResult.risk_type) }}
+          </div>
+          <p class="risk-type-description">
+            {{ getRiskTypeDescription(testResult.risk_type) }}
+          </p>
         </div>
+      </section>
 
-        <div class="result-details">
-          <div class="detail-item">
-            <span class="label">나이대:</span>
-            <span>{{ getAgeText(result.q1_age) }}</span>
-          </div>
-          <div class="detail-item">
-            <span class="label">투자 경험:</span>
-            <span>{{ getExperienceText(result.q2_experience) }}</span>
-          </div>
-          <div class="detail-item">
-            <span class="label">손실 대응:</span>
-            <span>{{ getLossResponseText(result.q3_loss_response) }}</span>
-          </div>
-          <div class="detail-item">
-            <span class="label">수입원:</span>
-            <span>{{ getIncomeText(result.q4_income) }}</span>
-          </div>
-          <div class="detail-item">
-            <span class="label">기대 수익률:</span>
-            <span>{{ getReturnText(result.q5_expected_return) }}</span>
-          </div>
-          <div class="detail-item">
-            <span class="label">비상 자금:</span>
-            <span>{{ getEmergencyText(result.q6_emergency) }}</span>
+      <!-- 테스트 응답 -->
+      <section class="result-section test-answers">
+        <h2>테스트 응답 내역</h2>
+        <div class="answers-grid">
+          <div v-for="(value, key) in testResult.test_data" :key="key" class="answer-item">
+            <span class="answer-label">{{ getQuestionLabel(key) }}</span>
+            <span class="answer-value">{{ value }}</span>
           </div>
         </div>
+      </section>
 
-        <div class="result-description">
-          <h3>성향 설명</h3>
-          <ul>
-            <li>{{ result.description.description }}</li>
-            <li>{{ result.description.recommendation }}</li>
-          </ul>
-        </div>
-
-        <div class="recommendation">
-          <h3>추천 투자 방식</h3>
-          <ul>
-            <li v-for="(item, index) in result.recommendations" :key="index">
-              {{ item }}
-            </li>
-          </ul>
-        </div>
-
-        <div class="product-navigator">
-          <h3>추천 상품 바로가기</h3>
-          <div class="nav-buttons">
-            <router-link 
-              :to="{ name: 'savings' }" 
-              class="nav-btn"
-              :class="{ 'highlight': result.type === '안정형 투자자' }"
-              @click="scrollToTop"
-            >
-              정기예금/적금
-            </router-link>
-            <router-link 
-              :to="{ name: 'goods' }" 
-              class="nav-btn"
-              :class="{ 'highlight': result.type === '중립형 투자자' }"
-              @click="scrollToTop"
-            >
-              현물
-            </router-link>
-            <router-link 
-              :to="{ name: 'stocks' }" 
-              class="nav-btn"
-              :class="{ 'highlight': result.type === '공격형 투자자' }"
-              @click="scrollToTop"
-            >
-              주식
-            </router-link>
+      <!-- 추천 상품 -->
+      <section class="result-section recommendations">
+        <h2>맞춤 투자 상품 추천</h2>
+        <div class="recommendation-items">
+          <div 
+            v-for="(isRecommended, type) in testResult.recommendations" 
+            :key="type"
+            class="recommendation-item"
+            :class="{ 'recommended': isRecommended }"
+            @click="goToProductPage(type)"
+            :style="{ cursor: isRecommended ? 'pointer' : 'default' }"
+          >
+            <div class="product-info">
+              <span class="product-type">{{ getProductTypeDisplay(type) }}</span>
+              <span class="recommendation-status" :class="{ 'recommended': isRecommended }">
+                {{ isRecommended ? '추천' : '비추천' }}
+              </span>
+            </div>
+            <p class="product-description">
+              {{ getProductDescription(type) }}
+            </p>
           </div>
         </div>
-      </div>
+      </section>
 
       <div class="action-buttons">
-        <button @click="retakeTest" class="retake-btn">테스트 다시하기</button>
-        <button @click="goToMyPage" class="mypage-btn">마이페이지로 이동</button>
+        <button @click="retakeTest" class="retake-button">
+          테스트 다시하기
+        </button>
       </div>
     </div>
 
-    <div v-else class="error">
-      결과를 불러오는데 실패했습니다.
-      <button @click="retakeTest" class="retake-btn">테스트 다시하기</button>
+    <div v-else class="no-result">
+      <p>테스트 결과를 찾을 수 없습니다.</p>
+      <button @click="goToTest" class="take-test-button">
+        테스트 하러가기
+      </button>
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { useAccountStore } from '@/stores/users.js'
 import axios from 'axios'
 
 const router = useRouter()
-const route = useRoute()
 const accountStore = useAccountStore()
-const loading = ref(true)
-const result = ref(null)
-
-const getAgeText = (value) => {
-  const ages = ['20대 이하', '30~40대', '50대 이상']
-  return ages[value - 1]
-}
-
-const getExperienceText = (value) => {
-  const experiences = ['없음', '약간 있음', '매우 많음']
-  return experiences[value - 1]
-}
-
-const getLossResponseText = (value) => {
-  const responses = ['전부 인출', '일부 유지', '추가 매수']
-  return responses[value - 1]
-}
-
-const getIncomeText = (value) => {
-  const incomes = ['불안정 (자영업, 아르바이트 등)', '보통 (정규직 등)', '매우 안정 (공무원, 연금 등)']
-  return incomes[value - 1]
-}
-
-const getReturnText = (value) => {
-  const returns = ['3% 이하', '5~8%', '10% 이상']
-  return returns[value - 1]
-}
-
-const getEmergencyText = (value) => {
-  const emergencies = ['전혀 대비 안 됨', '일부 대비됨', '충분히 대비됨']
-  return emergencies[value - 1]
-}
-
-const scrollToTop = () => {
-  window.scrollTo({
-    top: 0,
-    behavior: 'smooth'
-  })
-}
+const testResult = ref(null)
 
 onMounted(async () => {
+  // 1. 먼저 router state에서 결과 확인
+  const state = router.currentRoute.value.state
+  if (state && state.testResult) {
+    testResult.value = state.testResult
+    return
+  }
+
+  // 2. state에 없으면 API로 가져오기
   const token = accountStore.token
   if (!token) {
-    alert('⚠️ 로그인이 필요한 서비스입니다.')
+    alert('로그인이 필요한 서비스입니다.')
     router.push({ name: 'login' })
     return
   }
 
   try {
-    const res = await axios.get('http://127.0.0.1:8000/api/v1/test/result/', {
+    const response = await axios.get('/api/v1/test/result/', {
       headers: {
         Authorization: `Token ${token}`
       }
     })
-    // 응답이 null 이거나 빈 객체면 리디렉션
-    if (!res.data || Object.keys(res.data).length === 0) {
+    
+    if (response.data) {
+      testResult.value = response.data
+    } else {
       alert('테스트 결과가 없습니다. 테스트를 먼저 진행해주세요.')
       router.push({ name: 'investmenttest' })
-      return  // 꼭 return 해줘야 템플릿 렌더링 안됨
     }
-    result.value = res.data
   } catch (err) {
+    console.error('테스트 결과 로딩 실패:', err)
     if (err.response?.status === 404) {
       alert('테스트 결과가 없습니다. 테스트를 먼저 진행해주세요.')
-      return router.push({ name: 'investmenttest' })
+      router.push({ name: 'investmenttest' })
+    } else {
+      alert('테스트 결과를 불러오는데 실패했습니다.')
     }
-    console.error('테스트 결과 로딩 실패:', err)
-  } finally {
-    loading.value = false
   }
 })
 
-const getRecommendations = (type) => {
-  switch (type) {
-    case '안정형':
-      return [
-        '원금 보장형 상품 위주로 투자',
-        '정기예금, 적금 추천',
-        '안정적인 채권형 펀드 고려'
-      ]
-    case '중립형':
-      return [
-        '적절한 위험-수익 균형 추구',
-        '채권형과 주식형 펀드 혼합',
-        '안정적인 배당주 투자 고려'
-      ]
-    case '공격형':
-      return [
-        '높은 수익을 위한 적극적 투자',
-        '주식형 펀드, 해외 투자',
-        '신흥 시장 및 섹터 투자 고려'
-      ]
-    default:
-      return []
+const getRiskTypeDisplay = (riskType) => {
+  const types = {
+    conservative: '안정형',
+    moderate: '중립형',
+    aggressive: '공격형'
+  }
+  return types[riskType] || riskType
+}
+
+const getRiskTypeDescription = (riskType) => {
+  const descriptions = {
+    conservative: '원금 손실을 최소화하려는 성향으로, 안정적인 수익을 추구합니다.',
+    moderate: '적절한 위험을 감수하며 중위험-중수익을 추구합니다.',
+    aggressive: '높은 수익을 위해 적극적인 투자를 선호하며, 위험을 감수할 수 있습니다.'
+  }
+  return descriptions[riskType] || ''
+}
+
+const getQuestionLabel = (key) => {
+  const labels = {
+    age: '나이',
+    gender: '성별',
+    income: '연간 소득',
+    assets: '총 자산',
+    risk_tolerance: '위험 성향',
+    financial_knowledge: '금융 지식',
+    investment_experience: '투자 경험',
+    saving_goal: '저축 목표',
+    preferred_term: '선호 투자기간',
+    user_type: '직업군'
+  }
+  return labels[key] || key
+}
+
+const getProductTypeDisplay = (type) => {
+  const types = {
+    deposit: '예금',
+    saving: '적금',
+    stock: '주식',
+    etf: 'ETF',
+    goods: '기타 상품'
+  }
+  return types[type] || type
+}
+
+const getProductDescription = (type) => {
+  const descriptions = {
+    deposit: '안정적인 수익을 제공하는 예금 상품입니다.',
+    saving: '정기적인 저축으로 목돈을 마련할 수 있는 적금 상품입니다.',
+    stock: '높은 수익을 기대할 수 있는 주식 투자 상품입니다.',
+    etf: '분산 투자가 가능한 상장지수펀드입니다.',
+    goods: '다양한 투자 상품을 포함한 금융 상품입니다.'
+  }
+  return descriptions[type] || ''
+}
+
+const goToProductPage = (type) => {
+  if (!testResult.value.recommendations[type]) return
+
+  const routes = {
+    deposit: { name: 'savings' },
+    saving: { name: 'savings' },
+    stock: { name: 'stocks' },
+    etf: { name: 'stocks' },
+    goods: { name: 'goods' }
+  }
+
+  if (routes[type]) {
+    router.push(routes[type])
   }
 }
 
-const retakeTest = async () => {
-  console.log('🎯 테스트 결과 페이지 - 테스트 다시하기 버튼 클릭됨')
-  
-  // 이미 결과가 있다는 것을 알고 있으므로 바로 확인창 표시
-  const userChoice = confirm('이미 투자 성향 검사를 받으셨습니다.\n\n다시 검사를 받으시겠습니까?\n\n확인: 새로 검사받기\n취소: 현재 결과 유지')
-  console.log('👤 사용자 선택:', userChoice ? '새로 검사받기' : '현재 결과 유지')
-  
-  if (userChoice) {
-    // 새로 검사받기
-    router.push({ name: 'investmenttest' })
-    scrollToTop()
-  }
-  // 취소하면 현재 페이지에 그대로 유지
+const retakeTest = () => {
+  router.push({ name: 'investmenttest' })
 }
 
-const goToMyPage = () => {
-  router.push({ name: 'mypage' })
-  scrollToTop()
+const goToTest = () => {
+  router.push({ name: 'investmenttest' })
 }
 </script>
 
 <style scoped>
-.result-container {
+.test-result {
   max-width: 800px;
-  margin: 2rem auto;
-  padding: 0 1rem;
+  margin: 0 auto;
+  padding: 2rem;
 }
 
 .result-title {
-  text-align: center;
-  color: #145c2b;
+  font-size: 2rem;
+  color: #2c3e50;
   margin-bottom: 2rem;
+  text-align: center;
 }
 
-.result-box {
+.result-section {
   background: white;
-  border: 1px solid #eee;
-  border-radius: 12px;
+  border-radius: 8px;
   padding: 2rem;
   margin-bottom: 2rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.result-type {
-  text-align: center;
-  margin-bottom: 2rem;
-  padding-bottom: 1.5rem;
-  border-bottom: 2px solid #145c2b;
-}
-
-.result-type h2 {
-  color: #145c2b;
-  font-size: 2rem;
-  margin-bottom: 0.5rem;
-}
-
-.score {
-  color: #666;
-  font-size: 1.1rem;
-}
-
-.result-details {
-  background: #f8f9fa;
-  border-radius: 8px;
-  padding: 1.5rem;
-  margin-bottom: 2rem;
-}
-
-.detail-item {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 0.8rem;
-  padding-bottom: 0.8rem;
-  border-bottom: 1px solid #e9ecef;
-}
-
-.detail-item:last-child {
-  margin-bottom: 0;
-  padding-bottom: 0;
-  border-bottom: none;
-}
-
-.detail-item .label {
-  font-weight: bold;
-  color: #495057;
-}
-
-.result-description, .recommendation {
+.result-section h2 {
+  color: #2c3e50;
   margin-bottom: 1.5rem;
+  font-size: 1.5rem;
 }
 
-.result-description h3, .recommendation h3 {
-  color: #333;
+/* 투자 성향 섹션 */
+.risk-type-content {
+  text-align: center;
+}
+
+.risk-type-badge {
+  display: inline-block;
+  padding: 0.5rem 2rem;
+  border-radius: 20px;
+  font-size: 1.2rem;
+  font-weight: bold;
   margin-bottom: 1rem;
 }
 
-.result-description ul {
-  list-style: none;
-  padding: 0;
+.risk-type-badge.conservative {
+  background-color: #3498db;
+  color: white;
 }
 
-.result-description li {
-  padding: 0.5rem 0;
-  padding-left: 1.5rem;
-  position: relative;
+.risk-type-badge.moderate {
+  background-color: #f1c40f;
+  color: white;
 }
 
-.recommendation ul {
-  list-style: none;
-  padding: 0;
+.risk-type-badge.aggressive {
+  background-color: #e74c3c;
+  color: white;
 }
 
-.recommendation li {
-  padding: 0.5rem 0;
-  padding-left: 1.5rem;
-  position: relative;
+.risk-type-description {
+  color: #666;
+  font-size: 1.1rem;
+  line-height: 1.6;
 }
 
-.recommendation li::before {
-  content: "•";
-  color: #145c2b;
-  position: absolute;
-  left: 0;
-}
-
-.product-navigator {
-  margin-top: 2rem;
-  padding-top: 2rem;
-  border-top: 2px solid #e9ecef;
-}
-
-.product-navigator h3 {
-  text-align: center;
-  margin-bottom: 1.5rem;
-}
-
-.nav-buttons {
-  display: flex;
-  justify-content: space-between;
+/* 테스트 응답 섹션 */
+.answers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1rem;
 }
 
-.nav-btn {
-  flex: 1;
+.answer-item {
   padding: 1rem;
-  text-align: center;
-  text-decoration: none;
-  color: #495057;
   background: #f8f9fa;
-  border: 1px solid #dee2e6;
+  border-radius: 4px;
+}
+
+.answer-label {
+  display: block;
+  color: #666;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.answer-value {
+  display: block;
+  color: #2c3e50;
+  font-weight: bold;
+}
+
+/* 추천 상품 섹션 */
+.recommendation-items {
+  display: grid;
+  gap: 1rem;
+}
+
+.recommendation-item {
+  padding: 1.5rem;
+  border: 1px solid #ddd;
   border-radius: 8px;
   transition: all 0.3s ease;
 }
 
-.nav-btn:hover {
-  background: #e9ecef;
+.recommendation-item.recommended {
+  border-color: #3498db;
+  background-color: #ebf5fb;
+}
+
+.recommendation-item.recommended:hover {
   transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.nav-btn.highlight {
-  background: #145c2b;
-  color: white;
-  border-color: #145c2b;
-}
-
-.nav-btn.highlight:hover {
-  background: #0d4420;
-}
-
-.action-buttons {
+.product-info {
   display: flex;
-  gap: 1rem;
-  justify-content: center;
-  margin-top: 2rem;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
 }
 
-.retake-btn, .mypage-btn {
-  padding: 0.8rem 1.5rem;
-  border-radius: 6px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.2s;
+.product-type {
+  font-weight: bold;
+  color: #2c3e50;
+  font-size: 1.1rem;
 }
 
-.retake-btn {
-  background-color: white;
-  color: #145c2b;
-  border: 2px solid #145c2b;
-}
-
-.mypage-btn {
-  background-color: #145c2b;
-  color: white;
-  border: none;
-}
-
-.retake-btn:hover {
-  background-color: #145c2b;
-  color: white;
-}
-
-.mypage-btn:hover {
-  background-color: #0d4420;
-}
-
-.loading, .error {
-  text-align: center;
-  padding: 2rem;
+.recommendation-status {
   color: #666;
 }
 
-.error {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
+.recommendation-status.recommended {
+  color: #3498db;
+}
+
+.product-description {
+  color: #666;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+/* 버튼 */
+.action-buttons {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.retake-button,
+.take-test-button {
+  background-color: #3498db;
+  color: white;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.retake-button:hover,
+.take-test-button:hover {
+  background-color: #2980b9;
+}
+
+.no-result {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.no-result p {
+  color: #666;
+  margin-bottom: 2rem;
 }
 </style> 

@@ -7,6 +7,10 @@
         {{ route.query.message }}
       </div>
 
+      <div v-if="errorMessage" class="alert alert-error">
+        {{ errorMessage }}
+      </div>
+
       <label>아이디:</label>
       <input type="text" v-model="form.userid" />
 
@@ -32,10 +36,12 @@ const form = ref({
   password: ''
 })
 
+const errorMessage = ref('')
+
 // 유효성 검사
 const validateForm = () => {
   if (!form.value.userid || !form.value.password) {
-    alert('아이디와 비밀번호를 모두 입력하세요.')
+    errorMessage.value = '아이디와 비밀번호를 모두 입력하세요.'
     return false
   }
   return true
@@ -50,15 +56,18 @@ const onLogin = async () => {
     password: form.value.password
   }
 
-  // const requestData = { ...form.value }
-  //   console.log('회원가입 요청 데이터:', requestData)
   try {
-    await accountStore.logIn(loginPayload)
-    // 리다이렉트 URL이 있으면 해당 페이지로, 없으면 홈으로 이동
-    const redirectPath = route.query.redirect || { name: 'home' }
-    router.push(redirectPath)
+    const success = await accountStore.logIn(loginPayload)
+    if (success) {
+      // 리다이렉트 URL이 있으면 해당 페이지로, 없으면 홈으로 이동
+      const redirectPath = route.query.redirect || { name: 'home' }
+      router.push(redirectPath)
+    }
   } catch (error) {
     console.error('로그인 처리 중 오류:', error)
+    // 비밀번호만 초기화
+    form.value.password = ''
+    errorMessage.value = '아이디 또는 비밀번호가 올바르지 않습니다.'
   }
 }
 </script>
@@ -100,6 +109,12 @@ h2 {
   background-color: #fff3cd;
   color: #856404;
   border: 1px solid #ffeeba;
+}
+
+.alert-error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
 }
 
 label {

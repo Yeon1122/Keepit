@@ -12,23 +12,14 @@ class TestResult(models.Model):
     
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='test_results')
     risk_type = models.CharField(max_length=20, choices=RISK_CHOICES)
-    total_score = models.IntegerField()  # 총점
-    
-    # 각 문항별 응답 저장
-    q1_age = models.IntegerField()  # 나이
-    q2_experience = models.IntegerField()  # 투자 경험
-    q3_loss_response = models.IntegerField()  # 손실 반응
-    q4_income = models.IntegerField()  # 수입원
-    q5_expected_return = models.IntegerField()  # 기대 수익률
-    q6_emergency = models.IntegerField()  # 긴급 지출 대비
-    
+    test_data = models.JSONField(default=dict)  # 기본값을 빈 딕셔너리로 설정
     created_at = models.DateTimeField(auto_now_add=True)
     
     class Meta:
         ordering = ['-created_at']  # 최신 결과가 먼저 오도록
         
     def __str__(self):
-        return f"{self.user.userid}의 투자 성향: {self.get_risk_type_display()} (총점: {self.total_score}점)"
+        return f"{self.user.userid}의 투자 성향: {self.get_risk_type_display()}"
     
     @property
     def result_description(self):

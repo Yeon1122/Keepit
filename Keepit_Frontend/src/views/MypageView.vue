@@ -49,11 +49,27 @@
         <div class="card-content">
           <template v-if="user.test_result">
             <div class="test-result">
-              <div class="result-header">
-                <div class="result-type-text">당신은</div>
-                <div class="result-type">{{ user.test_result.type }}</div>
+              <div class="risk-type-content">
+                <div class="risk-type-badge" :class="user.test_result.risk_type">
+                  {{ getRiskTypeDisplay(user.test_result.risk_type) }}
+                </div>
+                <p class="risk-type-description">
+                  {{ getRiskTypeDescription(user.test_result.risk_type) }}
+                </p>
               </div>
-              <div class="result-score">총점: {{ user.test_result.total_score }}점</div>
+              <div class="recommendations-preview">
+                <h4>추천 투자 상품</h4>
+                <div class="recommendation-chips">
+                  <div 
+                    v-for="(isRecommended, type) in user.test_result.recommendations" 
+                    :key="type"
+                    class="recommendation-chip"
+                    :class="{ 'recommended': isRecommended }"
+                  >
+                    {{ getProductTypeDisplay(type) }}
+                  </div>
+                </div>
+              </div>
             </div>
           </template>
           <div v-else class="empty-state">
@@ -498,6 +514,35 @@ const getPriceChangeClass = (change) => {
   if (!change) return ''
   return change > 0 ? 'price-up' : 'price-down'
 }
+
+const getRiskTypeDisplay = (riskType) => {
+  const types = {
+    conservative: '안정형',
+    moderate: '중립형',
+    aggressive: '공격형'
+  }
+  return types[riskType] || riskType
+}
+
+const getRiskTypeDescription = (riskType) => {
+  const descriptions = {
+    conservative: '원금 손실을 최소화하려는 성향으로, 안정적인 수익을 추구합니다.',
+    moderate: '적절한 위험을 감수하며 중위험-중수익을 추구합니다.',
+    aggressive: '높은 수익을 위해 적극적인 투자를 선호하며, 위험을 감수할 수 있습니다.'
+  }
+  return descriptions[riskType] || ''
+}
+
+const getProductTypeDisplay = (type) => {
+  const types = {
+    deposit: '예금',
+    saving: '적금',
+    stock: '주식',
+    etf: 'ETF',
+    goods: '기타 상품'
+  }
+  return types[type] || type
+}
 </script>
 
 <style scoped>
@@ -759,29 +804,69 @@ const getPriceChangeClass = (change) => {
   border-radius: 8px;
 }
 
-.result-header {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
+.risk-type-content {
+  text-align: center;
+  margin-bottom: 1.5rem;
 }
 
-.result-type-text {
+.risk-type-badge {
+  display: inline-block;
+  padding: 0.5rem 2rem;
+  border-radius: 20px;
   font-size: 1.2rem;
-  color: #495057;
-}
-
-.result-type {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #145c2b;
-}
-
-.result-score {
-  font-size: 1.1rem;
-  color: #666;
+  font-weight: bold;
   margin-bottom: 1rem;
+  color: white;
+}
+
+.risk-type-badge.conservative {
+  background-color: #3498db;
+}
+
+.risk-type-badge.moderate {
+  background-color: #f1c40f;
+}
+
+.risk-type-badge.aggressive {
+  background-color: #e74c3c;
+}
+
+.risk-type-description {
+  color: #666;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.recommendations-preview {
+  margin-top: 1.5rem;
+}
+
+.recommendations-preview h4 {
+  color: #2c3e50;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.recommendation-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.recommendation-chip {
+  padding: 0.3rem 1rem;
+  border-radius: 15px;
+  font-size: 0.9rem;
+  background-color: #f8f9fa;
+  color: #666;
+  border: 1px solid #ddd;
+}
+
+.recommendation-chip.recommended {
+  background-color: #ebf5fb;
+  border-color: #3498db;
+  color: #3498db;
 }
 
 .like-button {
