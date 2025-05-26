@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'recommendations',  # 새로 추가한 앱
 ]
 
 MIDDLEWARE = [

@@ -65,8 +65,6 @@
             :key="type"
             class="recommendation-item"
             :class="{ 'recommended': isRecommended }"
-            @click="goToProductPage(type)"
-            :style="{ cursor: isRecommended ? 'pointer' : 'default' }"
           >
             <span class="product-type">{{ getProductTypeDisplay(type) }}</span>
             <span class="recommendation-status">
@@ -76,14 +74,9 @@
         </div>
       </div>
 
-      <div class="button-group">
-        <button @click="goToTestResult" class="result-button">
-          상세 결과 보기
-        </button>
-        <button @click="retakeTest" class="retake-button">
-          테스트 다시하기
-        </button>
-      </div>
+      <button @click="retakeTest" class="retake-button">
+        테스트 다시하기
+      </button>
     </div>
   </div>
 </template>
@@ -91,76 +84,34 @@
 <script>
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
-import { useRouter } from 'vue-router'
-import { useAccountStore } from '@/stores/users.js'
 
 export default {
-  name: 'InvestmentTestView',
+  name: 'InvestmentTest',
   
   setup() {
-    const router = useRouter()
-    const accountStore = useAccountStore()
     const questions = ref([])
     const answers = ref({})
     const isSubmitted = ref(false)
     const testResult = ref(null)
 
-    onMounted(async () => {
-      const token = accountStore.token
-      if (!token) {
-        alert('로그인이 필요한 서비스입니다.')
-        router.push({ name: 'login' })
-        return
-      }
-
-      // 기존 테스트 결과 확인
+    // 테스트 문항 로드
+    const loadQuestions = async () => {
       try {
-        const response = await axios.get('/api/v1/test/result/', {
-          headers: {
-            Authorization: `Token ${token}`
-          }
-        })
-        
-        if (response.data) {
-          const confirmed = confirm('이미 투자 성향 테스트 결과가 있습니다. 정말 다시 하시겠습니까?')
-          if (!confirmed) {
-            router.push({ name: 'testresult' })
-            return
-          }
-        }
-      } catch (err) {
-        // 결과가 없는 경우(404) 또는 다른 에러는 무시하고 테스트 진행
-        console.log('기존 테스트 결과 없음:', err)
-      }
-
-      // 테스트 문항 가져오기
-      try {
-        const response = await axios.get('/api/v1/test/', {
-          headers: {
-            Authorization: `Token ${token}`
-          }
-        })
+        const response = await axios.get('/api/v1/test/')
         questions.value = response.data.questions
-      } catch (err) {
-        console.error('테스트 문항 로딩 실패:', err)
-        alert('테스트 문항을 불러오는데 실패했습니다.')
+      } catch (error) {
+        console.error('Failed to load test questions:', error)
       }
-    })
+    }
 
     // 테스트 제출
     const submitTest = async () => {
-      const token = accountStore.token
       try {
-        const response = await axios.post('/api/v1/test/submit/', answers.value, {
-          headers: {
-            Authorization: `Token ${token}`
-          }
-        })
+        const response = await axios.post('/api/v1/test/submit/', answers.value)
         testResult.value = response.data
         isSubmitted.value = true
       } catch (error) {
-        console.error('테스트 제출 실패:', error)
-        alert('테스트 제출에 실패했습니다.')
+        console.error('Failed to submit test:', error)
       }
     }
 
@@ -193,30 +144,7 @@ export default {
       return types[type] || type
     }
 
-    // 상품 페이지로 이동
-    const goToProductPage = (type) => {
-      if (!testResult.value.recommendations[type]) return // 추천되지 않은 상품은 클릭 무시
-
-      const routes = {
-        deposit: { name: 'savings' },
-        saving: { name: 'savings' },
-        stock: { name: 'stocks' },
-        etf: { name: 'stocks' },
-        goods: { name: 'goods' }
-      }
-
-      if (routes[type]) {
-        router.push(routes[type])
-      }
-    }
-
-    // 테스트 결과 페이지로 이동
-    const goToTestResult = () => {
-      router.push({
-        name: 'testresult',
-        state: { testResult: testResult.value }
-      })
-    }
+    onMounted(loadQuestions)
 
     return {
       questions,
@@ -226,9 +154,7 @@ export default {
       submitTest,
       retakeTest,
       getRiskTypeDisplay,
-      getProductTypeDisplay,
-      goToProductPage,
-      goToTestResult
+      getProductTypeDisplay
     }
   }
 }
@@ -344,12 +270,6 @@ export default {
 .recommendation-item.recommended {
   border-color: #3498db;
   background-color: #ebf5fb;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.recommendation-item.recommended:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .product-type {
@@ -363,36 +283,5 @@ export default {
 
 .recommendation-item.recommended .recommendation-status {
   color: #3498db;
-}
-
-.button-group {
-  display: flex;
-  gap: 1rem;
-  margin-top: 2rem;
-}
-
-.result-button,
-.retake-button {
-  flex: 1;
-  background-color: #3498db;
-  color: white;
-  padding: 1rem 2rem;
-  border: none;
-  border-radius: 4px;
-  font-size: 1.1rem;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.result-button {
-  background-color: #2ecc71;
-}
-
-.result-button:hover {
-  background-color: #27ae60;
-}
-
-.retake-button:hover {
-  background-color: #2980b9;
 }
 </style> 

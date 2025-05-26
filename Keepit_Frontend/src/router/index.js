@@ -6,7 +6,7 @@ import SavingsView from '@/views/SavingsView.vue'
 import MypageView from '@/views/MypageView.vue'
 import UserEditView from '@/views/UserEditView.vue'
 import FollowListView from '@/views/FollowListView.vue'
-import OtherUserPageView from '@/views/OtherUserPageView.vue'
+import UserDetailView from '@/views/UserDetailView.vue'
 import StocksView from '@/views/StocksView.vue'
 import StockDetailView from '@/views/StockDetailView.vue'
 import GoodsView from '@/views/GoodsView.vue'
@@ -74,7 +74,7 @@ const router = createRouter({
     {
       path: '/users/:userid',
       name: 'userpage',
-      component: OtherUserPageView,
+      component: UserDetailView,
     },
     {
       path: '/products/stocketf',

@@ -11,8 +11,33 @@ import './assets/styles/variables.css'
 import './assets/styles/components.css'
 
 // axios 기본 설정
-axios.defaults.baseURL = 'http://127.0.0.1:8000'
-axios.defaults.withCredentials = false
+axios.defaults.baseURL = 'http://localhost:8000'  // Django 서버 주소
+
+// 요청 인터셉터 설정
+axios.interceptors.request.use(
+  config => {
+    const accountData = JSON.parse(localStorage.getItem('account') || '{}')
+    if (accountData.token) {
+      config.headers.Authorization = `Token ${accountData.token}`
+    }
+    return config
+  },
+  error => {
+    return Promise.reject(error)
+  }
+)
+
+// 응답 인터셉터 설정
+axios.interceptors.response.use(
+  response => response,
+  error => {
+    if (error.response && error.response.status === 401) {
+      // 인증 오류 시 로그인 페이지로 리다이렉트
+      router.push('/users/login')
+    }
+    return Promise.reject(error)
+  }
+)
 
 const app = createApp(App)
 const pinia = createPinia()

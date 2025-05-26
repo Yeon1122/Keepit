@@ -140,10 +140,10 @@ export const useAccountStore = defineStore('account', () => {
       axios.defaults.headers.common['Authorization'] = `Token ${res.data.token}`
 
       console.log('✅ 로그인 성공')
-      router.push({ name: 'home' })
+      return true
     } catch (err) {
       console.error('❌ 로그인 실패:', err.response?.data || err.message)
-      alert('로그인 실패! 아이디/비밀번호를 확인하세요.')
+      throw err
     }
   }
 

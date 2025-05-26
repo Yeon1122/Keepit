@@ -1,9 +1,10 @@
 <template>
   <div>
     <div class="title-container">
-      <h3>정기 예금/적금 상품 안내</h3>
+      <h3>{{ pageTitle }}</h3>
 
-      <div class="filter-bar">
+      <!-- 일반 상품 목록일 때의 필터바 -->
+      <div v-if="!route.query.userId" class="filter-bar">
         <div class="btn-group">
           <button :class="{ active: selectedType === '정기예금' }" @click="filterByType('정기예금')">정기예금</button>
           <button :class="{ active: selectedType === '적금' }" @click="filterByType('적금')">적금</button>
@@ -14,9 +15,30 @@
           <option value="special">최고금리순</option>
         </select>
       </div>
+
+      <!-- 찜한 상품 목록일 때의 필터 버튼 -->
+      <div v-else class="filter-section">
+        <div class="filter-buttons">
+          <button 
+            class="filter-button" 
+            :class="{ active: selectedType === '정기예금' }"
+            @click="filterByType('정기예금')"
+          >
+            예금
+          </button>
+          <button 
+            class="filter-button" 
+            :class="{ active: selectedType === '적금' }"
+            @click="filterByType('적금')"
+          >
+            적금
+          </button>
+        </div>
+      </div>
     </div>
 
-    <div class="saving-container">
+    <!-- 일반 상품 목록 -->
+    <div v-if="!route.query.userId" class="saving-container">
       <div v-if="loading" class="loading-state">
         {{ loadingMessage }}
       </div>
@@ -37,7 +59,51 @@
       </template>
     </div>
 
-    <div class="pagination">
+    <!-- 찜한 상품 목록 -->
+    <div v-else class="products-grid">
+      <div v-if="loading" class="loading-state">
+        {{ loadingMessage }}
+      </div>
+      <div v-else-if="error" class="error-state">
+        {{ error }}
+        <button @click="fetchProducts" class="retry-button">다시 시도</button>
+      </div>
+      <template v-else>
+        <div v-if="paginatedProducts.length" class="products-container">
+          <div class="product-card" v-for="product in paginatedProducts" :key="product.id">
+            <div class="product-type" :class="product.type">
+              {{ product.type === 'deposit' ? '예금' : '적금' }}
+            </div>
+            <div class="product-content">
+              <div class="product-header">
+                <div class="company">{{ product.company }}</div>
+                <h4 class="product-name">{{ product.name }}</h4>
+              </div>
+              <div class="product-details">
+                <div class="info-row">
+                  <span class="label">기본금리</span>
+                  <span class="value highlight">{{ product.interest_rate }}%</span>
+                </div>
+                <div class="info-row">
+                  <span class="label">최고금리</span>
+                  <span class="value highlight">{{ product.special_rate }}%</span>
+                </div>
+                <div class="info-row">
+                  <span class="label">가입기간</span>
+                  <span class="value">{{ product.term }}개월</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div v-else class="empty-state">
+          <i class="fas fa-heart"></i>
+          <p>표시할 상품이 없습니다.</p>
+        </div>
+      </template>
+    </div>
+
+    <div class="pagination" v-if="totalPages > 1">
       <button 
         v-for="page in totalPages" 
         :key="page" 
@@ -55,7 +121,9 @@ import { ref, onMounted, computed } from 'vue'
 import SavingCard from '@/components/SavingCard.vue'
 import axios from 'axios'
 import { useAccountStore } from '@/stores/users'
+import { useRoute } from 'vue-router'
 
+const route = useRoute()
 const loading = ref(true)
 const error = ref(null)
 const products = ref([])
@@ -68,27 +136,50 @@ const loadingMessage = ref('데이터를 불러오는 중입니다...')
 const accountStore = useAccountStore()
 const isAuthenticated = computed(() => accountStore.isAuthenticated)
 
+// 페이지 제목 계산
+const pageTitle = computed(() => {
+  if (route.query.userId) {
+    return `${route.query.nickname}님의 찜한 상품 목록`
+  }
+  return '정기 예금/적금 상품 안내'
+})
+
 const fetchProducts = async () => {
   loading.value = true
   error.value = null
   products.value = []
 
-  const backendType = selectedType.value === '정기예금' ? 'deposits' : 'savings'
-  const url = `/api/v1/products/${backendType}/`
-
   try {
-    console.log(`[fetchProducts] 요청 URL: ${url}`)
-    const res = await axios.get(url)
-    
-    if (!res.data || (!res.data.data && !Array.isArray(res.data))) {
-      throw new Error('데이터 형식이 올바르지 않습니다.')
-    }
+    let url
+    if (route.query.userId) {
+      // 특정 사용자의 찜한 상품 목록을 가져오는 경우
+      url = `/api/v1/products/favorites/${route.query.userId}/`
+      console.log(`[fetchProducts] 사용자 찜 목록 요청 URL: ${url}`)
+      const res = await axios.get(url, {
+        headers: {
+          Authorization: `Token ${accountStore.token}`
+        }
+      })
+      products.value = sortByOption(res.data.filter(product => 
+        selectedType.value === '정기예금' ? product.type === 'deposit' : product.type === 'saving'
+      ), sortOption.value)
+    } else {
+      // 전체 상품 목록을 가져오는 경우
+      const backendType = selectedType.value === '정기예금' ? 'deposits' : 'savings'
+      url = `/api/v1/products/${backendType}/`
+      console.log(`[fetchProducts] 전체 상품 요청 URL: ${url}`)
+      const res = await axios.get(url)
+      
+      if (!res.data || (!res.data.data && !Array.isArray(res.data))) {
+        throw new Error('데이터 형식이 올바르지 않습니다.')
+      }
 
-    const productsData = Array.isArray(res.data) ? res.data : res.data.data
-    products.value = sortByOption(productsData.map(product => ({
-      ...product,
-      type: selectedType.value === '정기예금' ? 'deposit' : 'saving'
-    })), sortOption.value)
+      const productsData = Array.isArray(res.data) ? res.data : res.data.data
+      products.value = sortByOption(productsData.map(product => ({
+        ...product,
+        type: selectedType.value === '정기예금' ? 'deposit' : 'saving'
+      })), sortOption.value)
+    }
 
     currentPage.value = 1
   } catch (err) {
@@ -134,17 +225,12 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.title-container,
-.saving-container {
-  padding: 0 2rem;
-}
-
+/* 공통 스타일 */
 .title-container {
+  padding: 0 2rem;
   margin-top: 2rem;
   margin-bottom: 2rem;
 }
-
-
 
 h3 {
   color: #145c2b;
@@ -155,7 +241,7 @@ h3 {
   text-align: left;
 }
 
-/* 필터바 스타일링 */
+/* 일반 상품 목록 스타일 */
 .filter-bar {
   display: flex;
   justify-content: space-between;
@@ -172,7 +258,6 @@ h3 {
   gap: 1rem;
 }
 
-/* 버튼 스타일링 */
 .btn-group button {
   padding: 0.8rem 2rem;
   border: 2px solid #145c2b;
@@ -198,7 +283,6 @@ h3 {
   box-shadow: 0 2px 8px rgba(20, 92, 43, 0.2);
 }
 
-/* 드롭다운 스타일링 */
 select {
   padding: 0.8rem 1.5rem;
   border: 2px solid #e0e0e0;
@@ -220,7 +304,6 @@ select:focus {
   box-shadow: 0 0 0 2px rgba(20, 92, 43, 0.1);
 }
 
-/* 상품 컨테이너 */
 .saving-container {
   display: flex;
   flex-wrap: wrap;
@@ -231,7 +314,6 @@ select:focus {
   margin: 0 auto;
 }
 
-/* 상품 카드 */
 .saving-card {
   flex: 1 1 300px;
   max-width: 350px;
@@ -244,7 +326,113 @@ select:focus {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* 로딩, 에러, 데이터 없음 상태 */
+/* 찜한 상품 목록 스타일 */
+.filter-section {
+  margin-bottom: 2rem;
+}
+
+.filter-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.filter-button {
+  padding: 0.5rem 1.5rem;
+  border: 1px solid #e0e0e0;
+  background: white;
+  color: #666;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.9rem;
+}
+
+.filter-button.active {
+  background: #145c2b;
+  color: white;
+  border-color: #145c2b;
+}
+
+.products-grid {
+  padding: 0 2rem;
+}
+
+.products-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.product-card {
+  position: relative;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.product-type {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.3rem 1rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.product-type.deposit {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.product-type.saving {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.product-content {
+  padding: 1.5rem;
+}
+
+.product-header {
+  margin-bottom: 1.5rem;
+}
+
+.company {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 0.5rem;
+}
+
+.product-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.product-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* 공통 상태 스타일 */
 .loading-state,
 .error-state,
 .no-data {
@@ -282,7 +470,6 @@ select:focus {
   box-shadow: 0 2px 8px rgba(20, 92, 43, 0.2);
 }
 
-/* 페이지네이션 */
 .pagination {
   display: flex;
   justify-content: center;
@@ -313,5 +500,27 @@ select:focus {
   color: white;
   border-color: #145c2b;
   box-shadow: 0 2px 4px rgba(20, 92, 43, 0.2);
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  color: #666;
+}
+
+.empty-state i {
+  font-size: 2rem;
+  color: #145c2b;
+  margin-bottom: 1rem;
+}
+
+.empty-state p {
+  margin: 0.5rem 0;
+  font-size: 1.1rem;
+}
+
+.value.highlight {
+  color: #145c2b;
+  font-weight: 600;
 }
 </style>
