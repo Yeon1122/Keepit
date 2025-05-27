@@ -15,7 +15,8 @@
 [![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?style=flat-square&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 
 </div>
----
+
+----
 
 ## 프로젝트 개요
 
@@ -43,7 +44,7 @@
 ### 2. 금융 상품 탐색
 - 예·적금 금리 비교 및 상세 정보 조회
 - 금·은 등 현물 정보 제공
-- 주식/ETF 실시간 정보 제공
+- 주식/ETF 실시간 정보 및 관련 뉴스 제공
 - 관심 상품 찜하기
 
 ### 3. 찜한 상품 비교하기
