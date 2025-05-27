@@ -1,0 +1,1522 @@
+[
+{
+  "model": "products.product",
+  "pk": 1,
+  "fields": {
+    "product_code": null,
+    "type": "deposit",
+    "name": "WON플러스예금",
+    "company": "우리은행",
+    "interest_rate": 2.5,
+    "special_rate": 2.5,
+    "term": 36,
+    "target": "실명의 개인",
+    "created_at": "2025-05-27T04:09:11.345Z",
+    "updated_at": "2025-05-27T04:09:11.368Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 2,
+  "fields": {
+    "product_code": null,
+    "type": "deposit",
+    "name": "e-그린세이브예금",
+    "company": "한국스탠다드차타드은행",
+    "interest_rate": 2.6,
+    "special_rate": 2.9,
+    "term": 12,
+    "target": "개인(개인사업자 포함)",
+    "created_at": "2025-05-27T04:09:11.372Z",
+    "updated_at": "2025-05-27T04:09:11.383Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 3,
+  "fields": {
+    "product_code": null,
+    "type": "deposit",
+    "name": "iM주거래우대예금(첫만남고객형)",
+    "company": "아이엠뱅크",
+    "interest_rate": 2.15,
+    "special_rate": 2.8,
+    "term": 36,
+    "target": "실명의 개인",
+    "created_at": "2025-05-27T04:09:11.387Z",
+    "updated_at": "2025-05-27T04:09:11.397Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 4,
+  "fields": {
+    "product_code": null,
+    "type": "deposit",
+    "name": "iM행복파트너예금(일반형)",
+    "company": "아이엠뱅크",
+    "interest_rate": 2.35,
+    "special_rate": 2.8,
+    "term": 36,
+    "target": "만50세 이상 실명의 개인",
+    "created_at": "2025-05-27T04:09:11.401Z",
+    "updated_at": "2025-05-27T04:09:11.414Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 5,
+  "fields": {
+    "product_code": null,
+    "type": "deposit",
+    "name": "iM함께예금",
+    "company": "아이엠뱅크",
+    "interest_rate": 2.4,
+    "special_rate": 2.85,
+    "term": 12,
+    "target": "실명의 개인 및 개인사업자",
+    "created_at": "2025-05-27T04:09:11.418Z",
+    "updated_at": "2025-05-27T04:09:11.418Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 6,
+  "fields": {
+    "product_code": null,
+    "type": "deposit",
+    "name": "iM스마트예금",
+    "company": "아이엠뱅크",
+    "interest_rate": 2.2,
+    "special_rate": 2.45,
+    "term": 36,
+    "target": "실명의 개인",
+    "created_at": "2025-05-27T04:09:11.421Z",
+    "updated_at": "2025-05-27T04:09:11.438Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 7,
+  "fields": {
+    "product_code": null,
+    "type": "deposit",
+    "name": "LIVE정기예금",
+    "company": "부산은행",
+    "interest_rate": 1.9,
+    "special_rate": 1.9,
+    "term": 36,
+    "target": "제한없음",
+    "created_at": "2025-05-27T04:09:11.442Z",
+    "updated_at": "2025-05-27T04:09:11.459Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 8,
+  "fields": {
+    "product_code": null,
+    "type": "deposit",
+    "name": "더(The) 특판 정기예금",
+    "company": "부산은행",
+    "interest_rate": 1.25,
+    "special_rate": 1.95,
+    "term": 36,
+    "target": "실명의 개인",
+    "created_at": "2025-05-27T04:09:11.463Z",
+    "updated_at": "2025-05-27T04:09:11.480Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 9,
+  "fields": {
+    "product_code": null,
+    "type": "deposit",
+    "name": "더(The) 레벨업 정기예금",
+    "company": "부산은행",
+    "interest_rate": 2.45,
+    "special_rate": 2.65,
+    "term": 12,
+    "target": "실명의 개인",
+    "created_at": "2025-05-27T04:09:11.483Z",
+    "updated_at": "2025-05-27T04:09:11.487Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 10,
+  "fields": {
+    "product_code": null,
+    "type": "deposit",
+    "name": "미즈월복리정기예금",
+    "company": "광주은행",
+    "interest_rate": 2.25,
+    "special_rate": 2.45,
+    "term": 36,
+    "target": "만18세이상 여성으로 실명의 개인 및 개인사업자",
+    "created_at": "2025-05-27T04:09:11.490Z",
+    "updated_at": "2025-05-27T04:09:11.497Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 11,
+  "fields": {
+    "product_code": null,
+    "type": "deposit",
+    "name": "스마트모아Dream정기예금",
+    "company": "광주은행",
+    "interest_rate": 2.15,
+    "special_rate": 2.35,
+    "term": 36,
+    "target": "개인 및 개인사업자",
+    "created_at": "2025-05-27T04:09:11.500Z",
+    "updated_at": "2025-05-27T04:09:11.517Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 12,
+  "fields": {
+    "product_code": null,
+    "type": "deposit",
+    "name": "굿스타트예금",
+    "company": "광주은행",
+    "interest_rate": 2.09,
+    "special_rate": 2.59,
+    "term": 12,
+    "target": "개인 및 개인사업자",
+    "created_at": "2025-05-27T04:09:11.521Z",
+    "updated_at": "2025-05-27T04:09:11.521Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 13,
+  "fields": {
+    "product_code": null,
+    "type": "deposit",
+    "name": "The플러스예금",
+    "company": "광주은행",
+    "interest_rate": 2.6,
+    "special_rate": 2.6,
+    "term": 12,
+    "target": "개인 및 법인(단,국가 지자체 및 금융기관 제외)",
+    "created_at": "2025-05-27T04:09:11.525Z",
+    "updated_at": "2025-05-27T04:09:11.531Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 14,
+  "fields": {
+    "product_code": null,
+    "type": "deposit",
+    "name": "제주Dream\n정기예금\n(개인/만기\n지급식)",
+    "company": "제주은행",
+    "interest_rate": 2.2,
+    "special_rate": 2.3,
+    "term": 36,
+    "target": "제한없음",
+    "created_at": "2025-05-27T04:09:11.535Z",
+    "updated_at": "2025-05-27T04:09:11.553Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 15,
+  "fields": {
+    "product_code": null,
+    "type": "deposit",
+    "name": "J정기예금\n(만기지급식)",
+    "company": "제주은행",
+    "interest_rate": 1.85,
+    "special_rate": 2.5,
+    "term": 36,
+    "target": "실명의 \n개인 및 \n개인사업자",
+    "created_at": "2025-05-27T04:09:11.556Z",
+    "updated_at": "2025-05-27T04:09:11.573Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 16,
+  "fields": {
+    "product_code": null,
+    "type": "deposit",
+    "name": "스마일드림 \n정기예금\n(개인/선이자\n지급식)",
+    "company": "제주은행",
+    "interest_rate": 1.9,
+    "special_rate": 2.6,
+    "term": 12,
+    "target": "실명의\n개인 및 \n개인사업자",
+    "created_at": "2025-05-27T04:09:11.577Z",
+    "updated_at": "2025-05-27T04:09:11.584Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 17,
+  "fields": {
+    "product_code": null,
+    "type": "deposit",
+    "name": "JB 다이렉트예금통장\n(만기일시지급식)",
+    "company": "전북은행",
+    "interest_rate": 2.77,
+    "special_rate": 2.77,
+    "term": 12,
+    "target": "실명의 개인(임의단체 제외",
+    "created_at": "2025-05-27T04:09:11.587Z",
+    "updated_at": "2025-05-27T04:09:11.594Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 18,
+  "fields": {
+    "product_code": null,
+    "type": "deposit",
+    "name": "JB 123 정기예금\n (만기일시지급식)",
+    "company": "전북은행",
+    "interest_rate": 0.0,
+    "special_rate": 2.85,
+    "term": 36,
+    "target": "실명의 개인 또는 개인사업자 (1인 다계좌 가입 가능함)",
+    "created_at": "2025-05-27T04:09:11.598Z",
+    "updated_at": "2025-05-27T04:09:11.604Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 19,
+  "fields": {
+    "product_code": null,
+    "type": "deposit",
+    "name": "내맘 쏙 정기예금",
+    "company": "전북은행",
+    "interest_rate": 2.5,
+    "special_rate": 2.8,
+    "term": 12,
+    "target": "실명의 개인 및 개인사업자",
+    "created_at": "2025-05-27T04:09:11.608Z",
+    "updated_at": "2025-05-27T04:09:11.618Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 20,
+  "fields": {
+    "product_code": null,
+    "type": "deposit",
+    "name": "BNK더조은정기예금",
+    "company": "경남은행",
+    "interest_rate": 2.15,
+    "special_rate": 2.65,
+    "term": 24,
+    "target": "거래대상자는 제한을 두지 아니한다. 다만, 국가 및 지방자치단체는 이 예금을 거래할 수 없다.",
+    "created_at": "2025-05-27T04:09:11.621Z",
+    "updated_at": "2025-05-27T04:09:11.631Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 21,
+  "fields": {
+    "product_code": null,
+    "type": "deposit",
+    "name": "The든든예금(시즌2)",
+    "company": "경남은행",
+    "interest_rate": 2.0,
+    "special_rate": 2.75,
+    "term": 12,
+    "target": "개인",
+    "created_at": "2025-05-27T04:09:11.635Z",
+    "updated_at": "2025-05-27T04:09:11.643Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 22,
+  "fields": {
+    "product_code": null,
+    "type": "deposit",
+    "name": "IBK평생한가족통장(실세금리정기예금)",
+    "company": "중소기업은행",
+    "interest_rate": 2.25,
+    "special_rate": 2.45,
+    "term": 36,
+    "target": "실명의 개인\n(개인사업자 제외)",
+    "created_at": "2025-05-27T04:09:11.646Z",
+    "updated_at": "2025-05-27T04:09:11.653Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 23,
+  "fields": {
+    "product_code": null,
+    "type": "deposit",
+    "name": "IBK더굴리기통장(실세금리정기예금)",
+    "company": "중소기업은행",
+    "interest_rate": 2.24,
+    "special_rate": 2.24,
+    "term": 36,
+    "target": "실명의 개인\n(개인사업자 제외)",
+    "created_at": "2025-05-27T04:09:11.657Z",
+    "updated_at": "2025-05-27T04:09:11.667Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 24,
+  "fields": {
+    "product_code": null,
+    "type": "deposit",
+    "name": "IBK굴리기통장(정기예금)",
+    "company": "중소기업은행",
+    "interest_rate": 2.35,
+    "special_rate": 2.35,
+    "term": 12,
+    "target": "실명의 개인\n(개인사업자 제외)",
+    "created_at": "2025-05-27T04:09:11.670Z",
+    "updated_at": "2025-05-27T04:09:11.681Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 25,
+  "fields": {
+    "product_code": null,
+    "type": "deposit",
+    "name": "KDB 정기예금",
+    "company": "한국산업은행",
+    "interest_rate": 2.5,
+    "special_rate": 2.5,
+    "term": 36,
+    "target": "제한없음",
+    "created_at": "2025-05-27T04:09:11.684Z",
+    "updated_at": "2025-05-27T04:09:11.701Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 26,
+  "fields": {
+    "product_code": null,
+    "type": "deposit",
+    "name": "KB Star 정기예금",
+    "company": "국민은행",
+    "interest_rate": 2.4,
+    "special_rate": 2.45,
+    "term": 36,
+    "target": "실명의 개인 또는 개인사업자",
+    "created_at": "2025-05-27T04:09:11.704Z",
+    "updated_at": "2025-05-27T04:09:11.721Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 27,
+  "fields": {
+    "product_code": null,
+    "type": "deposit",
+    "name": "쏠편한 정기예금",
+    "company": "신한은행",
+    "interest_rate": 2.25,
+    "special_rate": 2.45,
+    "term": 36,
+    "target": "만14세이상 개인고객",
+    "created_at": "2025-05-27T04:09:11.725Z",
+    "updated_at": "2025-05-27T04:09:11.742Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 28,
+  "fields": {
+    "product_code": null,
+    "type": "deposit",
+    "name": "NH왈츠회전예금 II",
+    "company": "농협은행주식회사",
+    "interest_rate": 2.55,
+    "special_rate": 2.65,
+    "term": 12,
+    "target": "개인",
+    "created_at": "2025-05-27T04:09:11.746Z",
+    "updated_at": "2025-05-27T04:09:11.758Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 29,
+  "fields": {
+    "product_code": null,
+    "type": "deposit",
+    "name": "NH내가Green초록세상예금",
+    "company": "농협은행주식회사",
+    "interest_rate": 2.3,
+    "special_rate": 2.7,
+    "term": 36,
+    "target": "개인",
+    "created_at": "2025-05-27T04:09:11.762Z",
+    "updated_at": "2025-05-27T04:09:11.769Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 30,
+  "fields": {
+    "product_code": null,
+    "type": "deposit",
+    "name": "NH올원e예금",
+    "company": "농협은행주식회사",
+    "interest_rate": 2.48,
+    "special_rate": 2.48,
+    "term": 36,
+    "target": "개인",
+    "created_at": "2025-05-27T04:09:11.772Z",
+    "updated_at": "2025-05-27T04:09:11.798Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 31,
+  "fields": {
+    "product_code": null,
+    "type": "deposit",
+    "name": "NH고향사랑기부예금",
+    "company": "농협은행주식회사",
+    "interest_rate": 2.4,
+    "special_rate": 3.1,
+    "term": 12,
+    "target": "개인",
+    "created_at": "2025-05-27T04:09:11.802Z",
+    "updated_at": "2025-05-27T04:09:11.802Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 32,
+  "fields": {
+    "product_code": null,
+    "type": "deposit",
+    "name": "하나의정기예금",
+    "company": "하나은행",
+    "interest_rate": 2.2,
+    "special_rate": 2.5,
+    "term": 36,
+    "target": "실명의 개인 또는 개인사업자",
+    "created_at": "2025-05-27T04:09:11.806Z",
+    "updated_at": "2025-05-27T04:09:11.823Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 33,
+  "fields": {
+    "product_code": null,
+    "type": "deposit",
+    "name": "코드K 정기예금",
+    "company": "주식회사 케이뱅크",
+    "interest_rate": 2.5,
+    "special_rate": 2.5,
+    "term": 36,
+    "target": "만 17세 이상 실명의 개인 및 개인사업자",
+    "created_at": "2025-05-27T04:09:11.827Z",
+    "updated_at": "2025-05-27T04:09:11.844Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 34,
+  "fields": {
+    "product_code": null,
+    "type": "deposit",
+    "name": "Sh평생주거래우대예금\n(만기일시지급식)",
+    "company": "수협은행",
+    "interest_rate": 2.1,
+    "special_rate": 2.5,
+    "term": 12,
+    "target": "실명의 개인",
+    "created_at": "2025-05-27T04:09:11.847Z",
+    "updated_at": "2025-05-27T04:09:11.847Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 35,
+  "fields": {
+    "product_code": null,
+    "type": "deposit",
+    "name": "Sh해양플라스틱Zero!예금\n(만기일시지급식)",
+    "company": "수협은행",
+    "interest_rate": 2.35,
+    "special_rate": 2.7,
+    "term": 12,
+    "target": "실명의 개인",
+    "created_at": "2025-05-27T04:09:11.852Z",
+    "updated_at": "2025-05-27T04:09:11.855Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 36,
+  "fields": {
+    "product_code": null,
+    "type": "deposit",
+    "name": "헤이(Hey)정기예금",
+    "company": "수협은행",
+    "interest_rate": 2.72,
+    "special_rate": 2.72,
+    "term": 12,
+    "target": "실명의 개인",
+    "created_at": "2025-05-27T04:09:11.859Z",
+    "updated_at": "2025-05-27T04:09:11.867Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 37,
+  "fields": {
+    "product_code": null,
+    "type": "deposit",
+    "name": "Sh첫만남우대예금",
+    "company": "수협은행",
+    "interest_rate": 2.05,
+    "special_rate": 3.1,
+    "term": 12,
+    "target": "실명의 개인",
+    "created_at": "2025-05-27T04:09:11.870Z",
+    "updated_at": "2025-05-27T04:09:11.870Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 38,
+  "fields": {
+    "product_code": null,
+    "type": "deposit",
+    "name": "카카오뱅크 정기예금",
+    "company": "주식회사 카카오뱅크",
+    "interest_rate": 2.5,
+    "special_rate": 2.5,
+    "term": 36,
+    "target": "만 14세 이상의 실명의 개인",
+    "created_at": "2025-05-27T04:09:11.874Z",
+    "updated_at": "2025-05-27T04:09:11.892Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 39,
+  "fields": {
+    "product_code": null,
+    "type": "deposit",
+    "name": "토스뱅크 먼저 이자 받는 정기예금",
+    "company": "토스뱅크 주식회사",
+    "interest_rate": 2.5,
+    "special_rate": 2.5,
+    "term": 6,
+    "target": "토스뱅크 통장 또는 토스뱅크 서브 통장을 보유한 만 17세 이상 실명의 개인",
+    "created_at": "2025-05-27T04:09:11.895Z",
+    "updated_at": "2025-05-27T04:09:11.899Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 40,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "우리SUPER주거래적금",
+    "company": "우리은행",
+    "interest_rate": 2.35,
+    "special_rate": 3.75,
+    "term": 36,
+    "target": "실명의 개인",
+    "created_at": "2025-05-27T04:09:22.127Z",
+    "updated_at": "2025-05-27T04:09:22.149Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 41,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "WON적금",
+    "company": "우리은행",
+    "interest_rate": 3.15,
+    "special_rate": 3.35,
+    "term": 12,
+    "target": "실명의 개인",
+    "created_at": "2025-05-27T04:09:22.153Z",
+    "updated_at": "2025-05-27T04:09:22.157Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 42,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "퍼스트가계적금",
+    "company": "한국스탠다드차타드은행",
+    "interest_rate": 2.6,
+    "special_rate": 2.6,
+    "term": 6,
+    "target": "개인(개인사업자 포함)",
+    "created_at": "2025-05-27T04:09:22.161Z",
+    "updated_at": "2025-05-27T04:09:22.188Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 43,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "내손안에 적금",
+    "company": "아이엠뱅크",
+    "interest_rate": 2.65,
+    "special_rate": 3.2,
+    "term": 36,
+    "target": "실명의 개인",
+    "created_at": "2025-05-27T04:09:22.192Z",
+    "updated_at": "2025-05-27T04:09:22.199Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 44,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "영플러스적금",
+    "company": "아이엠뱅크",
+    "interest_rate": 2.96,
+    "special_rate": 3.51,
+    "term": 12,
+    "target": "만 29세 이하 실명의 개인",
+    "created_at": "2025-05-27T04:09:22.203Z",
+    "updated_at": "2025-05-27T04:09:22.203Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 45,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "내가만든 보너스적금",
+    "company": "아이엠뱅크",
+    "interest_rate": 2.5,
+    "special_rate": 3.3,
+    "term": 6,
+    "target": "실명의 개인",
+    "created_at": "2025-05-27T04:09:22.207Z",
+    "updated_at": "2025-05-27T04:09:22.211Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 46,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "iM스마트적금",
+    "company": "아이엠뱅크",
+    "interest_rate": 2.7,
+    "special_rate": 3.15,
+    "term": 36,
+    "target": "실명의 개인",
+    "created_at": "2025-05-27T04:09:22.214Z",
+    "updated_at": "2025-05-27T04:09:22.226Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 47,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "펫 적금",
+    "company": "부산은행",
+    "interest_rate": 2.0,
+    "special_rate": 2.9,
+    "term": 12,
+    "target": "실명의 개인고객(1인 1계좌)",
+    "created_at": "2025-05-27T04:09:22.230Z",
+    "updated_at": "2025-05-27T04:09:22.234Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 48,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "저탄소 실천\n적금",
+    "company": "부산은행",
+    "interest_rate": 1.7,
+    "special_rate": 2.2,
+    "term": 36,
+    "target": "제한없음",
+    "created_at": "2025-05-27T04:09:22.238Z",
+    "updated_at": "2025-05-27T04:09:22.250Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 49,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "BNK내맘대로 \n적금",
+    "company": "부산은행",
+    "interest_rate": 2.2,
+    "special_rate": 2.4,
+    "term": 6,
+    "target": "제한없음",
+    "created_at": "2025-05-27T04:09:22.253Z",
+    "updated_at": "2025-05-27T04:09:22.264Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 50,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "부산이라 좋다\nBig적금",
+    "company": "부산은행",
+    "interest_rate": 2.5,
+    "special_rate": 4.7,
+    "term": 12,
+    "target": "실명의 개인고객(1인 1계좌)",
+    "created_at": "2025-05-27T04:09:22.267Z",
+    "updated_at": "2025-05-27T04:09:22.278Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 51,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "해피라이프_여행스케치적금V",
+    "company": "광주은행",
+    "interest_rate": 2.4,
+    "special_rate": 3.6,
+    "term": 6,
+    "target": "제한없음(단,국가및지방자치단체제외)",
+    "created_at": "2025-05-27T04:09:22.282Z",
+    "updated_at": "2025-05-27T04:09:22.307Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 52,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "여행스케치_남도투어적금",
+    "company": "광주은행",
+    "interest_rate": 2.0,
+    "special_rate": 3.9,
+    "term": 12,
+    "target": "만14세이상 개인 및 개인사업자",
+    "created_at": "2025-05-27T04:09:22.310Z",
+    "updated_at": "2025-05-27T04:09:22.315Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 53,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "VIP플러스적금",
+    "company": "광주은행",
+    "interest_rate": 2.3,
+    "special_rate": 2.8,
+    "term": 12,
+    "target": "실명의 개인",
+    "created_at": "2025-05-27T04:09:22.318Z",
+    "updated_at": "2025-05-27T04:09:22.322Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 54,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "jbank 저금통적금",
+    "company": "제주은행",
+    "interest_rate": 2.85,
+    "special_rate": 4.95,
+    "term": 12,
+    "target": "개인 및 개인사업자",
+    "created_at": "2025-05-27T04:09:22.325Z",
+    "updated_at": "2025-05-27T04:09:22.329Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 55,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "MZ 플랜적금",
+    "company": "제주은행",
+    "interest_rate": 3.2,
+    "special_rate": 5.2,
+    "term": 12,
+    "target": "개인 및 개인사업자",
+    "created_at": "2025-05-27T04:09:22.333Z",
+    "updated_at": "2025-05-27T04:09:22.337Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 56,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "탐이나요적금",
+    "company": "제주은행",
+    "interest_rate": 1.9,
+    "special_rate": 4.6,
+    "term": 12,
+    "target": "개인 및 개인사업자",
+    "created_at": "2025-05-27T04:09:22.340Z",
+    "updated_at": "2025-05-27T04:09:22.344Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 57,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "JB 다이렉트적금(자유적립식)",
+    "company": "전북은행",
+    "interest_rate": 2.65,
+    "special_rate": 2.75,
+    "term": 36,
+    "target": "실명의 개인 및 개인사업자(임의단체 제외)",
+    "created_at": "2025-05-27T04:09:22.348Z",
+    "updated_at": "2025-05-27T04:09:22.355Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 58,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "JB 다이렉트적금(정액적립식)",
+    "company": "전북은행",
+    "interest_rate": 2.75,
+    "special_rate": 2.85,
+    "term": 36,
+    "target": "실명의 개인 및 개인사업자(임의단체 제외)",
+    "created_at": "2025-05-27T04:09:22.358Z",
+    "updated_at": "2025-05-27T04:09:22.365Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 59,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "행복 DREAM 적금",
+    "company": "경남은행",
+    "interest_rate": 2.9,
+    "special_rate": 3.9,
+    "term": 12,
+    "target": "실명의 개인 및 개인사업자",
+    "created_at": "2025-05-27T04:09:22.368Z",
+    "updated_at": "2025-05-27T04:09:22.375Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 60,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "BNK더조은자유적금",
+    "company": "경남은행",
+    "interest_rate": 3.3,
+    "special_rate": 4.0,
+    "term": 24,
+    "target": "거래대상자는 제한을 두지 아니한다. 다만, 국가 및 지방자치단체는 이 예금을 거래할 수 없다.",
+    "created_at": "2025-05-27T04:09:22.378Z",
+    "updated_at": "2025-05-27T04:09:22.385Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 61,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "BNK 위더스자유적금",
+    "company": "경남은행",
+    "interest_rate": 2.1,
+    "special_rate": 4.6,
+    "term": 36,
+    "target": "실명의 개인 및 개인사업자",
+    "created_at": "2025-05-27T04:09:22.389Z",
+    "updated_at": "2025-05-27T04:09:22.402Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 62,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "주거래 프리미엄 적금",
+    "company": "경남은행",
+    "interest_rate": 2.75,
+    "special_rate": 4.35,
+    "term": 12,
+    "target": "실명의 개인 및 개인사업자",
+    "created_at": "2025-05-27T04:09:22.406Z",
+    "updated_at": "2025-05-27T04:09:22.413Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 63,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "오늘도세이브적금",
+    "company": "경남은행",
+    "interest_rate": 2.75,
+    "special_rate": 4.5,
+    "term": 6,
+    "target": "실명의 개인 및 개인사업자",
+    "created_at": "2025-05-27T04:09:22.417Z",
+    "updated_at": "2025-05-27T04:09:22.424Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 64,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "사장님 걱정 ZERO 자유적금",
+    "company": "경남은행",
+    "interest_rate": 1.8,
+    "special_rate": 5.0,
+    "term": 12,
+    "target": "실명의 개인 및 개인사업자",
+    "created_at": "2025-05-27T04:09:22.428Z",
+    "updated_at": "2025-05-27T04:09:22.428Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 65,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "IBK D-day적금(자유적립식)",
+    "company": "중소기업은행",
+    "interest_rate": 2.85,
+    "special_rate": 4.35,
+    "term": 12,
+    "target": "실명의 개인\n(개인사업자 제외)",
+    "created_at": "2025-05-27T04:09:22.431Z",
+    "updated_at": "2025-05-27T04:09:22.441Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 66,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "IBK탄소제로적금(자유적립식)",
+    "company": "중소기업은행",
+    "interest_rate": 2.5,
+    "special_rate": 4.5,
+    "term": 12,
+    "target": "실명의 개인\n(개인사업자 제외)",
+    "created_at": "2025-05-27T04:09:22.445Z",
+    "updated_at": "2025-05-27T04:09:22.445Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 67,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "IBK중기근로자우대적금\n(자유적립식)",
+    "company": "중소기업은행",
+    "interest_rate": 2.75,
+    "special_rate": 4.95,
+    "term": 12,
+    "target": "중소기업에서 근무하는\n실명의 개인\n(개인사업자 제외)",
+    "created_at": "2025-05-27T04:09:22.448Z",
+    "updated_at": "2025-05-27T04:09:22.448Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 68,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "IBK모으기통장(자유적립식)",
+    "company": "중소기업은행",
+    "interest_rate": 2.45,
+    "special_rate": 2.65,
+    "term": 6,
+    "target": "실명의 개인\n(개인사업자 제외)",
+    "created_at": "2025-05-27T04:09:22.452Z",
+    "updated_at": "2025-05-27T04:09:22.462Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 69,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "KDB 기업정기적금",
+    "company": "한국산업은행",
+    "interest_rate": 1.38,
+    "special_rate": 1.38,
+    "term": 36,
+    "target": "개인사업자, 조합(비영리법인 포함), 법인",
+    "created_at": "2025-05-27T04:09:22.465Z",
+    "updated_at": "2025-05-27T04:09:22.476Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 70,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "KDB 자유적금",
+    "company": "한국산업은행",
+    "interest_rate": 1.89,
+    "special_rate": 1.89,
+    "term": 1,
+    "target": "개인, 개인사업자, 임의단체",
+    "created_at": "2025-05-27T04:09:22.480Z",
+    "updated_at": "2025-05-27T04:09:22.497Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 71,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "KB국민프리미엄적금(정액)",
+    "company": "국민은행",
+    "interest_rate": 2.8,
+    "special_rate": 4.0,
+    "term": 36,
+    "target": "실명의 개인",
+    "created_at": "2025-05-27T04:09:22.500Z",
+    "updated_at": "2025-05-27T04:09:22.507Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 72,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "KB내맘대로적금",
+    "company": "국민은행",
+    "interest_rate": 2.95,
+    "special_rate": 3.55,
+    "term": 36,
+    "target": "실명의 개인 또는 개인사업자",
+    "created_at": "2025-05-27T04:09:22.510Z",
+    "updated_at": "2025-05-27T04:09:22.528Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 73,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "KB맑은하늘적금",
+    "company": "국민은행",
+    "interest_rate": 2.45,
+    "special_rate": 3.25,
+    "term": 12,
+    "target": "실명의 개인",
+    "created_at": "2025-05-27T04:09:22.532Z",
+    "updated_at": "2025-05-27T04:09:22.539Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 74,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "KB 특★한 적금",
+    "company": "국민은행",
+    "interest_rate": 2.0,
+    "special_rate": 6.0,
+    "term": 6,
+    "target": "실명의 개인",
+    "created_at": "2025-05-27T04:09:22.542Z",
+    "updated_at": "2025-05-27T04:09:22.549Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 75,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "신한 알.쏠 적금",
+    "company": "신한은행",
+    "interest_rate": 2.65,
+    "special_rate": 3.95,
+    "term": 36,
+    "target": "제한없음",
+    "created_at": "2025-05-27T04:09:22.553Z",
+    "updated_at": "2025-05-27T04:09:22.559Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 76,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "NH올원e 미니적금",
+    "company": "농협은행주식회사",
+    "interest_rate": 2.45,
+    "special_rate": 4.15,
+    "term": 6,
+    "target": "개인",
+    "created_at": "2025-05-27T04:09:22.563Z",
+    "updated_at": "2025-05-27T04:09:22.571Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 77,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "NH1934월복리적금",
+    "company": "농협은행주식회사",
+    "interest_rate": 2.45,
+    "special_rate": 5.95,
+    "term": 6,
+    "target": "만19세~만34세 개인 및 개인사업자",
+    "created_at": "2025-05-27T04:09:22.574Z",
+    "updated_at": "2025-05-27T04:09:22.581Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 78,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "NH내가Green초록세상적금",
+    "company": "농협은행주식회사",
+    "interest_rate": 2.65,
+    "special_rate": 3.65,
+    "term": 36,
+    "target": "개인",
+    "created_at": "2025-05-27T04:09:22.585Z",
+    "updated_at": "2025-05-27T04:09:22.591Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 79,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "NH고향사랑기부적금",
+    "company": "농협은행주식회사",
+    "interest_rate": 2.95,
+    "special_rate": 3.75,
+    "term": 36,
+    "target": "개인",
+    "created_at": "2025-05-27T04:09:22.595Z",
+    "updated_at": "2025-05-27T04:09:22.602Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 80,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "NH직장인월복리적금",
+    "company": "농협은행주식회사",
+    "interest_rate": 2.5,
+    "special_rate": 3.3,
+    "term": 36,
+    "target": "만18세이상 개인",
+    "created_at": "2025-05-27T04:09:22.605Z",
+    "updated_at": "2025-05-27T04:09:22.612Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 81,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "주거래하나 월복리적금",
+    "company": "하나은행",
+    "interest_rate": 2.95,
+    "special_rate": 3.95,
+    "term": 12,
+    "target": "실명의 개인\n또는 개인사업자",
+    "created_at": "2025-05-27T04:09:22.615Z",
+    "updated_at": "2025-05-27T04:09:22.622Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 82,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "내맘적금",
+    "company": "하나은행",
+    "interest_rate": 2.0,
+    "special_rate": 2.5,
+    "term": 36,
+    "target": "실명의 개인\n또는 개인사업자(1인 다계좌 가능)",
+    "created_at": "2025-05-27T04:09:22.625Z",
+    "updated_at": "2025-05-27T04:09:22.651Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 83,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "코드K 자유적금",
+    "company": "주식회사 케이뱅크",
+    "interest_rate": 3.0,
+    "special_rate": 3.0,
+    "term": 1,
+    "target": "만 17세 이상 실명의 개인 및 개인사업자",
+    "created_at": "2025-05-27T04:09:22.654Z",
+    "updated_at": "2025-05-27T04:09:22.672Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 84,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "궁금한 적금",
+    "company": "주식회사 케이뱅크",
+    "interest_rate": 1.2,
+    "special_rate": 7.2,
+    "term": 1,
+    "target": "만 17세 이상 실명의 개인 및 개인사업자",
+    "created_at": "2025-05-27T04:09:22.676Z",
+    "updated_at": "2025-05-27T04:09:22.676Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 85,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "주거래우대 자유적금",
+    "company": "주식회사 케이뱅크",
+    "interest_rate": 3.2,
+    "special_rate": 3.8,
+    "term": 36,
+    "target": "만 17세 이상 실명의 개인 및 개인사업자",
+    "created_at": "2025-05-27T04:09:22.679Z",
+    "updated_at": "2025-05-27T04:09:22.690Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 86,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "Sh해양플라스틱Zero!적금\n(정액적립식)",
+    "company": "수협은행",
+    "interest_rate": 3.5,
+    "special_rate": 4.0,
+    "term": 12,
+    "target": "실명의 개인",
+    "created_at": "2025-05-27T04:09:22.693Z",
+    "updated_at": "2025-05-27T04:09:22.700Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 87,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "Sh월복리자유적금",
+    "company": "수협은행",
+    "interest_rate": 1.9,
+    "special_rate": 2.6,
+    "term": 36,
+    "target": "실명의 개인 및 개인사업자",
+    "created_at": "2025-05-27T04:09:22.704Z",
+    "updated_at": "2025-05-27T04:09:22.711Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 88,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "Sh해양플라스틱Zero!적금\n(자유적립식)",
+    "company": "수협은행",
+    "interest_rate": 2.35,
+    "special_rate": 2.85,
+    "term": 36,
+    "target": "실명의 개인",
+    "created_at": "2025-05-27T04:09:22.714Z",
+    "updated_at": "2025-05-27T04:09:22.721Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 89,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "카카오뱅크 자유적금",
+    "company": "주식회사 카카오뱅크",
+    "interest_rate": 2.75,
+    "special_rate": 2.95,
+    "term": 6,
+    "target": "만 14세 이상의 실명의 개인",
+    "created_at": "2025-05-27T04:09:22.726Z",
+    "updated_at": "2025-05-27T04:09:22.737Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 90,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "카카오뱅크 26주적금",
+    "company": "주식회사 카카오뱅크",
+    "interest_rate": 2.5,
+    "special_rate": 5.5,
+    "term": 6,
+    "target": "만 14세 이상의 실명의 개인",
+    "created_at": "2025-05-27T04:09:22.741Z",
+    "updated_at": "2025-05-27T04:09:22.741Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 91,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "카카오뱅크 한달적금",
+    "company": "주식회사 카카오뱅크",
+    "interest_rate": 1.5,
+    "special_rate": 7.0,
+    "term": 1,
+    "target": "만 14세 이상의 실명의 개인",
+    "created_at": "2025-05-27T04:09:22.746Z",
+    "updated_at": "2025-05-27T04:09:22.746Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 92,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "토스뱅크 키워봐요 적금",
+    "company": "토스뱅크 주식회사",
+    "interest_rate": 1.8,
+    "special_rate": 3.8,
+    "term": 6,
+    "target": "· 토스뱅크 통장 또는 토스뱅크 서브 통장을 보유한 실명의 개인",
+    "created_at": "2025-05-27T04:09:22.749Z",
+    "updated_at": "2025-05-27T04:09:22.749Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 93,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "토스뱅크 굴비 적금",
+    "company": "토스뱅크 주식회사",
+    "interest_rate": 1.8,
+    "special_rate": 4.3,
+    "term": 6,
+    "target": "· 토스뱅크 통장 또는 토스뱅크 서브 통장을 보유한 실명의 개인",
+    "created_at": "2025-05-27T04:09:22.753Z",
+    "updated_at": "2025-05-27T04:09:22.753Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 94,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "토스뱅크 자유 적금",
+    "company": "토스뱅크 주식회사",
+    "interest_rate": 2.8,
+    "special_rate": 3.3,
+    "term": 36,
+    "target": "· 토스뱅크 통장 또는 토스뱅크 서브 통장을 보유한 실명의 개인",
+    "created_at": "2025-05-27T04:09:22.756Z",
+    "updated_at": "2025-05-27T04:09:22.771Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 95,
+  "fields": {
+    "product_code": null,
+    "type": "saving",
+    "name": "토스뱅크 아이 적금",
+    "company": "토스뱅크 주식회사",
+    "interest_rate": 2.8,
+    "special_rate": 5.3,
+    "term": 12,
+    "target": "· 토스뱅크 아이 통장을 보유한 15세 이하 실명의 개인",
+    "created_at": "2025-05-27T04:09:22.775Z",
+    "updated_at": "2025-05-27T04:09:22.775Z"
+  }
+}
+]

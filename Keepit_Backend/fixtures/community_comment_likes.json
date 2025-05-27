@@ -1,0 +1,10 @@
+[
+{
+  "model": "community.comment_likes",
+  "pk": 1,
+  "fields": {
+    "comment": 2,
+    "user": 3
+  }
+}
+]

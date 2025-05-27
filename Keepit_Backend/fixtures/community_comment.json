@@ -1,0 +1,76 @@
+[
+{
+  "model": "community.comment",
+  "pk": 1,
+  "fields": {
+    "post": 1,
+    "author": 2,
+    "content": "첫걸음 축하드려요! 너무 자주 안 보시는 것도 꿀팁이에요~",
+    "created_at": "2025-05-27T04:18:57.120Z",
+    "updated_at": "2025-05-27T04:18:57.120Z",
+    "likes": []
+  }
+},
+{
+  "model": "community.comment",
+  "pk": 2,
+  "fields": {
+    "post": 3,
+    "author": 1,
+    "content": "비상금 통장은 어떻게 설정하셨어요? 월 얼마 정도 넣으시나요?",
+    "created_at": "2025-05-27T04:20:09.125Z",
+    "updated_at": "2025-05-27T04:20:09.125Z",
+    "likes": [
+      3
+    ]
+  }
+},
+{
+  "model": "community.comment",
+  "pk": 3,
+  "fields": {
+    "post": 2,
+    "author": 1,
+    "content": "저축은행은 금리는 높지만 예금자보호 되는지도 확인해봐야해요!",
+    "created_at": "2025-05-27T04:21:12.923Z",
+    "updated_at": "2025-05-27T04:21:12.923Z",
+    "likes": []
+  }
+},
+{
+  "model": "community.comment",
+  "pk": 4,
+  "fields": {
+    "post": 1,
+    "author": 1,
+    "content": "앗 그런 꿀팁이ㅋㅋ 감사합니다!",
+    "created_at": "2025-05-27T04:22:25.495Z",
+    "updated_at": "2025-05-27T04:22:25.495Z",
+    "likes": []
+  }
+},
+{
+  "model": "community.comment",
+  "pk": 5,
+  "fields": {
+    "post": 3,
+    "author": 3,
+    "content": "와우 대단해요!",
+    "created_at": "2025-05-27T05:30:39.715Z",
+    "updated_at": "2025-05-27T05:30:39.715Z",
+    "likes": []
+  }
+},
+{
+  "model": "community.comment",
+  "pk": 6,
+  "fields": {
+    "post": 4,
+    "author": 3,
+    "content": "PER은 주가/수익 비율이에요. 낮을수록 저평가된 기업일 가능성이 있어요\nPBR은 자산 기준이에요. 1 이하이면 자산보다도 싸게 거래되는 경우죠.",
+    "created_at": "2025-05-27T05:32:06.291Z",
+    "updated_at": "2025-05-27T05:32:06.291Z",
+    "likes": []
+  }
+}
+]
