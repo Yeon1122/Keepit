@@ -294,30 +294,66 @@ def fetch_product_details_by_name(product_names, product_type):
         'pageNo': 1
     }
 
-    res = requests.get(API_URL, params=params)
-    data = res.json()
+    try:
+        res = requests.get(API_URL, params=params)
+        res.raise_for_status()  # HTTP 에러 체크
+        data = res.json()
 
-    base_list = data.get('result', {}).get('baseList', [])
-    option_list = data.get('result', {}).get('optionList', [])
+        base_list = data.get('result', {}).get('baseList', [])
+        option_list = data.get('result', {}).get('optionList', [])
 
-    # 상품 이름으로 필터링
-    matched_products = []
-    for base in base_list:
-        if base['fin_prdt_nm'] in product_names:
-            # 해당 상품의 옵션 찾기
-            product_options = [
-                opt for opt in option_list
-                if opt['fin_co_no'] == base['fin_co_no'] and opt['fin_prdt_cd'] == base['fin_prdt_cd']
-            ]
-            
-            # 각 옵션에 대해 상품 정보 생성
-            for opt in product_options:
+        if not base_list or not option_list:
+            print(f"API 응답에 데이터가 없습니다: {data}")
+            return []
+
+        # 상품 이름으로 필터링
+        matched_products = []
+        for base in base_list:
+            if base['fin_prdt_nm'] in product_names:
+                # 해당 상품의 옵션 찾기
+                product_options = [
+                    opt for opt in option_list
+                    if opt['fin_co_no'] == base['fin_co_no'] and 
+                    opt['fin_prdt_cd'] == base['fin_prdt_cd']
+                ]
+                
+                if product_options:  # 옵션이 있는 경우만 처리
+                    # 각 옵션에 대해 상품 정보 생성
+                    for opt in product_options:
+                        try:
+                            # save_trm이 없거나 0인 경우 기본값 12 사용
+                            term = opt.get('save_trm')
+                            if not term or term == '0':
+                                term = '12'
+                                
+                            matched_products.append({
+                                'name': base['fin_prdt_nm'],
+                                'company': base['kor_co_nm'],
+                                'interest_rate': float(opt.get('intr_rate', 0) or 0),
+                                'special_rate': float(opt.get('intr_rate2', 0) or 0),
+                                'term': int(term)
+                            })
+                        except (ValueError, TypeError) as e:
+                            print(f"상품 데이터 변환 중 오류: {e}, 상품: {base['fin_prdt_nm']}, 옵션: {opt}")
+                            continue
+
+        if not matched_products:
+            print(f"매칭된 상품이 없습니다. 검색한 상품명: {product_names}")
+            # 매칭된 상품이 없을 경우 기본 데이터 추가
+            for name in product_names:
                 matched_products.append({
-                    'name': base['fin_prdt_nm'],
-                    'company': base['kor_co_nm'],
-                    'interest_rate': float(opt['intr_rate'] or 0),
-                    'special_rate': float(opt['intr_rate2'] or 0),
-                    'term': int(opt['save_trm'] or 0)
+                    'name': name,
+                    'company': '정보 없음',
+                    'interest_rate': 0,
+                    'special_rate': 0,
+                    'term': 12
                 })
 
-    return matched_products
+        return matched_products
+
+    except requests.RequestException as e:
+        print(f"API 요청 중 오류 발생: {e}")
+        return []
+    except Exception as e:
+        print(f"예상치 못한 오류 발생: {e}")
+        return []

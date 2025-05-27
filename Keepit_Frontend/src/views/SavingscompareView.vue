@@ -1,8 +1,14 @@
 <template>
     <div class="compare-container">
         <!-- 로딩 상태 -->
-        <div v-if="loading" class="loading-state">
-            데이터를 불러오는 중입니다...
+        <div v-if="loading" class="loading-overlay">
+            <lottie-player
+                :animationData="loadingAnimation"
+                :loop="true"
+                :autoplay="true"
+                style="width: 200px; height: 200px;"
+            />
+            <p class="loading-text">데이터를 불러오는 중입니다...</p>
         </div>
 
         <!-- 에러 상태 -->
@@ -140,6 +146,8 @@ import { useRoute, useRouter } from 'vue-router'
 import { useAccountStore } from '@/stores/users'
 import SavingCard from '@/components/SavingCard.vue'
 import axios from 'axios'
+import loadingAnimation from '@/assets/animations/compare_loading.json'
+import LottiePlayer from '@/components/LottiePlayer.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -175,7 +183,6 @@ const totalSavingAmount = computed(() => {
 })
 
 const compareProducts = async () => {
-
     if (selectedProducts.value.length !== 2) {
         alert('2개의 상품을 선택해주세요.')
         return
@@ -204,7 +211,14 @@ const compareProducts = async () => {
         }))
     } catch (err) {
         console.error('비교 실패:', err)
-        alert('상품 비교에 실패했습니다.')
+        // 서버에서 보낸 에러 메시지가 있으면 그것을 표시
+        if (err.response?.data?.error) {
+            alert(err.response.data.error)
+        } else {
+            alert('상품 비교에 실패했습니다.')
+        }
+        // 선택된 상품 초기화
+        selectedProducts.value = []
     }
 }
 
@@ -455,15 +469,30 @@ button.active {
     font-size: 1rem;
 }
 
-.loading-state,
-.error-state {
-    text-align: center;
-    padding: 2rem;
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.9);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.loading-text {
+    margin-top: 1rem;
+    font-size: 1.1rem;
     color: #666;
 }
 
 .error-state {
-    color: #dc3545;
+    text-align: center;
+    padding: 2rem;
+    color: #666;
 }
 
 .retry-button {

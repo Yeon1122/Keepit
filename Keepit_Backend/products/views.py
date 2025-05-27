@@ -690,43 +690,6 @@ def compare_savings(request):
 
 def compare_products_by_name(request, product_type):
     product_names = request.data.get('product_names')
-    monthly_amount = request.data.get('monthly_amount')
-    months = request.data.get('months')
-
-    if not product_names or len(product_names) != 2:
-        return Response({'error': '상품 이름 2개를 선택해야 합니다.'}, status=400)
-
-    # 👉 외부 API 또는 크롤링 함수 호출해서 상품 정보 가져오기
-    product_data_list = fetch_product_details_by_name(product_names, product_type)
-    
-    if len(product_data_list) != 2:
-        return Response({'error': '해당 상품 정보를 찾을 수 없습니다.'}, status=404)
-
-    # 👉 이자 계산 후 응답 구성
-    result = []
-    for product in product_data_list:
-        name = product['name']
-        interest_rate = float(product['interest_rate'])
-        term = int(product['term'])
-
-        if product_type == 'deposit':
-            total_amount = monthly_amount * months
-            expected = calc_deposit_final_amount(total_amount, months, interest_rate)
-        else:
-            expected = calc_saving_final_amount(monthly_amount, months, interest_rate)
-
-        result.append({
-            "name": name,
-            "interest_rate": interest_rate,
-            "term": term,
-            "expected_amount": expected
-        })
-
-    return Response({'products': result})
-
-
-def compare_products_by_name(request, product_type):
-    product_names = request.data.get('product_names')
     monthly_amount = int(request.data.get('monthly_amount', 0))
     months = int(request.data.get('months', 0))
 
@@ -734,6 +697,33 @@ def compare_products_by_name(request, product_type):
         return Response({'error': '상품 이름 2개를 선택해야 합니다.'}, status=400)
 
     all_matched = fetch_product_details_by_name(product_names, product_type)
+
+    # 각 상품별로 가능한 저축 기간 확인
+    available_terms = {}
+    for product in all_matched:
+        name = product['name']
+        if name not in available_terms:
+            available_terms[name] = set()
+        available_terms[name].add(product['term'])
+
+    # 선택한 기간이 모든 상품에서 불가능한 경우 안내 메시지 반환
+    invalid_products = []
+    for name, terms in available_terms.items():
+        if not terms or months not in terms:
+            invalid_products.append({
+                'name': name,
+                'available_terms': sorted(list(terms))
+            })
+    
+    if invalid_products:
+        error_message = "선택하신 저축 기간이 가능하지 않은 상품이 있습니다.\n"
+        for product in invalid_products:
+            error_message += f"\n- {product['name']}: "
+            if product['available_terms']:
+                error_message += f"가능한 기간은 {', '.join(map(str, product['available_terms']))}개월입니다."
+            else:
+                error_message += "가능한 저축 기간 정보가 없습니다."
+        return Response({'error': error_message}, status=400)
 
     # ✅ 여기서 중복 제거 + 원하는 기간 선택!
     matched = filter_one_option_per_product(all_matched, months)
@@ -744,11 +734,14 @@ def compare_products_by_name(request, product_type):
     # 계산 결과 붙이기
     result = []
     for product in matched:
+        # 기본금리만 사용
+        interest_rate = product['interest_rate']
+        
         if product_type == 'saving':
-            expected = calc_saving_final_amount(monthly_amount, months, product['interest_rate'])
+            expected = calc_saving_final_amount(monthly_amount, months, interest_rate)
         else:
-            total_amount = monthly_amount * months
-            expected = calc_deposit_final_amount(total_amount, months, product['interest_rate'])
+            total_amount = monthly_amount
+            expected = calc_deposit_final_amount(total_amount, months, interest_rate)
 
         result.append({
             **product,
