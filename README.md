@@ -170,7 +170,7 @@ source venv/bin/activate   # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 python manage.py migrate
 ```
-(선택) 더미 데이터 로드하기
+(선택) 더미 데이터 로드하기  
 ⚠️ 더미 데이터 로드 시 주의사항
 더미 데이터는 외래키(ForeignKey) 관계로 연결되어 있기 때문에 반드시 아래 순서대로 로드해야 합니다. 순서를 지키지 않으면 로딩 과정에서 참조 오류가 발생할 수 있습니다.
 ```bash
