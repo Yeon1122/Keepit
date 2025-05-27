@@ -85,7 +85,7 @@
                             </div>
                         </div>
 
-                        <button @click="compareProducts" :disabled="selectedProducts.length !== 2">
+                        <button @click.prevent="compareProducts" :disabled="selectedProducts.length !== 2">
                             {{ selectedProducts.length === 0 ? '비교할 상품 2개를 선택하세요' : 
                                selectedProducts.length === 1 ? '비교할 상품 1개를 더 선택하세요' : 
                                '비교하기' }}
@@ -175,10 +175,14 @@ const totalSavingAmount = computed(() => {
 })
 
 const compareProducts = async () => {
+
     if (selectedProducts.value.length !== 2) {
         alert('2개의 상품을 선택해주세요.')
         return
     }
+    console.log('상품 이름 목록:', selectedProducts.value.map(p => p.name))
+    const url = `/api/v1/products/compare/${selectedType.value}s/`
+    console.log('👉 비교 요청 URL:', url)
 
     try {
         const response = await axios.post(

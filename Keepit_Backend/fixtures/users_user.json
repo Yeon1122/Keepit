@@ -1,0 +1,77 @@
+[
+{
+  "model": "users.user",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$600000$LWRISJM3qQc4Mf9ZxNOWk0$N/M/ndmfWPdIPYnHKWM1hZLskBH6Y6/38AV1LyORES4=",
+    "last_login": null,
+    "is_superuser": false,
+    "first_name": "",
+    "last_name": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-05-27T04:04:38.385Z",
+    "name": "ÀÌÇÏ¿¬",
+    "nickname": "Å·¿ÕÂ¯ÇÏ¿¬",
+    "userid": "keepit22",
+    "email": "lhy9822@gmail.com",
+    "birth_year": 1998,
+    "birth_month": 11,
+    "birth_day": 22,
+    "region_city": 8,
+    "region_district": 94,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "users.user",
+  "pk": 2,
+  "fields": {
+    "password": "pbkdf2_sha256$600000$oMs1QTwoa4p35PCwF5453P$neE8UlObG2TOvEDvRlcCJLBEqQP1ZWClcptjyOhHV6o=",
+    "last_login": null,
+    "is_superuser": false,
+    "first_name": "",
+    "last_name": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-05-27T04:17:11.049Z",
+    "name": "¼Û¿µÁö",
+    "nickname": "µ¿ÀÛ±¸ ºÀÃã³²",
+    "userid": "youngji123",
+    "email": "youngji@example.com",
+    "birth_year": 1999,
+    "birth_month": 11,
+    "birth_day": 28,
+    "region_city": 6,
+    "region_district": 68,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "users.user",
+  "pk": 3,
+  "fields": {
+    "password": "pbkdf2_sha256$600000$mQGsFvnVk1CDFKPlXBblDO$dHtp/9IyDfZqfs+NjjNpQloFxVPX6EomQQdLXFvQFMg=",
+    "last_login": null,
+    "is_superuser": false,
+    "first_name": "",
+    "last_name": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-05-27T04:24:11.218Z",
+    "name": "±ÇÀ±Á¤",
+    "nickname": "ÅÂ±ÇÀ±Á¤",
+    "userid": "taekwon12",
+    "email": "taekwon12@gmail.com",
+    "birth_year": 2008,
+    "birth_month": 4,
+    "birth_day": 17,
+    "region_city": 1,
+    "region_district": 15,
+    "groups": [],
+    "user_permissions": []
+  }
+}
+]

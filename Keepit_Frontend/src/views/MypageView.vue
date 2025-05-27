@@ -882,13 +882,16 @@ const getProductTypeDisplay = (type) => {
 
 .recommendation-chips {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;          
   gap: 0.5rem;
   justify-content: center;
+  max-width: 100%; 
 }
 
 .recommendation-chip {
-  padding: 0.3rem 1rem;
+  white-space: nowrap; 
+  flex-shrink: 0; 
+  padding: 0.3rem 0.8rem;
   border-radius: 15px;
   font-size: 0.9rem;
   background-color: #f8f9fa;

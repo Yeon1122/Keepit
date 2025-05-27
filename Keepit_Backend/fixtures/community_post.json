@@ -1,0 +1,8 @@
+[
+{
+  "model": "community.post",
+  "pk": 1,
+  "fields": {
+    "board_type": "free",
+    "title": "©ю╢ц ц╧ аж╫д ╩Р╬Н©Д!",
+    "content": 
