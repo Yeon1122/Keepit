@@ -32,10 +32,14 @@
   </div>
 
     <div class="content-container">
-      <div v-if="loading" class="loading-state">
-        <div class="loading-text">
-          {{ selectedTab === 'stock' ? '주식' : 'ETF' }} 데이터를 불러오는 중입니다...
-        </div>
+      <div v-if="loading" class="loading-overlay">
+        <lottie-player
+          :animationData="loadingAnimation"
+          :loop="true"
+          :autoplay="true"
+          style="width: 200px; height: 200px;"
+        />
+        <p class="loading-text">{{ selectedTab === 'stock' ? '주식' : 'ETF' }} 데이터를 불러오는 중입니다...</p>
       </div>
 
       <div v-else-if="error" class="error-state">
@@ -115,6 +119,8 @@ import axios from 'axios'
 import StockCard from '@/components/StockCard.vue'
 import EtfCard from '@/components/EtfCard.vue'
 import { useAccountStore } from '@/stores/users'
+import loadingAnimation from '@/assets/animations/stock_loading.json'
+import LottiePlayer from '@/components/LottiePlayer.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -599,6 +605,26 @@ button.active {
 
 .load-more-button:hover {
   background-color: #e0e0e0;
+}
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.9);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.loading-text {
+  margin-top: 1rem;
+  font-size: 1.1rem;
+  color: #666;
 }
 
 </style>
