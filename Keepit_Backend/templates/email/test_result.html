@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Keepit - 투자 성향 분석 결과</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif; line-height: 1.6; color: #333; background-color: #f8f9fa;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f8f9fa;">
+        <tr>
+            <td align="center" style="padding: 20px;">
+                <table width="600" cellpadding="0" cellspacing="0" style="background-color: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                    <!-- 헤더 -->
+                    <tr>
+                        <td style="background-color: #145c2b; color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0;">
+                            <h1 style="margin: 0; font-size: 32px; margin-bottom: 10px;">Keepit</h1>
+                            <h2 style="margin: 0; font-size: 24px;">투자 성향 분석 결과</h2>
+                        </td>
+                    </tr>
+
+                    <!-- 컨텐츠 -->
+                    <tr>
+                        <td style="padding: 30px;">
+                            <!-- 인사말 -->
+                            <div style="font-size: 18px; color: #145c2b; margin-bottom: 30px;">
+                                안녕하세요, <strong>{{ user.userid }}</strong>님!<br>
+                                귀하의 투자 성향 분석 결과를 보내드립니다.
+                            </div>
+
+                            <!-- 투자 성향 -->
+                            <div style="text-align: center; margin: 30px 0;">
+                                <div style="display: inline-block; font-size: 24px; font-weight: bold; color: #145c2b; padding: 15px 40px; border: 2px solid #145c2b; border-radius: 50px; background-color: #f1fcf4;">
+                                    {{ risk_type }}
+                                </div>
+                            </div>
+
+                            <!-- 투자 성향 설명 -->
+                            <table width="100%" cellpadding="20" style="background-color: #f8f9fa; border-radius: 8px; margin-bottom: 20px;">
+                                <tr>
+                                    <td>
+                                        <div style="color: #145c2b; font-size: 18px; font-weight: bold; margin-bottom: 10px;">
+                                            💡 투자 성향 설명
+                                        </div>
+                                        <div style="color: #666; line-height: 1.8;">
+                                            {{ risk_description.description }}
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- 투자 추천 -->
+                            <table width="100%" cellpadding="20" style="background-color: #f8f9fa; border-radius: 8px; margin-bottom: 20px;">
+                                <tr>
+                                    <td>
+                                        <div style="color: #145c2b; font-size: 18px; font-weight: bold; margin-bottom: 10px;">
+                                            📈 투자 추천
+                                        </div>
+                                        <div style="color: #666; line-height: 1.8;">
+                                            {{ risk_description.recommendation }}
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- 구분선 -->
+                            <div style="height: 1px; background-color: #eee; margin: 30px 0;"></div>
+
+                            <!-- 테스트 응답 내역 -->
+                            <div style="color: #145c2b; font-size: 18px; font-weight: bold; margin-bottom: 20px;">
+                                📋 테스트 응답 내역
+                            </div>
+                            <table width="100%" cellpadding="10" style="border-collapse: collapse; margin-bottom: 30px;">
+                                <tr>
+                                    <th style="background-color: #f1fcf4; color: #145c2b; text-align: left; padding: 15px; border: 1px solid #eee;">항목</th>
+                                    <th style="background-color: #f1fcf4; color: #145c2b; text-align: left; padding: 15px; border: 1px solid #eee;">응답</th>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 15px; border: 1px solid #eee;">나이</td>
+                                    <td style="padding: 15px; border: 1px solid #eee;">{{ test_data.age }}세</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 15px; border: 1px solid #eee;">성별</td>
+                                    <td style="padding: 15px; border: 1px solid #eee;">{% if test_data.gender == 'M' %}남성{% else %}여성{% endif %}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 15px; border: 1px solid #eee;">연간 소득</td>
+                                    <td style="padding: 15px; border: 1px solid #eee;">{{ test_data.income }}만원</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 15px; border: 1px solid #eee;">총 자산</td>
+                                    <td style="padding: 15px; border: 1px solid #eee;">{{ test_data.assets }}만원</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 15px; border: 1px solid #eee;">위험 성향</td>
+                                    <td style="padding: 15px; border: 1px solid #eee;">{{ test_data.risk_tolerance }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 15px; border: 1px solid #eee;">금융 지식</td>
+                                    <td style="padding: 15px; border: 1px solid #eee;">{{ test_data.financial_knowledge }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 15px; border: 1px solid #eee;">투자 경험</td>
+                                    <td style="padding: 15px; border: 1px solid #eee;">{{ test_data.investment_experience }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 15px; border: 1px solid #eee;">저축 목표</td>
+                                    <td style="padding: 15px; border: 1px solid #eee;">{{ test_data.saving_goal }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 15px; border: 1px solid #eee;">선호 투자기간</td>
+                                    <td style="padding: 15px; border: 1px solid #eee;">{{ test_data.preferred_term }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 15px; border: 1px solid #eee;">직업군</td>
+                                    <td style="padding: 15px; border: 1px solid #eee;">{{ test_data.user_type }}</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <!-- 푸터 -->
+                    <tr>
+                        <td style="background-color: #f8f9fa; color: #666; text-align: center; padding: 30px; border-radius: 0 0 8px 8px;">
+                            <p style="margin: 0 0 10px 0;">본 이메일은 Keepit 서비스에서 자동으로 발송되었습니다.</p>
+                            <p style="margin: 0;">© 2024 Keepit. All rights reserved.</p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html> 

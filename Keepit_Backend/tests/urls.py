@@ -7,4 +7,5 @@ urlpatterns = [
     path('result/', views.get_test_result, name='get_test_result'),
     path('result/<str:userid>/', views.get_user_test_result, name='get_user_test_result'),
     path('result/delete/', views.delete_test_result, name='delete_test_result'),
+    path('send-result-email/', views.send_result_email, name='send_result_email'),
 ] 

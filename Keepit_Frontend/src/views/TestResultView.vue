@@ -56,6 +56,9 @@
         <button @click="retakeTest" class="retake-button">
           테스트 다시하기
         </button>
+        <button @click="sendResultEmail" class="email-button">
+          이메일로 결과 받기
+        </button>
       </div>
     </div>
 
@@ -196,6 +199,20 @@ const retakeTest = () => {
 
 const goToTest = () => {
   router.push({ name: 'investmenttest' })
+}
+
+const sendResultEmail = async () => {
+  try {
+    const response = await axios.post('/api/v1/test/send-result-email/', null, {
+      headers: {
+        Authorization: `Token ${accountStore.token}`
+      }
+    })
+    alert('테스트 결과가 이메일로 전송되었습니다.')
+  } catch (err) {
+    console.error('이메일 전송 실패:', err)
+    alert('이메일 전송에 실패했습니다.')
+  }
 }
 
 // 숫자에 천단위 구분기호 추가하는 함수
@@ -354,11 +371,41 @@ const formatAnswerValue = (key, value) => {
 
 /* 버튼 */
 .action-buttons {
-  text-align: center;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
   margin-top: 2rem;
 }
 
 .retake-button,
+.email-button {
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.retake-button {
+  background-color: #145c2b;
+  color: white;
+  border: none;
+}
+
+.retake-button:hover {
+  background-color: #0d4420;
+}
+
+.email-button {
+  background-color: white;
+  color: #145c2b;
+  border: 2px solid #145c2b;
+}
+
+.email-button:hover {
+  background-color: #f0f8f3;
+}
+
 .take-test-button {
   background-color: #145c2b;
   color: white;
@@ -370,7 +417,6 @@ const formatAnswerValue = (key, value) => {
   transition: background-color 0.2s;
 }
 
-.retake-button:hover,
 .take-test-button:hover {
   background-color: #145c2b;
 }
