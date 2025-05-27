@@ -1,14 +1,17 @@
 <template>
-  <button 
-    class="heart-button"
-    :class="{ 'hearted': isHearted }"
-    @click="toggleHeart"
-    :disabled="isLoading"
+  <button
+    class="icon-button heart"
+    :class="{
+      active: isHearted,
+      hovered: !isHearted && isHovered
+    }"
     @mouseenter="isHovered = true"
     @mouseleave="isHovered = false"
+    @click="toggleHeart"
+    :disabled="isLoading"
   >
-    <i class="far fa-heart" :class="{ 'fas': isHearted }"></i>
-    <span v-if="showCount" class="heart-count">{{ heartCount }}</span>
+    <i :class="[isHearted ? 'fas' : 'far', 'fa-heart']"></i>
+    <span v-if="showCount" class="tooltip">찜하기</span>
   </button>
 </template>
 
@@ -61,57 +64,50 @@ const toggleHeart = async () => {
 </script>
 
 <style scoped>
-.heart-button {
-  display: inline-flex;
+.icon-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
-  border: 2px solid #e272c0;
-  border-radius: 50%;
-  background-color: white;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  padding: 0;
-  box-sizing: border-box;
+  position: relative;
+  transition: all 0.3s ease;
 }
 
-/* 기본 상태 (찜 안됨) */
-.heart-button i {
-  color: #e272c0;
-  font-size: 1rem;
-  transition: all 0.2s ease;
+.icon-button:hover {
+  background-color: #f5f5f5;
 }
 
-/* 찜된 상태 */
-.heart-button.hearted i {
-  color: #e272c0;
+.icon-button.heart {
+  color: #e64545;
 }
 
-/* 호버 상태 */
-.heart-button:hover {
-  border-color: white;
-  background-color: #e272c0;
-}
-
-.heart-button:hover i {
-  color: white;
-}
-
-.heart-button:disabled {
-  cursor: not-allowed;
-  opacity: 0.7;
-}
-
-.heart-count {
-  font-size: 0.9rem;
-  font-weight: 500;
-  margin-left: 0.5rem;
-}
-
-/* 하트 애니메이션 */
-.heart-button.hearted .fas {
+.icon-button.heart.active {
+  color: #e64545;
   animation: heartBeat 0.3s ease-in-out;
+}
+
+.tooltip {
+  position: absolute;
+  bottom: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  display: none;
+}
+
+.icon-button:hover .tooltip {
+  display: block;
 }
 
 @keyframes heartBeat {
