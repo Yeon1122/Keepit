@@ -1,247 +1,261 @@
 <template>
   <div class="mypage-container">
-    <!-- 프로필 섹션 -->
-    <div class="profile-card">
-      <div class="profile-header">
-        <div class="profile-main">
-          <div class="profile-image">
-            <img src="/images/images_momo/momo_happy.png" alt="프로필 이미지" />
-          </div>
-          <div class="profile-info">
-            <h2 class="user-name">{{ user.nickname }}</h2>
-            <p class="user-id">@{{ user.userid }}</p>
-            <button @click="goToEdit" class="edit-button">
-              <i class="fas fa-edit"></i> 프로필 수정
-            </button>
-          </div>
-        </div>
-        <div class="profile-stats">
-          <div class="stat-item" @click="goToFollow">
-            <div class="stat-value">{{ user.following && user.following.length ? user.following.length : 0 }}</div>
-            <div class="stat-label">팔로우</div>
-          </div>
-          <div class="stat-item" @click="goToFollow">
-            <div class="stat-value">{{ user.followers && user.followers.length ? user.followers.length : 0 }}</div>
-            <div class="stat-label">팔로워</div>
-          </div>
-          <div class="stat-item" @click="goToMyPosts">
-            <div class="stat-value">{{ user.posts_summary && user.posts_summary.total_posts ?
-              user.posts_summary.total_posts : 0 }}</div>
-            <div class="stat-label">작성글</div>
-          </div>
-        </div>
-      </div>
+    <!-- 로딩 상태 -->
+    <div v-if="isLoading" class="loading-overlay">
+      <lottie-player
+        :animationData="loadingAnimation"
+        :loop="true"
+        :autoplay="true"
+        style="width: 200px; height: 200px;"
+      />
+      <p class="loading-text">데이터를 불러오는 중입니다...</p>
     </div>
 
-    <div class="content-grid">
-      <!-- 성향 테스트 결과 카드 -->
-      <div class="content-card">
-        <div class="card-header">
-          <h3>투자 성향 분석</h3>
-          <div class="card-actions">
-            <button v-if="user.test_result" class="action-button" @click="goToTestResult">
-              결과 상세
-            </button>
-            <button class="action-button primary" @click="goToTest">
-              {{ user.test_result ? '다시하기' : '테스트하기' }}
-            </button>
-          </div>
-        </div>
-        <div class="card-content">
-          <template v-if="user.test_result">
-            <div class="test-result">
-              <div class="risk-type-content">
-                <div class="risk-type-badge" :class="user.test_result.risk_type">
-                  {{ getRiskTypeDisplay(user.test_result.risk_type) }}
-                </div>
-                <p class="risk-type-description">
-                  {{ getRiskTypeDescription(user.test_result.risk_type) }}
-                </p>
-              </div>
-              <div class="recommendations-preview">
-                <h4>추천 투자 상품</h4>
-                <div class="recommendation-chips">
-                  <div v-for="(isRecommended, type) in user.test_result.recommendations" :key="type"
-                    class="recommendation-chip" :class="{ 'recommended': isRecommended }">
-                    {{ getProductTypeDisplay(type) }}
-                  </div>
-                </div>
-              </div>
+    <!-- 기존 컨텐츠 -->
+    <template v-else>
+      <!-- 프로필 섹션 -->
+      <div class="profile-card">
+        <div class="profile-header">
+          <div class="profile-main">
+            <div class="profile-image">
+              <img src="/images/images_momo/momo_happy.png" alt="프로필 이미지" />
             </div>
-          </template>
-          <div v-else class="empty-state">
-            <i class="fas fa-chart-line"></i>
-            <p>아직 투자 성향 테스트를 하지 않으셨네요!</p>
-            <p class="sub-text">나의 투자 성향을 알아보고 맞춤 상품을 추천받아보세요.</p>
+            <div class="profile-info">
+              <h2 class="user-name">{{ user.nickname }}</h2>
+              <p class="user-id">@{{ user.userid }}</p>
+              <button @click="goToEdit" class="edit-button">
+                <i class="fas fa-edit"></i> 프로필 수정
+              </button>
+            </div>
+          </div>
+          <div class="profile-stats">
+            <div class="stat-item" @click="goToFollow">
+              <div class="stat-value">{{ user.following && user.following.length ? user.following.length : 0 }}</div>
+              <div class="stat-label">팔로우</div>
+            </div>
+            <div class="stat-item" @click="goToFollow">
+              <div class="stat-value">{{ user.followers && user.followers.length ? user.followers.length : 0 }}</div>
+              <div class="stat-label">팔로워</div>
+            </div>
+            <div class="stat-item" @click="goToMyPosts">
+              <div class="stat-value">{{ user.posts_summary && user.posts_summary.total_posts ?
+                user.posts_summary.total_posts : 0 }}</div>
+              <div class="stat-label">작성글</div>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- 찜한 상품 카드 -->
-      <div class="content-card">
-        <div class="card-header">
-          <h3>찜한 상품</h3>
-        </div>
-        <div class="filter-section">
-          <div class="filter-buttons">
-            <button class="filter-button" :class="{ active: selectedFilter === 'all' }" @click="selectedFilter = 'all'">
-              전체
-            </button>
-            <button class="filter-button" :class="{ active: selectedFilter === 'deposit' }"
-              @click="selectedFilter = 'deposit'">
-              예금
-            </button>
-            <button class="filter-button" :class="{ active: selectedFilter === 'saving' }"
-              @click="selectedFilter = 'saving'">
-              적금
-            </button>
-            <button class="filter-button" :class="{ active: selectedFilter === 'goods' }"
-              @click="selectedFilter = 'goods'">
-              현물
-            </button>
-            <button class="filter-button" :class="{ active: selectedFilter === 'stock' }"
-              @click="selectedFilter = 'stock'">
-              주식
-            </button>
-            <button class="filter-button" :class="{ active: selectedFilter === 'etf' }" @click="selectedFilter = 'etf'">
-              ETF
-            </button>
-          </div>
-        </div>
-        <div class="card-content">
-          <template v-if="limitedFilteredProducts.length">
-            <div class="product-card" v-for="product in limitedFilteredProducts" :key="product.id">
-              <div class="product-info">
-                <div class="product-header">
-                  <div class="product-type-name">
-                    <span class="product-type" :class="product.type">{{ getProductTypeText(product.type) }}</span>
-                    <span class="product-title">{{ getProductName(product) }}</span>
-                  </div>
-                </div>
-                <!-- 예금/적금 상품일 경우 -->
-                <div v-if="['deposit', 'saving'].includes(product.type)" class="product-details">
-                  <div class="rate-info">
-                    <span class="label">금리</span>
-                    <span class="value">{{ product.interest_rate }}% ~ {{ product.special_rate }}%</span>
-                  </div>
-                  <div class="term-info">
-                    <span class="label">기간</span>
-                    <span class="value">{{ product.term }}개월</span>
-                  </div>
-                </div>
-                <!-- 주식/ETF 상품일 경우 -->
-                <div v-else-if="['stock', 'etf'].includes(product.type)" class="product-details">
-                  <div class="price-info">
-                    <span class="label">현재가</span>
-                    <span class="value">{{ formatPrice(product.current_price) }}원</span>
-                  </div>
-                  <div class="change-info">
-                    <span class="label">변동가</span>
-                    <span class="value" :class="getPriceChangeClass(product.price_change)">
-                      <i :class="['fas', product.price_change > 0 ? 'fa-caret-up' : 'fa-caret-down']"></i>
-                      {{ formatPriceChange(product.price_change) }}원
-                    </span>
-                  </div>
-                </div>
-                <!-- 현물 상품일 경우 -->
-                <div v-else-if="product.type === 'goods'" class="product-details">
-                  <div class="price-info">
-                    <span class="label">현재가</span>
-                    <span class="value">${{ formatPrice(product.current_price) }} / oz</span>
-                  </div>
-                  <div class="change-info">
-                    <span class="label">변동가</span>
-                    <span class="value" :class="getPriceChangeClass(product.price_change)">
-                      <i :class="['fas', product.price_change > 0 ? 'fa-caret-up' : 'fa-caret-down']"></i>
-                      ${{ formatPriceChange(product.price_change) }}
-                    </span>
-                  </div>
-                </div>
-                <button v-if="filteredProducts.length > 1" class="view-more-button" @click="goToFavorites">
-                  더보기
-                  <i class="fas fa-chevron-right"></i>
-                </button>
-              </div>
-              <div class="product-divider"></div>
+      <div class="content-grid">
+        <!-- 성향 테스트 결과 카드 -->
+        <div class="content-card">
+          <div class="card-header">
+            <h3>투자 성향 분석</h3>
+            <div class="card-actions">
+              <button v-if="user.test_result" class="action-button" @click="goToTestResult">
+                결과 상세
+              </button>
+              <button class="action-button primary" @click="goToTest">
+                {{ user.test_result ? '다시하기' : '테스트하기' }}
+              </button>
             </div>
-          </template>
-          <div v-else class="empty-state">
-            <i class="fas fa-heart"></i>
-            <p>{{ getEmptyStateMessage }}</p>
-            <p class="sub-text">마음에 드는 상품을 찜해보세요!</p>
-            <button class="action-button primary" @click="goToSavings">
-              상품 보러가기
-              <i class="fas fa-arrow-right"></i>
-            </button>
+          </div>
+          <div class="card-content">
+            <template v-if="user.test_result">
+              <div class="test-result">
+                <div class="risk-type-content">
+                  <div class="risk-type-badge" :class="user.test_result.risk_type">
+                    {{ getRiskTypeDisplay(user.test_result.risk_type) }}
+                  </div>
+                  <p class="risk-type-description">
+                    {{ getRiskTypeDescription(user.test_result.risk_type) }}
+                  </p>
+                </div>
+                <div class="recommendations-preview">
+                  <h4>추천 투자 상품</h4>
+                  <div class="recommendation-chips">
+                    <div v-for="(isRecommended, type) in user.test_result.recommendations" :key="type"
+                      class="recommendation-chip" :class="{ 'recommended': isRecommended }">
+                      {{ getProductTypeDisplay(type) }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </template>
+            <div v-else class="empty-state">
+              <i class="fas fa-chart-line"></i>
+              <p>아직 투자 성향 테스트를 하지 않으셨네요!</p>
+              <p class="sub-text">나의 투자 성향을 알아보고 맞춤 상품을 추천받아보세요.</p>
+            </div>
           </div>
         </div>
-      </div>
 
-      <!-- 작성 글 카드 -->
-      <div class="content-card">
-        <div class="card-header">
-          <h3>최근 작성글</h3>
-          <button class="action-button" @click="goToMyPosts">전체보기</button>
-        </div>
-        <div class="card-content">
-          <div v-if="freePosts.length || questionPosts.length" class="posts-grid">
-            <!-- 자유 게시판 -->
-            <div class="posts-section">
-              <h4>자유게시판</h4>
-              <ul class="posts-list">
-                <li v-for="post in freePosts.slice(0, 2)" :key="post.id" @click="goToPost('free', post.id)"
-                  class="post-item">
-                  <div class="post-title">{{ post.title }}</div>
-                  <div class="post-meta">
-                    <span class="post-date">{{ formatDate(post.created_at) }}</span>
-                    <div class="post-stats">
-                      <span class="likes">
-                        <i class="fas fa-thumbs-up"></i> {{ post.likes_count }}
-                      </span>
-                      <span class="comments">
-                        <i class="fas fa-comment"></i> {{ Array.isArray(post.comments) ? post.comments.length : 0 }}
+        <!-- 찜한 상품 카드 -->
+        <div class="content-card">
+          <div class="card-header">
+            <h3>찜한 상품</h3>
+          </div>
+          <div class="filter-section">
+            <div class="filter-buttons">
+              <button class="filter-button" :class="{ active: selectedFilter === 'all' }" @click="selectedFilter = 'all'">
+                전체
+              </button>
+              <button class="filter-button" :class="{ active: selectedFilter === 'deposit' }"
+                @click="selectedFilter = 'deposit'">
+                예금
+              </button>
+              <button class="filter-button" :class="{ active: selectedFilter === 'saving' }"
+                @click="selectedFilter = 'saving'">
+                적금
+              </button>
+              <button class="filter-button" :class="{ active: selectedFilter === 'goods' }"
+                @click="selectedFilter = 'goods'">
+                현물
+              </button>
+              <button class="filter-button" :class="{ active: selectedFilter === 'stock' }"
+                @click="selectedFilter = 'stock'">
+                주식
+              </button>
+              <button class="filter-button" :class="{ active: selectedFilter === 'etf' }" @click="selectedFilter = 'etf'">
+                ETF
+              </button>
+            </div>
+          </div>
+          <div class="card-content">
+            <template v-if="limitedFilteredProducts.length">
+              <div class="product-card" v-for="product in limitedFilteredProducts" :key="product.id">
+                <div class="product-info">
+                  <div class="product-header">
+                    <div class="product-type-name">
+                      <span class="product-type" :class="product.type">{{ getProductTypeText(product.type) }}</span>
+                      <span class="product-title">{{ getProductName(product) }}</span>
+                    </div>
+                  </div>
+                  <!-- 예금/적금 상품일 경우 -->
+                  <div v-if="['deposit', 'saving'].includes(product.type)" class="product-details">
+                    <div class="rate-info">
+                      <span class="label">금리</span>
+                      <span class="value">{{ product.interest_rate }}% ~ {{ product.special_rate }}%</span>
+                    </div>
+                    <div class="term-info">
+                      <span class="label">기간</span>
+                      <span class="value">{{ product.term }}개월</span>
+                    </div>
+                  </div>
+                  <!-- 주식/ETF 상품일 경우 -->
+                  <div v-else-if="['stock', 'etf'].includes(product.type)" class="product-details">
+                    <div class="price-info">
+                      <span class="label">현재가</span>
+                      <span class="value">{{ formatPrice(product.current_price) }}원</span>
+                    </div>
+                    <div class="change-info">
+                      <span class="label">변동가</span>
+                      <span class="value" :class="getPriceChangeClass(product.price_change)">
+                        <i :class="['fas', product.price_change > 0 ? 'fa-caret-up' : 'fa-caret-down']"></i>
+                        {{ formatPriceChange(product.price_change) }}원
                       </span>
                     </div>
                   </div>
-                </li>
-              </ul>
-            </div>
-
-            <!-- 질문 게시판 -->
-            <div class="posts-section">
-              <h4>질문게시판</h4>
-              <ul class="posts-list">
-                <li v-for="post in questionPosts.slice(0, 2)" :key="post.id" @click="goToPost('question', post.id)"
-                  class="post-item">
-                  <div class="post-title">
-                    {{ post.title }}
-                    <span v-if="post.is_solved" class="solved-badge">해결</span>
-                  </div>
-                  <div class="post-meta">
-                    <span class="post-date">{{ formatDate(post.created_at) }}</span>
-                    <div class="post-stats">
-                      <span class="likes">
-                        <i class="fas fa-thumbs-up"></i> {{ post.likes_count }}
-                      </span>
-                      <span class="comments">
-                        <i class="fas fa-comment"></i> {{ Array.isArray(post.comments) ? post.comments.length : 0 }}
+                  <!-- 현물 상품일 경우 -->
+                  <div v-else-if="product.type === 'goods'" class="product-details">
+                    <div class="price-info">
+                      <span class="label">현재가</span>
+                      <span class="value">${{ formatPrice(product.current_price) }} / oz</span>
+                    </div>
+                    <div class="change-info">
+                      <span class="label">변동가</span>
+                      <span class="value" :class="getPriceChangeClass(product.price_change)">
+                        <i :class="['fas', product.price_change > 0 ? 'fa-caret-up' : 'fa-caret-down']"></i>
+                        ${{ formatPriceChange(product.price_change) }}
                       </span>
                     </div>
                   </div>
-                </li>
-              </ul>
+                  <button v-if="filteredProducts.length > 1" class="view-more-button" @click="goToFavorites">
+                    더보기
+                    <i class="fas fa-chevron-right"></i>
+                  </button>
+                </div>
+                <div class="product-divider"></div>
+              </div>
+            </template>
+            <div v-else class="empty-state">
+              <i class="fas fa-heart"></i>
+              <p>{{ getEmptyStateMessage }}</p>
+              <p class="sub-text">마음에 드는 상품을 찜해보세요!</p>
+              <button class="action-button primary" @click="goToSavings">
+                상품 보러가기
+                <i class="fas fa-arrow-right"></i>
+              </button>
             </div>
           </div>
+        </div>
 
-          <!-- 게시글이 없을 때 -->
-          <div v-else class="empty-state">
-            <i class="fas fa-pen"></i>
-            <p>첫 게시글을 작성해보세요!</p>
+        <!-- 작성 글 카드 -->
+        <div class="content-card">
+          <div class="card-header">
+            <h3>최근 작성글</h3>
+            <button class="action-button" @click="goToMyPosts">전체보기</button>
+          </div>
+          <div class="card-content">
+            <div v-if="freePosts.length || questionPosts.length" class="posts-grid">
+              <!-- 자유 게시판 -->
+              <div class="posts-section">
+                <h4>자유게시판</h4>
+                <ul class="posts-list">
+                  <li v-for="post in freePosts.slice(0, 2)" :key="post.id" @click="goToPost('free', post.id)"
+                    class="post-item">
+                    <div class="post-title">{{ post.title }}</div>
+                    <div class="post-meta">
+                      <span class="post-date">{{ formatDate(post.created_at) }}</span>
+                      <div class="post-stats">
+                        <span class="likes">
+                          <i class="fas fa-thumbs-up"></i> {{ post.likes_count }}
+                        </span>
+                        <span class="comments">
+                          <i class="fas fa-comment"></i> {{ Array.isArray(post.comments) ? post.comments.length : 0 }}
+                        </span>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+
+              <!-- 질문 게시판 -->
+              <div class="posts-section">
+                <h4>질문게시판</h4>
+                <ul class="posts-list">
+                  <li v-for="post in questionPosts.slice(0, 2)" :key="post.id" @click="goToPost('question', post.id)"
+                    class="post-item">
+                    <div class="post-title">
+                      {{ post.title }}
+                      <span v-if="post.is_solved" class="solved-badge">해결</span>
+                    </div>
+                    <div class="post-meta">
+                      <span class="post-date">{{ formatDate(post.created_at) }}</span>
+                      <div class="post-stats">
+                        <span class="likes">
+                          <i class="fas fa-thumbs-up"></i> {{ post.likes_count }}
+                        </span>
+                        <span class="comments">
+                          <i class="fas fa-comment"></i> {{ Array.isArray(post.comments) ? post.comments.length : 0 }}
+                        </span>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- 게시글이 없을 때 -->
+            <div v-else class="empty-state">
+              <i class="fas fa-pen"></i>
+              <p>첫 게시글을 작성해보세요!</p>
+            </div>
           </div>
         </div>
-      </div>
 
-    </div>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -250,6 +264,8 @@ import { ref, onMounted, computed } from 'vue'
 import axios from 'axios'
 import { useAccountStore } from '@/stores/users.js'
 import { useRouter } from 'vue-router'
+import loadingAnimation from '@/assets/animations/loading.json'
+import LottiePlayer from '@/components/LottiePlayer.vue'
 
 const accountStore = useAccountStore()
 const router = useRouter()
@@ -312,7 +328,10 @@ const getEmptyStateMessage = computed(() => {
   return `찜한 ${typeMap[selectedFilter.value]} 상품이 없습니다.`
 })
 
+const isLoading = ref(true)
+
 onMounted(async () => {
+  isLoading.value = true
   const token = accountStore.token
   const userId = accountStore.userId
 
@@ -374,6 +393,8 @@ onMounted(async () => {
     } else {
       alert('사용자 정보를 불러오는데 실패했습니다.')
     }
+  } finally {
+    isLoading.value = false
   }
 
   // 투자성향 테스트 결과 가져오기
@@ -651,7 +672,6 @@ const getProductTypeDisplay = (type) => {
   grid-template-columns: repeat(2, 1fr);
   gap: 2rem;
 }
-
 
 .content-card:last-child {
   grid-column: 1 / -1;
@@ -1350,5 +1370,25 @@ const getProductTypeDisplay = (type) => {
   border-radius: 4px;
   font-size: 0.8rem;
   margin-left: 0.5rem;
+}
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.9);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.loading-text {
+  margin-top: 1rem;
+  font-size: 1.1rem;
+  color: #333;
 }
 </style>
