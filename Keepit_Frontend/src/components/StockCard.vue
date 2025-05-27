@@ -26,7 +26,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch, defineProps, defineEmits } from 'vue'
 import { useAccountStore } from '@/stores/users'
 import { useRouter } from 'vue-router'
 import HeartButton from '@/components/HeartButton.vue'
@@ -35,6 +35,7 @@ import axios from 'axios'
 const router = useRouter()
 const accountStore = useAccountStore()
 const props = defineProps({
+  
   data: {
     type: Object,
     required: true

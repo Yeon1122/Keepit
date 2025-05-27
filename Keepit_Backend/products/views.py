@@ -1025,6 +1025,7 @@ def stock_favorite(request, stock_code):
 
 @api_view(['GET'])
 def goods_list(request):
+
     try:
         # 금/은 시세 API 호출
         headers = {
