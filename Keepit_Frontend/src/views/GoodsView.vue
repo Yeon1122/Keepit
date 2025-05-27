@@ -3,8 +3,14 @@
     <h3>현물 상품 안내</h3>
 
     <!-- 로딩 상태 -->
-    <div v-if="loading" class="loading-state">
-      데이터를 불러오는 중입니다...
+    <div v-if="loading" class="loading-overlay">
+      <lottie-player
+        :animationData="loadingAnimation"
+        :loop="true"
+        :autoplay="true"
+        style="width: 200px; height: 200px;"
+      />
+      <p class="loading-text">현물 데이터를 불러오는 중입니다...</p>
     </div>
 
     <!-- 에러 상태 -->
@@ -52,6 +58,8 @@ import { ref, computed, onMounted } from 'vue'
 import HeartButton from '@/components/HeartButton.vue'
 import { useAccountStore } from '@/stores/users'
 import axios from 'axios'
+import loadingAnimation from '@/assets/animations/gold_loading.json'
+import LottiePlayer from '@/components/LottiePlayer.vue'
 
 const accountStore = useAccountStore()
 const isAuthenticated = computed(() => accountStore.isAuthenticated)
@@ -266,15 +274,30 @@ h3 {
   color: white;
 }
 
-.loading-state,
-.error-state {
-  text-align: center;
-  padding: 2rem;
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.9);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.loading-text {
+  margin-top: 1rem;
+  font-size: 1.1rem;
   color: #666;
 }
 
 .error-state {
-  color: #dc3545;
+  text-align: center;
+  padding: 2rem;
+  color: #666;
 }
 
 .retry-button {
