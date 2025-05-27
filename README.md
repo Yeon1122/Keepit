@@ -162,6 +162,7 @@ python manage.py runserver
 | 주식 관련 뉴스   | NAVER Developers             |
 | 은행 위치        | Kakao Map API                |
 | AI 챗봇          | OpenAI API                   |
+| 테스트 결과 전송          | SMTP 이메일(gmail)                   |
 
 ---
 
