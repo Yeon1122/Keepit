@@ -3,7 +3,7 @@
   "model": "regions.regiondistrict",
   "pk": 1,
   "fields": {
-    "name": "°­³²±¸",
+    "name": "ê°•ë‚¨êµ¬",
     "city": 1
   }
 },
@@ -11,7 +11,7 @@
   "model": "regions.regiondistrict",
   "pk": 2,
   "fields": {
-    "name": "°­µ¿±¸",
+    "name": "ê°•ë™êµ¬",
     "city": 1
   }
 },
@@ -19,7 +19,7 @@
   "model": "regions.regiondistrict",
   "pk": 3,
   "fields": {
-    "name": "°­ºÏ±¸",
+    "name": "ê°•ë¶êµ¬",
     "city": 1
   }
 },
@@ -27,7 +27,7 @@
   "model": "regions.regiondistrict",
   "pk": 4,
   "fields": {
-    "name": "°­¼­±¸",
+    "name": "ê°•ì„œêµ¬",
     "city": 1
   }
 },
@@ -35,7 +35,7 @@
   "model": "regions.regiondistrict",
   "pk": 5,
   "fields": {
-    "name": "°ü¾Ç±¸",
+    "name": "ê´€ì•…êµ¬",
     "city": 1
   }
 },
@@ -43,7 +43,7 @@
   "model": "regions.regiondistrict",
   "pk": 6,
   "fields": {
-    "name": "±¤Áø±¸",
+    "name": "ê´‘ì§„êµ¬",
     "city": 1
   }
 },
@@ -51,7 +51,7 @@
   "model": "regions.regiondistrict",
   "pk": 7,
   "fields": {
-    "name": "±¸·Î±¸",
+    "name": "êµ¬ë¡œêµ¬",
     "city": 1
   }
 },
@@ -59,7 +59,7 @@
   "model": "regions.regiondistrict",
   "pk": 8,
   "fields": {
-    "name": "±İÃµ±¸",
+    "name": "ê¸ˆì²œêµ¬",
     "city": 1
   }
 },
@@ -67,7 +67,7 @@
   "model": "regions.regiondistrict",
   "pk": 9,
   "fields": {
-    "name": "³ë¿ø±¸",
+    "name": "ë…¸ì›êµ¬",
     "city": 1
   }
 },
@@ -75,7 +75,7 @@
   "model": "regions.regiondistrict",
   "pk": 10,
   "fields": {
-    "name": "µµºÀ±¸",
+    "name": "ë„ë´‰êµ¬",
     "city": 1
   }
 },
@@ -83,7 +83,7 @@
   "model": "regions.regiondistrict",
   "pk": 11,
   "fields": {
-    "name": "µ¿´ë¹®±¸",
+    "name": "ë™ëŒ€ë¬¸êµ¬",
     "city": 1
   }
 },
@@ -91,7 +91,7 @@
   "model": "regions.regiondistrict",
   "pk": 12,
   "fields": {
-    "name": "µ¿ÀÛ±¸",
+    "name": "ë™ì‘êµ¬",
     "city": 1
   }
 },
@@ -99,7 +99,7 @@
   "model": "regions.regiondistrict",
   "pk": 13,
   "fields": {
-    "name": "¸¶Æ÷±¸",
+    "name": "ë§ˆí¬êµ¬",
     "city": 1
   }
 },
@@ -107,7 +107,7 @@
   "model": "regions.regiondistrict",
   "pk": 14,
   "fields": {
-    "name": "¼­´ë¹®±¸",
+    "name": "ì„œëŒ€ë¬¸êµ¬",
     "city": 1
   }
 },
@@ -115,7 +115,7 @@
   "model": "regions.regiondistrict",
   "pk": 15,
   "fields": {
-    "name": "¼­ÃÊ±¸",
+    "name": "ì„œì´ˆêµ¬",
     "city": 1
   }
 },
@@ -123,7 +123,7 @@
   "model": "regions.regiondistrict",
   "pk": 16,
   "fields": {
-    "name": "¼ºµ¿±¸",
+    "name": "ì„±ë™êµ¬",
     "city": 1
   }
 },
@@ -131,7 +131,7 @@
   "model": "regions.regiondistrict",
   "pk": 17,
   "fields": {
-    "name": "¼ººÏ±¸",
+    "name": "ì„±ë¶êµ¬",
     "city": 1
   }
 },
@@ -139,7 +139,7 @@
   "model": "regions.regiondistrict",
   "pk": 18,
   "fields": {
-    "name": "¼ÛÆÄ±¸",
+    "name": "ì†¡íŒŒêµ¬",
     "city": 1
   }
 },
@@ -147,7 +147,7 @@
   "model": "regions.regiondistrict",
   "pk": 19,
   "fields": {
-    "name": "¾çÃµ±¸",
+    "name": "ì–‘ì²œêµ¬",
     "city": 1
   }
 },
@@ -155,7 +155,7 @@
   "model": "regions.regiondistrict",
   "pk": 20,
   "fields": {
-    "name": "¿µµîÆ÷±¸",
+    "name": "ì˜ë“±í¬êµ¬",
     "city": 1
   }
 },
@@ -163,7 +163,7 @@
   "model": "regions.regiondistrict",
   "pk": 21,
   "fields": {
-    "name": "¿ë»ê±¸",
+    "name": "ìš©ì‚°êµ¬",
     "city": 1
   }
 },
@@ -171,7 +171,7 @@
   "model": "regions.regiondistrict",
   "pk": 22,
   "fields": {
-    "name": "ÀºÆò±¸",
+    "name": "ì€í‰êµ¬",
     "city": 1
   }
 },
@@ -179,7 +179,7 @@
   "model": "regions.regiondistrict",
   "pk": 23,
   "fields": {
-    "name": "Á¾·Î±¸",
+    "name": "ì¢…ë¡œêµ¬",
     "city": 1
   }
 },
@@ -187,7 +187,7 @@
   "model": "regions.regiondistrict",
   "pk": 24,
   "fields": {
-    "name": "Áß±¸",
+    "name": "ì¤‘êµ¬",
     "city": 1
   }
 },
@@ -195,7 +195,7 @@
   "model": "regions.regiondistrict",
   "pk": 25,
   "fields": {
-    "name": "Áß¶û±¸",
+    "name": "ì¤‘ë‘êµ¬",
     "city": 1
   }
 },
@@ -203,7 +203,7 @@
   "model": "regions.regiondistrict",
   "pk": 26,
   "fields": {
-    "name": "°­¼­±¸",
+    "name": "ê°•ì„œêµ¬",
     "city": 2
   }
 },
@@ -211,7 +211,7 @@
   "model": "regions.regiondistrict",
   "pk": 27,
   "fields": {
-    "name": "±İÁ¤±¸",
+    "name": "ê¸ˆì •êµ¬",
     "city": 2
   }
 },
@@ -219,7 +219,7 @@
   "model": "regions.regiondistrict",
   "pk": 28,
   "fields": {
-    "name": "±âÀå±º",
+    "name": "ê¸°ì¥êµ°",
     "city": 2
   }
 },
@@ -227,7 +227,7 @@
   "model": "regions.regiondistrict",
   "pk": 29,
   "fields": {
-    "name": "³²±¸",
+    "name": "ë‚¨êµ¬",
     "city": 2
   }
 },
@@ -235,7 +235,7 @@
   "model": "regions.regiondistrict",
   "pk": 30,
   "fields": {
-    "name": "µ¿±¸",
+    "name": "ë™êµ¬",
     "city": 2
   }
 },
@@ -243,7 +243,7 @@
   "model": "regions.regiondistrict",
   "pk": 31,
   "fields": {
-    "name": "µ¿·¡±¸",
+    "name": "ë™ë˜êµ¬",
     "city": 2
   }
 },
@@ -251,7 +251,7 @@
   "model": "regions.regiondistrict",
   "pk": 32,
   "fields": {
-    "name": "ºÎ»êÁø±¸",
+    "name": "ë¶€ì‚°ì§„êµ¬",
     "city": 2
   }
 },
@@ -259,7 +259,7 @@
   "model": "regions.regiondistrict",
   "pk": 33,
   "fields": {
-    "name": "ºÏ±¸",
+    "name": "ë¶êµ¬",
     "city": 2
   }
 },
@@ -267,7 +267,7 @@
   "model": "regions.regiondistrict",
   "pk": 34,
   "fields": {
-    "name": "»ç»ó±¸",
+    "name": "ì‚¬ìƒêµ¬",
     "city": 2
   }
 },
@@ -275,7 +275,7 @@
   "model": "regions.regiondistrict",
   "pk": 35,
   "fields": {
-    "name": "»çÇÏ±¸",
+    "name": "ì‚¬í•˜êµ¬",
     "city": 2
   }
 },
@@ -283,7 +283,7 @@
   "model": "regions.regiondistrict",
   "pk": 36,
   "fields": {
-    "name": "¼­±¸",
+    "name": "ì„œêµ¬",
     "city": 2
   }
 },
@@ -291,7 +291,7 @@
   "model": "regions.regiondistrict",
   "pk": 37,
   "fields": {
-    "name": "¼ö¿µ±¸",
+    "name": "ìˆ˜ì˜êµ¬",
     "city": 2
   }
 },
@@ -299,7 +299,7 @@
   "model": "regions.regiondistrict",
   "pk": 38,
   "fields": {
-    "name": "¿¬Á¦±¸",
+    "name": "ì—°ì œêµ¬",
     "city": 2
   }
 },
@@ -307,7 +307,7 @@
   "model": "regions.regiondistrict",
   "pk": 39,
   "fields": {
-    "name": "¿µµµ±¸",
+    "name": "ì˜ë„êµ¬",
     "city": 2
   }
 },
@@ -315,7 +315,7 @@
   "model": "regions.regiondistrict",
   "pk": 40,
   "fields": {
-    "name": "Áß±¸",
+    "name": "ì¤‘êµ¬",
     "city": 2
   }
 },
@@ -323,7 +323,7 @@
   "model": "regions.regiondistrict",
   "pk": 41,
   "fields": {
-    "name": "ÇØ¿î´ë±¸",
+    "name": "í•´ìš´ëŒ€êµ¬",
     "city": 2
   }
 },
@@ -331,7 +331,7 @@
   "model": "regions.regiondistrict",
   "pk": 42,
   "fields": {
-    "name": "³²±¸",
+    "name": "ë‚¨êµ¬",
     "city": 3
   }
 },
@@ -339,7 +339,7 @@
   "model": "regions.regiondistrict",
   "pk": 43,
   "fields": {
-    "name": "´Ş¼­±¸",
+    "name": "ë‹¬ì„œêµ¬",
     "city": 3
   }
 },
@@ -347,7 +347,7 @@
   "model": "regions.regiondistrict",
   "pk": 44,
   "fields": {
-    "name": "´Ş¼º±º",
+    "name": "ë‹¬ì„±êµ°",
     "city": 3
   }
 },
@@ -355,7 +355,7 @@
   "model": "regions.regiondistrict",
   "pk": 45,
   "fields": {
-    "name": "µ¿±¸",
+    "name": "ë™êµ¬",
     "city": 3
   }
 },
@@ -363,7 +363,7 @@
   "model": "regions.regiondistrict",
   "pk": 46,
   "fields": {
-    "name": "ºÏ±¸",
+    "name": "ë¶êµ¬",
     "city": 3
   }
 },
@@ -371,7 +371,7 @@
   "model": "regions.regiondistrict",
   "pk": 47,
   "fields": {
-    "name": "¼­±¸",
+    "name": "ì„œêµ¬",
     "city": 3
   }
 },
@@ -379,7 +379,7 @@
   "model": "regions.regiondistrict",
   "pk": 48,
   "fields": {
-    "name": "¼ö¼º±¸",
+    "name": "ìˆ˜ì„±êµ¬",
     "city": 3
   }
 },
@@ -387,7 +387,7 @@
   "model": "regions.regiondistrict",
   "pk": 49,
   "fields": {
-    "name": "Áß±¸",
+    "name": "ì¤‘êµ¬",
     "city": 3
   }
 },
@@ -395,7 +395,7 @@
   "model": "regions.regiondistrict",
   "pk": 50,
   "fields": {
-    "name": "°­È­±º",
+    "name": "ê°•í™”êµ°",
     "city": 4
   }
 },
@@ -403,7 +403,7 @@
   "model": "regions.regiondistrict",
   "pk": 51,
   "fields": {
-    "name": "°è¾ç±¸",
+    "name": "ê³„ì–‘êµ¬",
     "city": 4
   }
 },
@@ -411,7 +411,7 @@
   "model": "regions.regiondistrict",
   "pk": 52,
   "fields": {
-    "name": "³²±¸",
+    "name": "ë‚¨êµ¬",
     "city": 4
   }
 },
@@ -419,7 +419,7 @@
   "model": "regions.regiondistrict",
   "pk": 53,
   "fields": {
-    "name": "³²µ¿±¸",
+    "name": "ë‚¨ë™êµ¬",
     "city": 4
   }
 },
@@ -427,7 +427,7 @@
   "model": "regions.regiondistrict",
   "pk": 54,
   "fields": {
-    "name": "µ¿±¸",
+    "name": "ë™êµ¬",
     "city": 4
   }
 },
@@ -435,7 +435,7 @@
   "model": "regions.regiondistrict",
   "pk": 55,
   "fields": {
-    "name": "ºÎÆò±¸",
+    "name": "ë¶€í‰êµ¬",
     "city": 4
   }
 },
@@ -443,7 +443,7 @@
   "model": "regions.regiondistrict",
   "pk": 56,
   "fields": {
-    "name": "¼­±¸",
+    "name": "ì„œêµ¬",
     "city": 4
   }
 },
@@ -451,7 +451,7 @@
   "model": "regions.regiondistrict",
   "pk": 57,
   "fields": {
-    "name": "¿¬¼ö±¸",
+    "name": "ì—°ìˆ˜êµ¬",
     "city": 4
   }
 },
@@ -459,7 +459,7 @@
   "model": "regions.regiondistrict",
   "pk": 58,
   "fields": {
-    "name": "¿ËÁø±º",
+    "name": "ì˜¹ì§„êµ°",
     "city": 4
   }
 },
@@ -467,7 +467,7 @@
   "model": "regions.regiondistrict",
   "pk": 59,
   "fields": {
-    "name": "Áß±¸",
+    "name": "ì¤‘êµ¬",
     "city": 4
   }
 },
@@ -475,7 +475,7 @@
   "model": "regions.regiondistrict",
   "pk": 60,
   "fields": {
-    "name": "±¤»ê±¸",
+    "name": "ê´‘ì‚°êµ¬",
     "city": 5
   }
 },
@@ -483,7 +483,7 @@
   "model": "regions.regiondistrict",
   "pk": 61,
   "fields": {
-    "name": "³²±¸",
+    "name": "ë‚¨êµ¬",
     "city": 5
   }
 },
@@ -491,7 +491,7 @@
   "model": "regions.regiondistrict",
   "pk": 62,
   "fields": {
-    "name": "µ¿±¸",
+    "name": "ë™êµ¬",
     "city": 5
   }
 },
@@ -499,7 +499,7 @@
   "model": "regions.regiondistrict",
   "pk": 63,
   "fields": {
-    "name": "ºÏ±¸",
+    "name": "ë¶êµ¬",
     "city": 5
   }
 },
@@ -507,7 +507,7 @@
   "model": "regions.regiondistrict",
   "pk": 64,
   "fields": {
-    "name": "¼­±¸",
+    "name": "ì„œêµ¬",
     "city": 5
   }
 },
@@ -515,7 +515,7 @@
   "model": "regions.regiondistrict",
   "pk": 65,
   "fields": {
-    "name": "´ë´ö±¸",
+    "name": "ëŒ€ë•êµ¬",
     "city": 6
   }
 },
@@ -523,7 +523,7 @@
   "model": "regions.regiondistrict",
   "pk": 66,
   "fields": {
-    "name": "µ¿±¸",
+    "name": "ë™êµ¬",
     "city": 6
   }
 },
@@ -531,7 +531,7 @@
   "model": "regions.regiondistrict",
   "pk": 67,
   "fields": {
-    "name": "¼­±¸",
+    "name": "ì„œêµ¬",
     "city": 6
   }
 },
@@ -539,7 +539,7 @@
   "model": "regions.regiondistrict",
   "pk": 68,
   "fields": {
-    "name": "À¯¼º±¸",
+    "name": "ìœ ì„±êµ¬",
     "city": 6
   }
 },
@@ -547,7 +547,7 @@
   "model": "regions.regiondistrict",
   "pk": 69,
   "fields": {
-    "name": "Áß±¸",
+    "name": "ì¤‘êµ¬",
     "city": 6
   }
 },
@@ -555,7 +555,7 @@
   "model": "regions.regiondistrict",
   "pk": 70,
   "fields": {
-    "name": "³²±¸",
+    "name": "ë‚¨êµ¬",
     "city": 7
   }
 },
@@ -563,7 +563,7 @@
   "model": "regions.regiondistrict",
   "pk": 71,
   "fields": {
-    "name": "µ¿±¸",
+    "name": "ë™êµ¬",
     "city": 7
   }
 },
@@ -571,7 +571,7 @@
   "model": "regions.regiondistrict",
   "pk": 72,
   "fields": {
-    "name": "ºÏ±¸",
+    "name": "ë¶êµ¬",
     "city": 7
   }
 },
@@ -579,7 +579,7 @@
   "model": "regions.regiondistrict",
   "pk": 73,
   "fields": {
-    "name": "¿ïÁÖ±º",
+    "name": "ìš¸ì£¼êµ°",
     "city": 7
   }
 },
@@ -587,7 +587,7 @@
   "model": "regions.regiondistrict",
   "pk": 74,
   "fields": {
-    "name": "Áß±¸",
+    "name": "ì¤‘êµ¬",
     "city": 7
   }
 },
@@ -595,7 +595,7 @@
   "model": "regions.regiondistrict",
   "pk": 75,
   "fields": {
-    "name": "°¡Æò±º",
+    "name": "ê°€í‰êµ°",
     "city": 8
   }
 },
@@ -603,7 +603,7 @@
   "model": "regions.regiondistrict",
   "pk": 76,
   "fields": {
-    "name": "°í¾ç½Ã ´ö¾ç±¸",
+    "name": "ê³ ì–‘ì‹œ ë•ì–‘êµ¬",
     "city": 8
   }
 },
@@ -611,7 +611,7 @@
   "model": "regions.regiondistrict",
   "pk": 77,
   "fields": {
-    "name": "°í¾ç½Ã ÀÏ»êµ¿±¸",
+    "name": "ê³ ì–‘ì‹œ ì¼ì‚°ë™êµ¬",
     "city": 8
   }
 },
@@ -619,7 +619,7 @@
   "model": "regions.regiondistrict",
   "pk": 78,
   "fields": {
-    "name": "°í¾ç½Ã ÀÏ»ê¼­±¸",
+    "name": "ê³ ì–‘ì‹œ ì¼ì‚°ì„œêµ¬",
     "city": 8
   }
 },
@@ -627,7 +627,7 @@
   "model": "regions.regiondistrict",
   "pk": 79,
   "fields": {
-    "name": "°úÃµ½Ã",
+    "name": "ê³¼ì²œì‹œ",
     "city": 8
   }
 },
@@ -635,7 +635,7 @@
   "model": "regions.regiondistrict",
   "pk": 80,
   "fields": {
-    "name": "±¤¸í½Ã",
+    "name": "ê´‘ëª…ì‹œ",
     "city": 8
   }
 },
@@ -643,7 +643,7 @@
   "model": "regions.regiondistrict",
   "pk": 81,
   "fields": {
-    "name": "±¤ÁÖ½Ã",
+    "name": "ê´‘ì£¼ì‹œ",
     "city": 8
   }
 },
@@ -651,7 +651,7 @@
   "model": "regions.regiondistrict",
   "pk": 82,
   "fields": {
-    "name": "±¸¸®½Ã",
+    "name": "êµ¬ë¦¬ì‹œ",
     "city": 8
   }
 },
@@ -659,7 +659,7 @@
   "model": "regions.regiondistrict",
   "pk": 83,
   "fields": {
-    "name": "±ºÆ÷½Ã",
+    "name": "êµ°í¬ì‹œ",
     "city": 8
   }
 },
@@ -667,7 +667,7 @@
   "model": "regions.regiondistrict",
   "pk": 84,
   "fields": {
-    "name": "±èÆ÷½Ã",
+    "name": "ê¹€í¬ì‹œ",
     "city": 8
   }
 },
@@ -675,7 +675,7 @@
   "model": "regions.regiondistrict",
   "pk": 85,
   "fields": {
-    "name": "³²¾çÁÖ½Ã",
+    "name": "ë‚¨ì–‘ì£¼ì‹œ",
     "city": 8
   }
 },
@@ -683,7 +683,7 @@
   "model": "regions.regiondistrict",
   "pk": 86,
   "fields": {
-    "name": "µ¿µÎÃµ½Ã",
+    "name": "ë™ë‘ì²œì‹œ",
     "city": 8
   }
 },
@@ -691,7 +691,7 @@
   "model": "regions.regiondistrict",
   "pk": 87,
   "fields": {
-    "name": "ºÎÃµ½Ã ¼Ò»ç±¸",
+    "name": "ë¶€ì²œì‹œ ì†Œì‚¬êµ¬",
     "city": 8
   }
 },
@@ -699,7 +699,7 @@
   "model": "regions.regiondistrict",
   "pk": 88,
   "fields": {
-    "name": "ºÎÃµ½Ã ¿ÀÁ¤±¸",
+    "name": "ë¶€ì²œì‹œ ì˜¤ì •êµ¬",
     "city": 8
   }
 },
@@ -707,7 +707,7 @@
   "model": "regions.regiondistrict",
   "pk": 89,
   "fields": {
-    "name": "ºÎÃµ½Ã ¿ø¹Ì±¸",
+    "name": "ë¶€ì²œì‹œ ì›ë¯¸êµ¬",
     "city": 8
   }
 },
@@ -715,7 +715,7 @@
   "model": "regions.regiondistrict",
   "pk": 90,
   "fields": {
-    "name": "¼º³²½Ã ºĞ´ç±¸",
+    "name": "ì„±ë‚¨ì‹œ ë¶„ë‹¹êµ¬",
     "city": 8
   }
 },
@@ -723,7 +723,7 @@
   "model": "regions.regiondistrict",
   "pk": 91,
   "fields": {
-    "name": "¼º³²½Ã ¼öÁ¤±¸",
+    "name": "ì„±ë‚¨ì‹œ ìˆ˜ì •êµ¬",
     "city": 8
   }
 },
@@ -731,7 +731,7 @@
   "model": "regions.regiondistrict",
   "pk": 92,
   "fields": {
-    "name": "¼º³²½Ã Áß¿ø±¸",
+    "name": "ì„±ë‚¨ì‹œ ì¤‘ì›êµ¬",
     "city": 8
   }
 },
@@ -739,7 +739,7 @@
   "model": "regions.regiondistrict",
   "pk": 93,
   "fields": {
-    "name": "¼ö¿ø½Ã ±Ç¼±±¸",
+    "name": "ìˆ˜ì›ì‹œ ê¶Œì„ êµ¬",
     "city": 8
   }
 },
@@ -747,7 +747,7 @@
   "model": "regions.regiondistrict",
   "pk": 94,
   "fields": {
-    "name": "¼ö¿ø½Ã ¿µÅë±¸",
+    "name": "ìˆ˜ì›ì‹œ ì˜í†µêµ¬",
     "city": 8
   }
 },
@@ -755,7 +755,7 @@
   "model": "regions.regiondistrict",
   "pk": 95,
   "fields": {
-    "name": "¼ö¿ø½Ã Àå¾È±¸",
+    "name": "ìˆ˜ì›ì‹œ ì¥ì•ˆêµ¬",
     "city": 8
   }
 },
@@ -763,7 +763,7 @@
   "model": "regions.regiondistrict",
   "pk": 96,
   "fields": {
-    "name": "¼ö¿ø½Ã ÆÈ´Ş±¸",
+    "name": "ìˆ˜ì›ì‹œ íŒ”ë‹¬êµ¬",
     "city": 8
   }
 },
@@ -771,7 +771,7 @@
   "model": "regions.regiondistrict",
   "pk": 97,
   "fields": {
-    "name": "½ÃÈï½Ã",
+    "name": "ì‹œí¥ì‹œ",
     "city": 8
   }
 },
@@ -779,7 +779,7 @@
   "model": "regions.regiondistrict",
   "pk": 98,
   "fields": {
-    "name": "¾È»ê½Ã ´Ü¿ø±¸",
+    "name": "ì•ˆì‚°ì‹œ ë‹¨ì›êµ¬",
     "city": 8
   }
 },
@@ -787,7 +787,7 @@
   "model": "regions.regiondistrict",
   "pk": 99,
   "fields": {
-    "name": "¾È»ê½Ã »ó·Ï±¸",
+    "name": "ì•ˆì‚°ì‹œ ìƒë¡êµ¬",
     "city": 8
   }
 },
@@ -795,7 +795,7 @@
   "model": "regions.regiondistrict",
   "pk": 100,
   "fields": {
-    "name": "¾È¼º½Ã",
+    "name": "ì•ˆì„±ì‹œ",
     "city": 8
   }
 },
@@ -803,7 +803,7 @@
   "model": "regions.regiondistrict",
   "pk": 101,
   "fields": {
-    "name": "¾È¾ç½Ã µ¿¾È±¸",
+    "name": "ì•ˆì–‘ì‹œ ë™ì•ˆêµ¬",
     "city": 8
   }
 },
@@ -811,7 +811,7 @@
   "model": "regions.regiondistrict",
   "pk": 102,
   "fields": {
-    "name": "¾È¾ç½Ã ¸¸¾È±¸",
+    "name": "ì•ˆì–‘ì‹œ ë§Œì•ˆêµ¬",
     "city": 8
   }
 },
@@ -819,7 +819,7 @@
   "model": "regions.regiondistrict",
   "pk": 103,
   "fields": {
-    "name": "¾çÁÖ½Ã",
+    "name": "ì–‘ì£¼ì‹œ",
     "city": 8
   }
 },
@@ -827,7 +827,7 @@
   "model": "regions.regiondistrict",
   "pk": 104,
   "fields": {
-    "name": "¾çÆò±º",
+    "name": "ì–‘í‰êµ°",
     "city": 8
   }
 },
@@ -835,7 +835,7 @@
   "model": "regions.regiondistrict",
   "pk": 105,
   "fields": {
-    "name": "¿©ÁÖ±º",
+    "name": "ì—¬ì£¼êµ°",
     "city": 8
   }
 },
@@ -843,7 +843,7 @@
   "model": "regions.regiondistrict",
   "pk": 106,
   "fields": {
-    "name": "¿¬Ãµ±º",
+    "name": "ì—°ì²œêµ°",
     "city": 8
   }
 },
@@ -851,7 +851,7 @@
   "model": "regions.regiondistrict",
   "pk": 107,
   "fields": {
-    "name": "¿À»ê½Ã",
+    "name": "ì˜¤ì‚°ì‹œ",
     "city": 8
   }
 },
@@ -859,7 +859,7 @@
   "model": "regions.regiondistrict",
   "pk": 108,
   "fields": {
-    "name": "¿ëÀÎ½Ã ±âÈï±¸",
+    "name": "ìš©ì¸ì‹œ ê¸°í¥êµ¬",
     "city": 8
   }
 },
@@ -867,7 +867,7 @@
   "model": "regions.regiondistrict",
   "pk": 109,
   "fields": {
-    "name": "¿ëÀÎ½Ã ¼öÁö±¸",
+    "name": "ìš©ì¸ì‹œ ìˆ˜ì§€êµ¬",
     "city": 8
   }
 },
@@ -875,7 +875,7 @@
   "model": "regions.regiondistrict",
   "pk": 110,
   "fields": {
-    "name": "¿ëÀÎ½Ã Ã³ÀÎ±¸",
+    "name": "ìš©ì¸ì‹œ ì²˜ì¸êµ¬",
     "city": 8
   }
 },
@@ -883,7 +883,7 @@
   "model": "regions.regiondistrict",
   "pk": 111,
   "fields": {
-    "name": "ÀÇ¿Õ½Ã",
+    "name": "ì˜ì™•ì‹œ",
     "city": 8
   }
 },
@@ -891,7 +891,7 @@
   "model": "regions.regiondistrict",
   "pk": 112,
   "fields": {
-    "name": "ÀÇÁ¤ºÎ½Ã",
+    "name": "ì˜ì •ë¶€ì‹œ",
     "city": 8
   }
 },
@@ -899,7 +899,7 @@
   "model": "regions.regiondistrict",
   "pk": 113,
   "fields": {
-    "name": "ÀÌÃµ½Ã",
+    "name": "ì´ì²œì‹œ",
     "city": 8
   }
 },
@@ -907,7 +907,7 @@
   "model": "regions.regiondistrict",
   "pk": 114,
   "fields": {
-    "name": "ÆÄÁÖ½Ã",
+    "name": "íŒŒì£¼ì‹œ",
     "city": 8
   }
 },
@@ -915,7 +915,7 @@
   "model": "regions.regiondistrict",
   "pk": 115,
   "fields": {
-    "name": "ÆòÅÃ½Ã",
+    "name": "í‰íƒì‹œ",
     "city": 8
   }
 },
@@ -923,7 +923,7 @@
   "model": "regions.regiondistrict",
   "pk": 116,
   "fields": {
-    "name": "Æ÷Ãµ½Ã",
+    "name": "í¬ì²œì‹œ",
     "city": 8
   }
 },
@@ -931,7 +931,7 @@
   "model": "regions.regiondistrict",
   "pk": 117,
   "fields": {
-    "name": "ÇÏ³²½Ã",
+    "name": "í•˜ë‚¨ì‹œ",
     "city": 8
   }
 },
@@ -939,7 +939,7 @@
   "model": "regions.regiondistrict",
   "pk": 118,
   "fields": {
-    "name": "È­¼º½Ã",
+    "name": "í™”ì„±ì‹œ",
     "city": 8
   }
 },
@@ -947,7 +947,7 @@
   "model": "regions.regiondistrict",
   "pk": 119,
   "fields": {
-    "name": "°­¸ª½Ã",
+    "name": "ê°•ë¦‰ì‹œ",
     "city": 9
   }
 },
@@ -955,7 +955,7 @@
   "model": "regions.regiondistrict",
   "pk": 120,
   "fields": {
-    "name": "°í¼º±º",
+    "name": "ê³ ì„±êµ°",
     "city": 9
   }
 },
@@ -963,7 +963,7 @@
   "model": "regions.regiondistrict",
   "pk": 121,
   "fields": {
-    "name": "µ¿ÇØ½Ã",
+    "name": "ë™í•´ì‹œ",
     "city": 9
   }
 },
@@ -971,7 +971,7 @@
   "model": "regions.regiondistrict",
   "pk": 122,
   "fields": {
-    "name": "»ïÃ´½Ã",
+    "name": "ì‚¼ì²™ì‹œ",
     "city": 9
   }
 },
@@ -979,7 +979,7 @@
   "model": "regions.regiondistrict",
   "pk": 123,
   "fields": {
-    "name": "¼ÓÃÊ½Ã",
+    "name": "ì†ì´ˆì‹œ",
     "city": 9
   }
 },
@@ -987,7 +987,7 @@
   "model": "regions.regiondistrict",
   "pk": 124,
   "fields": {
-    "name": "¾ç±¸±º",
+    "name": "ì–‘êµ¬êµ°",
     "city": 9
   }
 },
@@ -995,7 +995,7 @@
   "model": "regions.regiondistrict",
   "pk": 125,
   "fields": {
-    "name": "¾ç¾ç±º",
+    "name": "ì–‘ì–‘êµ°",
     "city": 9
   }
 },
@@ -1003,7 +1003,7 @@
   "model": "regions.regiondistrict",
   "pk": 126,
   "fields": {
-    "name": "¿µ¿ù±º",
+    "name": "ì˜ì›”êµ°",
     "city": 9
   }
 },
@@ -1011,7 +1011,7 @@
   "model": "regions.regiondistrict",
   "pk": 127,
   "fields": {
-    "name": "¿øÁÖ½Ã",
+    "name": "ì›ì£¼ì‹œ",
     "city": 9
   }
 },
@@ -1019,7 +1019,7 @@
   "model": "regions.regiondistrict",
   "pk": 128,
   "fields": {
-    "name": "ÀÎÁ¦±º",
+    "name": "ì¸ì œêµ°",
     "city": 9
   }
 },
@@ -1027,7 +1027,7 @@
   "model": "regions.regiondistrict",
   "pk": 129,
   "fields": {
-    "name": "Á¤¼±±º",
+    "name": "ì •ì„ êµ°",
     "city": 9
   }
 },
@@ -1035,7 +1035,7 @@
   "model": "regions.regiondistrict",
   "pk": 130,
   "fields": {
-    "name": "Ã¶¿ø±º",
+    "name": "ì² ì›êµ°",
     "city": 9
   }
 },
@@ -1043,7 +1043,7 @@
   "model": "regions.regiondistrict",
   "pk": 131,
   "fields": {
-    "name": "ÃáÃµ½Ã",
+    "name": "ì¶˜ì²œì‹œ",
     "city": 9
   }
 },
@@ -1051,7 +1051,7 @@
   "model": "regions.regiondistrict",
   "pk": 132,
   "fields": {
-    "name": "ÅÂ¹é½Ã",
+    "name": "íƒœë°±ì‹œ",
     "city": 9
   }
 },
@@ -1059,7 +1059,7 @@
   "model": "regions.regiondistrict",
   "pk": 133,
   "fields": {
-    "name": "ÆòÃ¢±º",
+    "name": "í‰ì°½êµ°",
     "city": 9
   }
 },
@@ -1067,7 +1067,7 @@
   "model": "regions.regiondistrict",
   "pk": 134,
   "fields": {
-    "name": "È«Ãµ±º",
+    "name": "í™ì²œêµ°",
     "city": 9
   }
 },
@@ -1075,7 +1075,7 @@
   "model": "regions.regiondistrict",
   "pk": 135,
   "fields": {
-    "name": "È­Ãµ±º",
+    "name": "í™”ì²œêµ°",
     "city": 9
   }
 },
@@ -1083,7 +1083,7 @@
   "model": "regions.regiondistrict",
   "pk": 136,
   "fields": {
-    "name": "È¾¼º±º",
+    "name": "íš¡ì„±êµ°",
     "city": 9
   }
 },
@@ -1091,7 +1091,7 @@
   "model": "regions.regiondistrict",
   "pk": 137,
   "fields": {
-    "name": "±«»ê±º",
+    "name": "ê´´ì‚°êµ°",
     "city": 10
   }
 },
@@ -1099,7 +1099,7 @@
   "model": "regions.regiondistrict",
   "pk": 138,
   "fields": {
-    "name": "´Ü¾ç±º",
+    "name": "ë‹¨ì–‘êµ°",
     "city": 10
   }
 },
@@ -1107,7 +1107,7 @@
   "model": "regions.regiondistrict",
   "pk": 139,
   "fields": {
-    "name": "º¸Àº±º",
+    "name": "ë³´ì€êµ°",
     "city": 10
   }
 },
@@ -1115,7 +1115,7 @@
   "model": "regions.regiondistrict",
   "pk": 140,
   "fields": {
-    "name": "¿µµ¿±º",
+    "name": "ì˜ë™êµ°",
     "city": 10
   }
 },
@@ -1123,7 +1123,7 @@
   "model": "regions.regiondistrict",
   "pk": 141,
   "fields": {
-    "name": "¿ÁÃµ±º",
+    "name": "ì˜¥ì²œêµ°",
     "city": 10
   }
 },
@@ -1131,7 +1131,7 @@
   "model": "regions.regiondistrict",
   "pk": 142,
   "fields": {
-    "name": "À½¼º±º",
+    "name": "ìŒì„±êµ°",
     "city": 10
   }
 },
@@ -1139,7 +1139,7 @@
   "model": "regions.regiondistrict",
   "pk": 143,
   "fields": {
-    "name": "Á¦Ãµ½Ã",
+    "name": "ì œì²œì‹œ",
     "city": 10
   }
 },
@@ -1147,7 +1147,7 @@
   "model": "regions.regiondistrict",
   "pk": 144,
   "fields": {
-    "name": "ÁõÆò±º",
+    "name": "ì¦í‰êµ°",
     "city": 10
   }
 },
@@ -1155,7 +1155,7 @@
   "model": "regions.regiondistrict",
   "pk": 145,
   "fields": {
-    "name": "ÁøÃµ±º",
+    "name": "ì§„ì²œêµ°",
     "city": 10
   }
 },
@@ -1163,7 +1163,7 @@
   "model": "regions.regiondistrict",
   "pk": 146,
   "fields": {
-    "name": "Ã»¿ø±º",
+    "name": "ì²­ì›êµ°",
     "city": 10
   }
 },
@@ -1171,7 +1171,7 @@
   "model": "regions.regiondistrict",
   "pk": 147,
   "fields": {
-    "name": "Ã»ÁÖ½Ã »ó´ç±¸",
+    "name": "ì²­ì£¼ì‹œ ìƒë‹¹êµ¬",
     "city": 10
   }
 },
@@ -1179,7 +1179,7 @@
   "model": "regions.regiondistrict",
   "pk": 148,
   "fields": {
-    "name": "Ã»ÁÖ½Ã Èï´ö±¸",
+    "name": "ì²­ì£¼ì‹œ í¥ë•êµ¬",
     "city": 10
   }
 },
@@ -1187,7 +1187,7 @@
   "model": "regions.regiondistrict",
   "pk": 149,
   "fields": {
-    "name": "ÃæÁÖ½Ã",
+    "name": "ì¶©ì£¼ì‹œ",
     "city": 10
   }
 },
@@ -1195,7 +1195,7 @@
   "model": "regions.regiondistrict",
   "pk": 150,
   "fields": {
-    "name": "°è·æ½Ã",
+    "name": "ê³„ë£¡ì‹œ",
     "city": 11
   }
 },
@@ -1203,7 +1203,7 @@
   "model": "regions.regiondistrict",
   "pk": 151,
   "fields": {
-    "name": "°øÁÖ½Ã",
+    "name": "ê³µì£¼ì‹œ",
     "city": 11
   }
 },
@@ -1211,7 +1211,7 @@
   "model": "regions.regiondistrict",
   "pk": 152,
   "fields": {
-    "name": "±İ»ê±º",
+    "name": "ê¸ˆì‚°êµ°",
     "city": 11
   }
 },
@@ -1219,7 +1219,7 @@
   "model": "regions.regiondistrict",
   "pk": 153,
   "fields": {
-    "name": "³í»ê½Ã",
+    "name": "ë…¼ì‚°ì‹œ",
     "city": 11
   }
 },
@@ -1227,7 +1227,7 @@
   "model": "regions.regiondistrict",
   "pk": 154,
   "fields": {
-    "name": "´çÁø½Ã",
+    "name": "ë‹¹ì§„ì‹œ",
     "city": 11
   }
 },
@@ -1235,7 +1235,7 @@
   "model": "regions.regiondistrict",
   "pk": 155,
   "fields": {
-    "name": "º¸·É½Ã",
+    "name": "ë³´ë ¹ì‹œ",
     "city": 11
   }
 },
@@ -1243,7 +1243,7 @@
   "model": "regions.regiondistrict",
   "pk": 156,
   "fields": {
-    "name": "ºÎ¿©±º",
+    "name": "ë¶€ì—¬êµ°",
     "city": 11
   }
 },
@@ -1251,7 +1251,7 @@
   "model": "regions.regiondistrict",
   "pk": 157,
   "fields": {
-    "name": "¼­»ê½Ã",
+    "name": "ì„œì‚°ì‹œ",
     "city": 11
   }
 },
@@ -1259,7 +1259,7 @@
   "model": "regions.regiondistrict",
   "pk": 158,
   "fields": {
-    "name": "¼­Ãµ±º",
+    "name": "ì„œì²œêµ°",
     "city": 11
   }
 },
@@ -1267,7 +1267,7 @@
   "model": "regions.regiondistrict",
   "pk": 159,
   "fields": {
-    "name": "¾Æ»ê½Ã",
+    "name": "ì•„ì‚°ì‹œ",
     "city": 11
   }
 },
@@ -1275,7 +1275,7 @@
   "model": "regions.regiondistrict",
   "pk": 160,
   "fields": {
-    "name": "¿¬±â±º",
+    "name": "ì—°ê¸°êµ°",
     "city": 11
   }
 },
@@ -1283,7 +1283,7 @@
   "model": "regions.regiondistrict",
   "pk": 161,
   "fields": {
-    "name": "¿¹»ê±º",
+    "name": "ì˜ˆì‚°êµ°",
     "city": 11
   }
 },
@@ -1291,7 +1291,7 @@
   "model": "regions.regiondistrict",
   "pk": 162,
   "fields": {
-    "name": "Ãµ¾È½Ã µ¿³²±¸",
+    "name": "ì²œì•ˆì‹œ ë™ë‚¨êµ¬",
     "city": 11
   }
 },
@@ -1299,7 +1299,7 @@
   "model": "regions.regiondistrict",
   "pk": 163,
   "fields": {
-    "name": "Ãµ¾È½Ã ¼­ºÏ±¸",
+    "name": "ì²œì•ˆì‹œ ì„œë¶êµ¬",
     "city": 11
   }
 },
@@ -1307,7 +1307,7 @@
   "model": "regions.regiondistrict",
   "pk": 164,
   "fields": {
-    "name": "Ã»¾ç±º",
+    "name": "ì²­ì–‘êµ°",
     "city": 11
   }
 },
@@ -1315,7 +1315,7 @@
   "model": "regions.regiondistrict",
   "pk": 165,
   "fields": {
-    "name": "ÅÂ¾È±º",
+    "name": "íƒœì•ˆêµ°",
     "city": 11
   }
 },
@@ -1323,7 +1323,7 @@
   "model": "regions.regiondistrict",
   "pk": 166,
   "fields": {
-    "name": "È«¼º±º",
+    "name": "í™ì„±êµ°",
     "city": 11
   }
 },
@@ -1331,7 +1331,7 @@
   "model": "regions.regiondistrict",
   "pk": 167,
   "fields": {
-    "name": "°íÃ¢±º",
+    "name": "ê³ ì°½êµ°",
     "city": 12
   }
 },
@@ -1339,7 +1339,7 @@
   "model": "regions.regiondistrict",
   "pk": 168,
   "fields": {
-    "name": "±º»ê½Ã",
+    "name": "êµ°ì‚°ì‹œ",
     "city": 12
   }
 },
@@ -1347,7 +1347,7 @@
   "model": "regions.regiondistrict",
   "pk": 169,
   "fields": {
-    "name": "±èÁ¦½Ã",
+    "name": "ê¹€ì œì‹œ",
     "city": 12
   }
 },
@@ -1355,7 +1355,7 @@
   "model": "regions.regiondistrict",
   "pk": 170,
   "fields": {
-    "name": "³²¿ø½Ã",
+    "name": "ë‚¨ì›ì‹œ",
     "city": 12
   }
 },
@@ -1363,7 +1363,7 @@
   "model": "regions.regiondistrict",
   "pk": 171,
   "fields": {
-    "name": "¹«ÁÖ±º",
+    "name": "ë¬´ì£¼êµ°",
     "city": 12
   }
 },
@@ -1371,7 +1371,7 @@
   "model": "regions.regiondistrict",
   "pk": 172,
   "fields": {
-    "name": "ºÎ¾È±º",
+    "name": "ë¶€ì•ˆêµ°",
     "city": 12
   }
 },
@@ -1379,7 +1379,7 @@
   "model": "regions.regiondistrict",
   "pk": 173,
   "fields": {
-    "name": "¼øÃ¢±º",
+    "name": "ìˆœì°½êµ°",
     "city": 12
   }
 },
@@ -1387,7 +1387,7 @@
   "model": "regions.regiondistrict",
   "pk": 174,
   "fields": {
-    "name": "¿ÏÁÖ±º",
+    "name": "ì™„ì£¼êµ°",
     "city": 12
   }
 },
@@ -1395,7 +1395,7 @@
   "model": "regions.regiondistrict",
   "pk": 175,
   "fields": {
-    "name": "ÀÍ»ê½Ã",
+    "name": "ìµì‚°ì‹œ",
     "city": 12
   }
 },
@@ -1403,7 +1403,7 @@
   "model": "regions.regiondistrict",
   "pk": 176,
   "fields": {
-    "name": "ÀÓ½Ç±º",
+    "name": "ì„ì‹¤êµ°",
     "city": 12
   }
 },
@@ -1411,7 +1411,7 @@
   "model": "regions.regiondistrict",
   "pk": 177,
   "fields": {
-    "name": "Àå¼ö±º",
+    "name": "ì¥ìˆ˜êµ°",
     "city": 12
   }
 },
@@ -1419,7 +1419,7 @@
   "model": "regions.regiondistrict",
   "pk": 178,
   "fields": {
-    "name": "ÀüÁÖ½Ã ´öÁø±¸",
+    "name": "ì „ì£¼ì‹œ ë•ì§„êµ¬",
     "city": 12
   }
 },
@@ -1427,7 +1427,7 @@
   "model": "regions.regiondistrict",
   "pk": 179,
   "fields": {
-    "name": "ÀüÁÖ½Ã ¿Ï»ê±¸",
+    "name": "ì „ì£¼ì‹œ ì™„ì‚°êµ¬",
     "city": 12
   }
 },
@@ -1435,7 +1435,7 @@
   "model": "regions.regiondistrict",
   "pk": 180,
   "fields": {
-    "name": "Á¤À¾½Ã",
+    "name": "ì •ìì‹œ",
     "city": 12
   }
 },
@@ -1443,7 +1443,7 @@
   "model": "regions.regiondistrict",
   "pk": 181,
   "fields": {
-    "name": "Áø¾È±º",
+    "name": "ì§„ì•ˆêµ°",
     "city": 12
   }
 },
@@ -1451,7 +1451,7 @@
   "model": "regions.regiondistrict",
   "pk": 182,
   "fields": {
-    "name": "°­Áø±º",
+    "name": "ê°•ì§„êµ°",
     "city": 13
   }
 },
@@ -1459,7 +1459,7 @@
   "model": "regions.regiondistrict",
   "pk": 183,
   "fields": {
-    "name": "°íÈï±º",
+    "name": "ê³ í¥êµ°",
     "city": 13
   }
 },
@@ -1467,7 +1467,7 @@
   "model": "regions.regiondistrict",
   "pk": 184,
   "fields": {
-    "name": "°î¼º±º",
+    "name": "ê³¡ì„±êµ°",
     "city": 13
   }
 },
@@ -1475,7 +1475,7 @@
   "model": "regions.regiondistrict",
   "pk": 185,
   "fields": {
-    "name": "±¤¾ç½Ã",
+    "name": "ê´‘ì–‘ì‹œ",
     "city": 13
   }
 },
@@ -1483,7 +1483,7 @@
   "model": "regions.regiondistrict",
   "pk": 186,
   "fields": {
-    "name": "±¸·Ê±º",
+    "name": "êµ¬ë¡€êµ°",
     "city": 13
   }
 },
@@ -1491,7 +1491,7 @@
   "model": "regions.regiondistrict",
   "pk": 187,
   "fields": {
-    "name": "³ªÁÖ½Ã",
+    "name": "ë‚˜ì£¼ì‹œ",
     "city": 13
   }
 },
@@ -1499,7 +1499,7 @@
   "model": "regions.regiondistrict",
   "pk": 188,
   "fields": {
-    "name": "´ã¾ç±º",
+    "name": "ë‹´ì–‘êµ°",
     "city": 13
   }
 },
@@ -1507,7 +1507,7 @@
   "model": "regions.regiondistrict",
   "pk": 189,
   "fields": {
-    "name": "¸ñÆ÷½Ã",
+    "name": "ëª©í¬ì‹œ",
     "city": 13
   }
 },
@@ -1515,7 +1515,7 @@
   "model": "regions.regiondistrict",
   "pk": 190,
   "fields": {
-    "name": "¹«¾È±º",
+    "name": "ë¬´ì•ˆêµ°",
     "city": 13
   }
 },
@@ -1523,7 +1523,7 @@
   "model": "regions.regiondistrict",
   "pk": 191,
   "fields": {
-    "name": "º¸¼º±º",
+    "name": "ë³´ì„±êµ°",
     "city": 13
   }
 },
@@ -1531,7 +1531,7 @@
   "model": "regions.regiondistrict",
   "pk": 192,
   "fields": {
-    "name": "¼øÃµ½Ã",
+    "name": "ìˆœì²œì‹œ",
     "city": 13
   }
 },
@@ -1539,7 +1539,7 @@
   "model": "regions.regiondistrict",
   "pk": 193,
   "fields": {
-    "name": "½Å¾È±º",
+    "name": "ì‹ ì•ˆêµ°",
     "city": 13
   }
 },
@@ -1547,7 +1547,7 @@
   "model": "regions.regiondistrict",
   "pk": 194,
   "fields": {
-    "name": "¿©¼ö½Ã",
+    "name": "ì—¬ìˆ˜ì‹œ",
     "city": 13
   }
 },
@@ -1555,7 +1555,7 @@
   "model": "regions.regiondistrict",
   "pk": 195,
   "fields": {
-    "name": "¿µ±¤±º",
+    "name": "ì˜ê´‘êµ°",
     "city": 13
   }
 },
@@ -1563,7 +1563,7 @@
   "model": "regions.regiondistrict",
   "pk": 196,
   "fields": {
-    "name": "¿µ¾Ï±º",
+    "name": "ì˜ì•”êµ°",
     "city": 13
   }
 },
@@ -1571,7 +1571,7 @@
   "model": "regions.regiondistrict",
   "pk": 197,
   "fields": {
-    "name": "¿Ïµµ±º",
+    "name": "ì™„ë„êµ°",
     "city": 13
   }
 },
@@ -1579,7 +1579,7 @@
   "model": "regions.regiondistrict",
   "pk": 198,
   "fields": {
-    "name": "Àå¼º±º",
+    "name": "ì¥ì„±êµ°",
     "city": 13
   }
 },
@@ -1587,7 +1587,7 @@
   "model": "regions.regiondistrict",
   "pk": 199,
   "fields": {
-    "name": "ÀåÈï±º",
+    "name": "ì¥í¥êµ°",
     "city": 13
   }
 },
@@ -1595,7 +1595,7 @@
   "model": "regions.regiondistrict",
   "pk": 200,
   "fields": {
-    "name": "Áøµµ±º",
+    "name": "ì§„ë„êµ°",
     "city": 13
   }
 },
@@ -1603,7 +1603,7 @@
   "model": "regions.regiondistrict",
   "pk": 201,
   "fields": {
-    "name": "ÇÔÆò±º",
+    "name": "í•¨í‰êµ°",
     "city": 13
   }
 },
@@ -1611,7 +1611,7 @@
   "model": "regions.regiondistrict",
   "pk": 202,
   "fields": {
-    "name": "ÇØ³²±º",
+    "name": "í•´ë‚¨êµ°",
     "city": 13
   }
 },
@@ -1619,7 +1619,7 @@
   "model": "regions.regiondistrict",
   "pk": 203,
   "fields": {
-    "name": "È­¼ø±º",
+    "name": "í™”ìˆœêµ°",
     "city": 13
   }
 },
@@ -1627,7 +1627,7 @@
   "model": "regions.regiondistrict",
   "pk": 204,
   "fields": {
-    "name": "°æ»ê½Ã",
+    "name": "ê²½ì‚°ì‹œ",
     "city": 14
   }
 },
@@ -1635,7 +1635,7 @@
   "model": "regions.regiondistrict",
   "pk": 205,
   "fields": {
-    "name": "°æÁÖ½Ã",
+    "name": "ê²½ì£¼ì‹œ",
     "city": 14
   }
 },
@@ -1643,7 +1643,7 @@
   "model": "regions.regiondistrict",
   "pk": 206,
   "fields": {
-    "name": "°í·É±º",
+    "name": "ê³ ë ¹êµ°",
     "city": 14
   }
 },
@@ -1651,7 +1651,7 @@
   "model": "regions.regiondistrict",
   "pk": 207,
   "fields": {
-    "name": "±¸¹Ì½Ã",
+    "name": "êµ¬ë¯¸ì‹œ",
     "city": 14
   }
 },
@@ -1659,7 +1659,7 @@
   "model": "regions.regiondistrict",
   "pk": 208,
   "fields": {
-    "name": "±ºÀ§±º",
+    "name": "êµ°ìœ„êµ°",
     "city": 14
   }
 },
@@ -1667,7 +1667,7 @@
   "model": "regions.regiondistrict",
   "pk": 209,
   "fields": {
-    "name": "±èÃµ½Ã",
+    "name": "ê¹€ì²œì‹œ",
     "city": 14
   }
 },
@@ -1675,7 +1675,7 @@
   "model": "regions.regiondistrict",
   "pk": 210,
   "fields": {
-    "name": "¹®°æ½Ã",
+    "name": "ë¬¸ê²½ì‹œ",
     "city": 14
   }
 },
@@ -1683,7 +1683,7 @@
   "model": "regions.regiondistrict",
   "pk": 211,
   "fields": {
-    "name": "ºÀÈ­±º",
+    "name": "ë´‰í™”êµ°",
     "city": 14
   }
 },
@@ -1691,7 +1691,7 @@
   "model": "regions.regiondistrict",
   "pk": 212,
   "fields": {
-    "name": "»óÁÖ½Ã",
+    "name": "ìƒì£¼ì‹œ",
     "city": 14
   }
 },
@@ -1699,7 +1699,7 @@
   "model": "regions.regiondistrict",
   "pk": 213,
   "fields": {
-    "name": "¼ºÁÖ±º",
+    "name": "ì„±ì£¼êµ°",
     "city": 14
   }
 },
@@ -1707,7 +1707,7 @@
   "model": "regions.regiondistrict",
   "pk": 214,
   "fields": {
-    "name": "¾Èµ¿½Ã",
+    "name": "ì•ˆë™ì‹œ",
     "city": 14
   }
 },
@@ -1715,7 +1715,7 @@
   "model": "regions.regiondistrict",
   "pk": 215,
   "fields": {
-    "name": "¿µ´ö±º",
+    "name": "ì˜ë•êµ°",
     "city": 14
   }
 },
@@ -1723,7 +1723,7 @@
   "model": "regions.regiondistrict",
   "pk": 216,
   "fields": {
-    "name": "¿µ¾ç±º",
+    "name": "ì˜ì–‘êµ°",
     "city": 14
   }
 },
@@ -1731,7 +1731,7 @@
   "model": "regions.regiondistrict",
   "pk": 217,
   "fields": {
-    "name": "¿µÁÖ½Ã",
+    "name": "ì˜ì£¼ì‹œ",
     "city": 14
   }
 },
@@ -1739,7 +1739,7 @@
   "model": "regions.regiondistrict",
   "pk": 218,
   "fields": {
-    "name": "¿µÃµ½Ã",
+    "name": "ì˜ì²œì‹œ",
     "city": 14
   }
 },
@@ -1747,7 +1747,7 @@
   "model": "regions.regiondistrict",
   "pk": 219,
   "fields": {
-    "name": "¿¹Ãµ±º",
+    "name": "ì˜ˆì²œêµ°",
     "city": 14
   }
 },
@@ -1755,7 +1755,7 @@
   "model": "regions.regiondistrict",
   "pk": 220,
   "fields": {
-    "name": "¿ï¸ª±º",
+    "name": "ìš¸ë¦‰êµ°",
     "city": 14
   }
 },
@@ -1763,7 +1763,7 @@
   "model": "regions.regiondistrict",
   "pk": 221,
   "fields": {
-    "name": "¿ïÁø±º",
+    "name": "ìš¸ì§„êµ°",
     "city": 14
   }
 },
@@ -1771,7 +1771,7 @@
   "model": "regions.regiondistrict",
   "pk": 222,
   "fields": {
-    "name": "ÀÇ¼º±º",
+    "name": "ì˜ì„±êµ°",
     "city": 14
   }
 },
@@ -1779,7 +1779,7 @@
   "model": "regions.regiondistrict",
   "pk": 223,
   "fields": {
-    "name": "Ã»µµ±º",
+    "name": "ì²­ë„êµ°",
     "city": 14
   }
 },
@@ -1787,7 +1787,7 @@
   "model": "regions.regiondistrict",
   "pk": 224,
   "fields": {
-    "name": "Ã»¼Û±º",
+    "name": "ì²­ì†¡êµ°",
     "city": 14
   }
 },
@@ -1795,7 +1795,7 @@
   "model": "regions.regiondistrict",
   "pk": 225,
   "fields": {
-    "name": "Ä¥°î±º",
+    "name": "ì¹ ê³¡êµ°",
     "city": 14
   }
 },
@@ -1803,7 +1803,7 @@
   "model": "regions.regiondistrict",
   "pk": 226,
   "fields": {
-    "name": "Æ÷Ç×½Ã ³²±¸",
+    "name": "í¬í•­ì‹œ ë‚¨êµ¬",
     "city": 14
   }
 },
@@ -1811,7 +1811,7 @@
   "model": "regions.regiondistrict",
   "pk": 227,
   "fields": {
-    "name": "Æ÷Ç×½Ã ºÏ±¸",
+    "name": "í¬í•­ì‹œ ë¶êµ¬",
     "city": 14
   }
 },
@@ -1819,7 +1819,7 @@
   "model": "regions.regiondistrict",
   "pk": 228,
   "fields": {
-    "name": "°ÅÁ¦½Ã",
+    "name": "ê±°ì œì‹œ",
     "city": 15
   }
 },
@@ -1827,7 +1827,7 @@
   "model": "regions.regiondistrict",
   "pk": 229,
   "fields": {
-    "name": "°ÅÃ¢±º",
+    "name": "ê±°ì°½êµ°",
     "city": 15
   }
 },
@@ -1835,7 +1835,7 @@
   "model": "regions.regiondistrict",
   "pk": 230,
   "fields": {
-    "name": "°í¼º±º",
+    "name": "ê³ ì„±êµ°",
     "city": 15
   }
 },
@@ -1843,7 +1843,7 @@
   "model": "regions.regiondistrict",
   "pk": 231,
   "fields": {
-    "name": "±èÇØ½Ã",
+    "name": "ê¹€í•´ì‹œ",
     "city": 15
   }
 },
@@ -1851,7 +1851,7 @@
   "model": "regions.regiondistrict",
   "pk": 232,
   "fields": {
-    "name": "³²ÇØ±º",
+    "name": "ë‚¨í•´êµ°",
     "city": 15
   }
 },
@@ -1859,7 +1859,7 @@
   "model": "regions.regiondistrict",
   "pk": 233,
   "fields": {
-    "name": "¹Ğ¾ç½Ã",
+    "name": "ë°€ì–‘ì‹œ",
     "city": 15
   }
 },
@@ -1867,7 +1867,7 @@
   "model": "regions.regiondistrict",
   "pk": 234,
   "fields": {
-    "name": "»çÃµ½Ã",
+    "name": "ì‚¬ì²œì‹œ",
     "city": 15
   }
 },
@@ -1875,7 +1875,7 @@
   "model": "regions.regiondistrict",
   "pk": 235,
   "fields": {
-    "name": "»êÃ»±º",
+    "name": "ì‚°ì²­êµ°",
     "city": 15
   }
 },
@@ -1883,7 +1883,7 @@
   "model": "regions.regiondistrict",
   "pk": 236,
   "fields": {
-    "name": "¾ç»ê½Ã",
+    "name": "ì–‘ì‚°ì‹œ",
     "city": 15
   }
 },
@@ -1891,7 +1891,7 @@
   "model": "regions.regiondistrict",
   "pk": 237,
   "fields": {
-    "name": "ÀÇ·É±º",
+    "name": "ì˜ë ¹êµ°",
     "city": 15
   }
 },
@@ -1899,7 +1899,7 @@
   "model": "regions.regiondistrict",
   "pk": 238,
   "fields": {
-    "name": "ÁøÁÖ½Ã",
+    "name": "ì§„ì£¼ì‹œ",
     "city": 15
   }
 },
@@ -1907,7 +1907,7 @@
   "model": "regions.regiondistrict",
   "pk": 239,
   "fields": {
-    "name": "Ã¢³ç±º",
+    "name": "ì°½ë…•êµ°",
     "city": 15
   }
 },
@@ -1915,7 +1915,7 @@
   "model": "regions.regiondistrict",
   "pk": 240,
   "fields": {
-    "name": "Ã¢¿ø½Ã ¸¶»êÇÕÆ÷±¸",
+    "name": "ì°½ì›ì‹œ ë§ˆì‚°í•©í¬êµ¬",
     "city": 15
   }
 },
@@ -1923,7 +1923,7 @@
   "model": "regions.regiondistrict",
   "pk": 241,
   "fields": {
-    "name": "Ã¢¿ø½Ã ¸¶»êÈ¸¿ø±¸",
+    "name": "ì°½ì›ì‹œ ë§ˆì‚°íšŒì›êµ¬",
     "city": 15
   }
 },
@@ -1931,7 +1931,7 @@
   "model": "regions.regiondistrict",
   "pk": 242,
   "fields": {
-    "name": "Ã¢¿ø½Ã ¼º»ê±¸",
+    "name": "ì°½ì›ì‹œ ì„±ì‚°êµ¬",
     "city": 15
   }
 },
@@ -1939,7 +1939,7 @@
   "model": "regions.regiondistrict",
   "pk": 243,
   "fields": {
-    "name": "Ã¢¿ø½Ã ÀÇÃ¢±¸",
+    "name": "ì°½ì›ì‹œ ì˜ì°½êµ¬",
     "city": 15
   }
 },
@@ -1947,7 +1947,7 @@
   "model": "regions.regiondistrict",
   "pk": 244,
   "fields": {
-    "name": "Ã¢¿ø½Ã ÁøÇØ±¸",
+    "name": "ì°½ì›ì‹œ ì§„í•´êµ¬",
     "city": 15
   }
 },
@@ -1955,7 +1955,7 @@
   "model": "regions.regiondistrict",
   "pk": 245,
   "fields": {
-    "name": "Åë¿µ½Ã",
+    "name": "í†µì˜ì‹œ",
     "city": 15
   }
 },
@@ -1963,7 +1963,7 @@
   "model": "regions.regiondistrict",
   "pk": 246,
   "fields": {
-    "name": "ÇÏµ¿±º",
+    "name": "í•˜ë™êµ°",
     "city": 15
   }
 },
@@ -1971,7 +1971,7 @@
   "model": "regions.regiondistrict",
   "pk": 247,
   "fields": {
-    "name": "ÇÔ¾È±º",
+    "name": "í•¨ì•ˆêµ°",
     "city": 15
   }
 },
@@ -1979,7 +1979,7 @@
   "model": "regions.regiondistrict",
   "pk": 248,
   "fields": {
-    "name": "ÇÔ¾ç±º",
+    "name": "í•¨ì–‘êµ°",
     "city": 15
   }
 },
@@ -1987,7 +1987,7 @@
   "model": "regions.regiondistrict",
   "pk": 249,
   "fields": {
-    "name": "ÇÕÃµ±º",
+    "name": "í•©ì²œêµ°",
     "city": 15
   }
 },
@@ -1995,7 +1995,7 @@
   "model": "regions.regiondistrict",
   "pk": 250,
   "fields": {
-    "name": "¼­±ÍÆ÷½Ã",
+    "name": "ì„œê·€í¬ì‹œ",
     "city": 16
   }
 },
@@ -2003,7 +2003,7 @@
   "model": "regions.regiondistrict",
   "pk": 251,
   "fields": {
-    "name": "Á¦ÁÖ½Ã",
+    "name": "ì œì£¼ì‹œ",
     "city": 16
   }
 },
@@ -2011,7 +2011,7 @@
   "model": "regions.regiondistrict",
   "pk": 252,
   "fields": {
-    "name": "¼¼Á¾½Ã",
+    "name": "ì„¸ì¢…ì‹œ",
     "city": 17
   }
 }

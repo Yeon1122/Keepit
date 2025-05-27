@@ -5,12 +5,12 @@
   "fields": {
     "product_code": null,
     "type": "deposit",
-    "name": "WONÇÃ·¯½º¿¹±İ",
-    "company": "¿ì¸®ÀºÇà",
+    "name": "WONí”ŒëŸ¬ìŠ¤ì˜ˆê¸ˆ",
+    "company": "ìš°ë¦¬ì€í–‰",
     "interest_rate": 2.5,
     "special_rate": 2.5,
     "term": 36,
-    "target": "½Ç¸íÀÇ °³ÀÎ",
+    "target": "ì‹¤ëª…ì˜ ê°œì¸",
     "created_at": "2025-05-27T04:09:11.345Z",
     "updated_at": "2025-05-27T04:09:11.368Z"
   }
@@ -21,12 +21,12 @@
   "fields": {
     "product_code": null,
     "type": "deposit",
-    "name": "e-±×¸°¼¼ÀÌºê¿¹±İ",
-    "company": "ÇÑ±¹½ºÅÄ´ÙµåÂ÷Å¸µåÀºÇà",
+    "name": "e-ê·¸ë¦°ì„¸ì´ë¸Œì˜ˆê¸ˆ",
+    "company": "í•œêµ­ìŠ¤íƒ ë‹¤ë“œì°¨íƒ€ë“œì€í–‰",
     "interest_rate": 2.6,
     "special_rate": 2.9,
     "term": 12,
-    "target": "°³ÀÎ(°³ÀÎ»ç¾÷ÀÚ Æ÷ÇÔ)",
+    "target": "ê°œì¸(ê°œì¸ì‚¬ì—…ì í¬í•¨)",
     "created_at": "2025-05-27T04:09:11.372Z",
     "updated_at": "2025-05-27T04:09:11.383Z"
   }
@@ -37,12 +37,12 @@
   "fields": {
     "product_code": null,
     "type": "deposit",
-    "name": "iMÁÖ°Å·¡¿ì´ë¿¹±İ(Ã¹¸¸³²°í°´Çü)",
-    "company": "¾ÆÀÌ¿¥¹ğÅ©",
+    "name": "iMì£¼ê±°ë˜ìš°ëŒ€ì˜ˆê¸ˆ(ì²«ë§Œë‚¨ê³ ê°í˜•)",
+    "company": "ì•„ì´ì— ë±…í¬",
     "interest_rate": 2.15,
     "special_rate": 2.8,
     "term": 36,
-    "target": "½Ç¸íÀÇ °³ÀÎ",
+    "target": "ì‹¤ëª…ì˜ ê°œì¸",
     "created_at": "2025-05-27T04:09:11.387Z",
     "updated_at": "2025-05-27T04:09:11.397Z"
   }
@@ -53,12 +53,12 @@
   "fields": {
     "product_code": null,
     "type": "deposit",
-    "name": "iMÇàº¹ÆÄÆ®³Ê¿¹±İ(ÀÏ¹İÇü)",
-    "company": "¾ÆÀÌ¿¥¹ğÅ©",
+    "name": "iMí–‰ë³µíŒŒíŠ¸ë„ˆì˜ˆê¸ˆ(ì¼ë°˜í˜•)",
+    "company": "ì•„ì´ì— ë±…í¬",
     "interest_rate": 2.35,
     "special_rate": 2.8,
     "term": 36,
-    "target": "¸¸50¼¼ ÀÌ»ó ½Ç¸íÀÇ °³ÀÎ",
+    "target": "ë§Œ50ì„¸ ì´ìƒ ì‹¤ëª…ì˜ ê°œì¸",
     "created_at": "2025-05-27T04:09:11.401Z",
     "updated_at": "2025-05-27T04:09:11.414Z"
   }
@@ -69,12 +69,12 @@
   "fields": {
     "product_code": null,
     "type": "deposit",
-    "name": "iMÇÔ²²¿¹±İ",
-    "company": "¾ÆÀÌ¿¥¹ğÅ©",
+    "name": "iMí•¨ê»˜ì˜ˆê¸ˆ",
+    "company": "ì•„ì´ì— ë±…í¬",
     "interest_rate": 2.4,
     "special_rate": 2.85,
     "term": 12,
-    "target": "½Ç¸íÀÇ °³ÀÎ ¹× °³ÀÎ»ç¾÷ÀÚ",
+    "target": "ì‹¤ëª…ì˜ ê°œì¸ ë° ê°œì¸ì‚¬ì—…ì",
     "created_at": "2025-05-27T04:09:11.418Z",
     "updated_at": "2025-05-27T04:09:11.418Z"
   }
@@ -85,12 +85,12 @@
   "fields": {
     "product_code": null,
     "type": "deposit",
-    "name": "iM½º¸¶Æ®¿¹±İ",
-    "company": "¾ÆÀÌ¿¥¹ğÅ©",
+    "name": "iMìŠ¤ë§ˆíŠ¸ì˜ˆê¸ˆ",
+    "company": "ì•„ì´ì— ë±…í¬",
     "interest_rate": 2.2,
     "special_rate": 2.45,
     "term": 36,
-    "target": "½Ç¸íÀÇ °³ÀÎ",
+    "target": "ì‹¤ëª…ì˜ ê°œì¸",
     "created_at": "2025-05-27T04:09:11.421Z",
     "updated_at": "2025-05-27T04:09:11.438Z"
   }
@@ -101,12 +101,12 @@
   "fields": {
     "product_code": null,
     "type": "deposit",
-    "name": "LIVEÁ¤±â¿¹±İ",
-    "company": "ºÎ»êÀºÇà",
+    "name": "LIVEì •ê¸°ì˜ˆê¸ˆ",
+    "company": "ë¶€ì‚°ì€í–‰",
     "interest_rate": 1.9,
     "special_rate": 1.9,
     "term": 36,
-    "target": "Á¦ÇÑ¾øÀ½",
+    "target": "ì œí•œì—†ìŒ",
     "created_at": "2025-05-27T04:09:11.442Z",
     "updated_at": "2025-05-27T04:09:11.459Z"
   }
@@ -117,12 +117,12 @@
   "fields": {
     "product_code": null,
     "type": "deposit",
-    "name": "´õ(The) Æ¯ÆÇ Á¤±â¿¹±İ",
-    "company": "ºÎ»êÀºÇà",
+    "name": "ë”(The) íŠ¹íŒ ì •ê¸°ì˜ˆê¸ˆ",
+    "company": "ë¶€ì‚°ì€í–‰",
     "interest_rate": 1.25,
     "special_rate": 1.95,
     "term": 36,
-    "target": "½Ç¸íÀÇ °³ÀÎ",
+    "target": "ì‹¤ëª…ì˜ ê°œì¸",
     "created_at": "2025-05-27T04:09:11.463Z",
     "updated_at": "2025-05-27T04:09:11.480Z"
   }
@@ -133,12 +133,12 @@
   "fields": {
     "product_code": null,
     "type": "deposit",
-    "name": "´õ(The) ·¹º§¾÷ Á¤±â¿¹±İ",
-    "company": "ºÎ»êÀºÇà",
+    "name": "ë”(The) ë ˆë²¨ì—… ì •ê¸°ì˜ˆê¸ˆ",
+    "company": "ë¶€ì‚°ì€í–‰",
     "interest_rate": 2.45,
     "special_rate": 2.65,
     "term": 12,
-    "target": "½Ç¸íÀÇ °³ÀÎ",
+    "target": "ì‹¤ëª…ì˜ ê°œì¸",
     "created_at": "2025-05-27T04:09:11.483Z",
     "updated_at": "2025-05-27T04:09:11.487Z"
   }
@@ -149,12 +149,12 @@
   "fields": {
     "product_code": null,
     "type": "deposit",
-    "name": "¹ÌÁî¿ùº¹¸®Á¤±â¿¹±İ",
-    "company": "±¤ÁÖÀºÇà",
+    "name": "ë¯¸ì¦ˆì›”ë³µë¦¬ì •ê¸°ì˜ˆê¸ˆ",
+    "company": "ê´‘ì£¼ì€í–‰",
     "interest_rate": 2.25,
     "special_rate": 2.45,
     "term": 36,
-    "target": "¸¸18¼¼ÀÌ»ó ¿©¼ºÀ¸·Î ½Ç¸íÀÇ °³ÀÎ ¹× °³ÀÎ»ç¾÷ÀÚ",
+    "target": "ë§Œ18ì„¸ì´ìƒ ì—¬ì„±ìœ¼ë¡œ ì‹¤ëª…ì˜ ê°œì¸ ë° ê°œì¸ì‚¬ì—…ì",
     "created_at": "2025-05-27T04:09:11.490Z",
     "updated_at": "2025-05-27T04:09:11.497Z"
   }
@@ -165,12 +165,12 @@
   "fields": {
     "product_code": null,
     "type": "deposit",
-    "name": "½º¸¶Æ®¸ğ¾ÆDreamÁ¤±â¿¹±İ",
-    "company": "±¤ÁÖÀºÇà",
+    "name": "ìŠ¤ë§ˆíŠ¸ëª¨ì•„Dreamì •ê¸°ì˜ˆê¸ˆ",
+    "company": "ê´‘ì£¼ì€í–‰",
     "interest_rate": 2.15,
     "special_rate": 2.35,
     "term": 36,
-    "target": "°³ÀÎ ¹× °³ÀÎ»ç¾÷ÀÚ",
+    "target": "ê°œì¸ ë° ê°œì¸ì‚¬ì—…ì",
     "created_at": "2025-05-27T04:09:11.500Z",
     "updated_at": "2025-05-27T04:09:11.517Z"
   }
@@ -181,12 +181,12 @@
   "fields": {
     "product_code": null,
     "type": "deposit",
-    "name": "±Â½ºÅ¸Æ®¿¹±İ",
-    "company": "±¤ÁÖÀºÇà",
+    "name": "êµ¿ìŠ¤íƒ€íŠ¸ì˜ˆê¸ˆ",
+    "company": "ê´‘ì£¼ì€í–‰",
     "interest_rate": 2.09,
     "special_rate": 2.59,
     "term": 12,
-    "target": "°³ÀÎ ¹× °³ÀÎ»ç¾÷ÀÚ",
+    "target": "ê°œì¸ ë° ê°œì¸ì‚¬ì—…ì",
     "created_at": "2025-05-27T04:09:11.521Z",
     "updated_at": "2025-05-27T04:09:11.521Z"
   }
@@ -197,12 +197,12 @@
   "fields": {
     "product_code": null,
     "type": "deposit",
-    "name": "TheÇÃ·¯½º¿¹±İ",
-    "company": "±¤ÁÖÀºÇà",
+    "name": "Theí”ŒëŸ¬ìŠ¤ì˜ˆê¸ˆ",
+    "company": "ê´‘ì£¼ì€í–‰",
     "interest_rate": 2.6,
     "special_rate": 2.6,
     "term": 12,
-    "target": "°³ÀÎ ¹× ¹ıÀÎ(´Ü,±¹°¡ ÁöÀÚÃ¼ ¹× ±İÀ¶±â°ü Á¦¿Ü)",
+    "target": "ê°œì¸ ë° ë²•ì¸(ë‹¨,êµ­ê°€ ì§€ìì²´ ë° ê¸ˆìœµê¸°ê´€ ì œì™¸)",
     "created_at": "2025-05-27T04:09:11.525Z",
     "updated_at": "2025-05-27T04:09:11.531Z"
   }
@@ -213,12 +213,12 @@
   "fields": {
     "product_code": null,
     "type": "deposit",
-    "name": "Á¦ÁÖDream\nÁ¤±â¿¹±İ\n(°³ÀÎ/¸¸±â\nÁö±Ş½Ä)",
-    "company": "Á¦ÁÖÀºÇà",
+    "name": "ì œì£¼Dream\nì •ê¸°ì˜ˆê¸ˆ\n(ê°œì¸/ë§Œê¸°\nì§€ê¸‰ì‹)",
+    "company": "ì œì£¼ì€í–‰",
     "interest_rate": 2.2,
     "special_rate": 2.3,
     "term": 36,
-    "target": "Á¦ÇÑ¾øÀ½",
+    "target": "ì œí•œì—†ìŒ",
     "created_at": "2025-05-27T04:09:11.535Z",
     "updated_at": "2025-05-27T04:09:11.553Z"
   }
@@ -229,12 +229,12 @@
   "fields": {
     "product_code": null,
     "type": "deposit",
-    "name": "JÁ¤±â¿¹±İ\n(¸¸±âÁö±Ş½Ä)",
-    "company": "Á¦ÁÖÀºÇà",
+    "name": "Jì •ê¸°ì˜ˆê¸ˆ\n(ë§Œê¸°ì§€ê¸‰ì‹)",
+    "company": "ì œì£¼ì€í–‰",
     "interest_rate": 1.85,
     "special_rate": 2.5,
     "term": 36,
-    "target": "½Ç¸íÀÇ \n°³ÀÎ ¹× \n°³ÀÎ»ç¾÷ÀÚ",
+    "target": "ì‹¤ëª…ì˜ \nê°œì¸ ë° \nê°œì¸ì‚¬ì—…ì",
     "created_at": "2025-05-27T04:09:11.556Z",
     "updated_at": "2025-05-27T04:09:11.573Z"
   }
@@ -245,12 +245,12 @@
   "fields": {
     "product_code": null,
     "type": "deposit",
-    "name": "½º¸¶ÀÏµå¸² \nÁ¤±â¿¹±İ\n(°³ÀÎ/¼±ÀÌÀÚ\nÁö±Ş½Ä)",
-    "company": "Á¦ÁÖÀºÇà",
+    "name": "ìŠ¤ë§ˆì¼ë“œë¦¼ \nì •ê¸°ì˜ˆê¸ˆ\n(ê°œì¸/ì„ ì´ì\nì§€ê¸‰ì‹)",
+    "company": "ì œì£¼ì€í–‰",
     "interest_rate": 1.9,
     "special_rate": 2.6,
     "term": 12,
-    "target": "½Ç¸íÀÇ\n°³ÀÎ ¹× \n°³ÀÎ»ç¾÷ÀÚ",
+    "target": "ì‹¤ëª…ì˜\nê°œì¸ ë° \nê°œì¸ì‚¬ì—…ì",
     "created_at": "2025-05-27T04:09:11.577Z",
     "updated_at": "2025-05-27T04:09:11.584Z"
   }
@@ -261,12 +261,12 @@
   "fields": {
     "product_code": null,
     "type": "deposit",
-    "name": "JB ´ÙÀÌ·ºÆ®¿¹±İÅëÀå\n(¸¸±âÀÏ½ÃÁö±Ş½Ä)",
-    "company": "ÀüºÏÀºÇà",
+    "name": "JB ë‹¤ì´ë ‰íŠ¸ì˜ˆê¸ˆí†µì¥\n(ë§Œê¸°ì¼ì‹œì§€ê¸‰ì‹)",
+    "company": "ì „ë¶ì€í–‰",
     "interest_rate": 2.77,
     "special_rate": 2.77,
     "term": 12,
-    "target": "½Ç¸íÀÇ °³ÀÎ(ÀÓÀÇ´ÜÃ¼ Á¦¿Ü",
+    "target": "ì‹¤ëª…ì˜ ê°œì¸(ì„ì˜ë‹¨ì²´ ì œì™¸",
     "created_at": "2025-05-27T04:09:11.587Z",
     "updated_at": "2025-05-27T04:09:11.594Z"
   }
@@ -277,12 +277,12 @@
   "fields": {
     "product_code": null,
     "type": "deposit",
-    "name": "JB 123 Á¤±â¿¹±İ\n (¸¸±âÀÏ½ÃÁö±Ş½Ä)",
-    "company": "ÀüºÏÀºÇà",
+    "name": "JB 123 ì •ê¸°ì˜ˆê¸ˆ\n (ë§Œê¸°ì¼ì‹œì§€ê¸‰ì‹)",
+    "company": "ì „ë¶ì€í–‰",
     "interest_rate": 0.0,
     "special_rate": 2.85,
     "term": 36,
-    "target": "½Ç¸íÀÇ °³ÀÎ ¶Ç´Â °³ÀÎ»ç¾÷ÀÚ (1ÀÎ ´Ù°èÁÂ °¡ÀÔ °¡´ÉÇÔ)",
+    "target": "ì‹¤ëª…ì˜ ê°œì¸ ë˜ëŠ” ê°œì¸ì‚¬ì—…ì (1ì¸ ë‹¤ê³„ì¢Œ ê°€ì… ê°€ëŠ¥í•¨)",
     "created_at": "2025-05-27T04:09:11.598Z",
     "updated_at": "2025-05-27T04:09:11.604Z"
   }
@@ -293,12 +293,12 @@
   "fields": {
     "product_code": null,
     "type": "deposit",
-    "name": "³»¸¾ ½ï Á¤±â¿¹±İ",
-    "company": "ÀüºÏÀºÇà",
+    "name": "ë‚´ë§˜ ì™ ì •ê¸°ì˜ˆê¸ˆ",
+    "company": "ì „ë¶ì€í–‰",
     "interest_rate": 2.5,
     "special_rate": 2.8,
     "term": 12,
-    "target": "½Ç¸íÀÇ °³ÀÎ ¹× °³ÀÎ»ç¾÷ÀÚ",
+    "target": "ì‹¤ëª…ì˜ ê°œì¸ ë° ê°œì¸ì‚¬ì—…ì",
     "created_at": "2025-05-27T04:09:11.608Z",
     "updated_at": "2025-05-27T04:09:11.618Z"
   }
@@ -309,12 +309,12 @@
   "fields": {
     "product_code": null,
     "type": "deposit",
-    "name": "BNK´õÁ¶ÀºÁ¤±â¿¹±İ",
-    "company": "°æ³²ÀºÇà",
+    "name": "BNKë”ì¡°ì€ì •ê¸°ì˜ˆê¸ˆ",
+    "company": "ê²½ë‚¨ì€í–‰",
     "interest_rate": 2.15,
     "special_rate": 2.65,
     "term": 24,
-    "target": "°Å·¡´ë»óÀÚ´Â Á¦ÇÑÀ» µÎÁö ¾Æ´ÏÇÑ´Ù. ´Ù¸¸, ±¹°¡ ¹× Áö¹æÀÚÄ¡´ÜÃ¼´Â ÀÌ ¿¹±İÀ» °Å·¡ÇÒ ¼ö ¾ø´Ù.",
+    "target": "ê±°ë˜ëŒ€ìƒìëŠ” ì œí•œì„ ë‘ì§€ ì•„ë‹ˆí•œë‹¤. ë‹¤ë§Œ, êµ­ê°€ ë° ì§€ë°©ìì¹˜ë‹¨ì²´ëŠ” ì´ ì˜ˆê¸ˆì„ ê±°ë˜í•  ìˆ˜ ì—†ë‹¤.",
     "created_at": "2025-05-27T04:09:11.621Z",
     "updated_at": "2025-05-27T04:09:11.631Z"
   }
@@ -325,12 +325,12 @@
   "fields": {
     "product_code": null,
     "type": "deposit",
-    "name": "Theµçµç¿¹±İ(½ÃÁğ2)",
-    "company": "°æ³²ÀºÇà",
+    "name": "Theë“ ë“ ì˜ˆê¸ˆ(ì‹œì¦Œ2)",
+    "company": "ê²½ë‚¨ì€í–‰",
     "interest_rate": 2.0,
     "special_rate": 2.75,
     "term": 12,
-    "target": "°³ÀÎ",
+    "target": "ê°œì¸",
     "created_at": "2025-05-27T04:09:11.635Z",
     "updated_at": "2025-05-27T04:09:11.643Z"
   }
@@ -341,12 +341,12 @@
   "fields": {
     "product_code": null,
     "type": "deposit",
-    "name": "IBKÆò»ıÇÑ°¡Á·ÅëÀå(½Ç¼¼±İ¸®Á¤±â¿¹±İ)",
-    "company": "Áß¼Ò±â¾÷ÀºÇà",
+    "name": "IBKí‰ìƒí•œê°€ì¡±í†µì¥(ì‹¤ì„¸ê¸ˆë¦¬ì •ê¸°ì˜ˆê¸ˆ)",
+    "company": "ì¤‘ì†Œê¸°ì—…ì€í–‰",
     "interest_rate": 2.25,
     "special_rate": 2.45,
     "term": 36,
-    "target": "½Ç¸íÀÇ °³ÀÎ\n(°³ÀÎ»ç¾÷ÀÚ Á¦¿Ü)",
+    "target": "ì‹¤ëª…ì˜ ê°œì¸\n(ê°œì¸ì‚¬ì—…ì ì œì™¸)",
     "created_at": "2025-05-27T04:09:11.646Z",
     "updated_at": "2025-05-27T04:09:11.653Z"
   }
@@ -357,12 +357,12 @@
   "fields": {
     "product_code": null,
     "type": "deposit",
-    "name": "IBK´õ±¼¸®±âÅëÀå(½Ç¼¼±İ¸®Á¤±â¿¹±İ)",
-    "company": "Áß¼Ò±â¾÷ÀºÇà",
+    "name": "IBKë”êµ´ë¦¬ê¸°í†µì¥(ì‹¤ì„¸ê¸ˆë¦¬ì •ê¸°ì˜ˆê¸ˆ)",
+    "company": "ì¤‘ì†Œê¸°ì—…ì€í–‰",
     "interest_rate": 2.24,
     "special_rate": 2.24,
     "term": 36,
-    "target": "½Ç¸íÀÇ °³ÀÎ\n(°³ÀÎ»ç¾÷ÀÚ Á¦¿Ü)",
+    "target": "ì‹¤ëª…ì˜ ê°œì¸\n(ê°œì¸ì‚¬ì—…ì ì œì™¸)",
     "created_at": "2025-05-27T04:09:11.657Z",
     "updated_at": "2025-05-27T04:09:11.667Z"
   }
@@ -373,12 +373,12 @@
   "fields": {
     "product_code": null,
     "type": "deposit",
-    "name": "IBK±¼¸®±âÅëÀå(Á¤±â¿¹±İ)",
-    "company": "Áß¼Ò±â¾÷ÀºÇà",
+    "name": "IBKêµ´ë¦¬ê¸°í†µì¥(ì •ê¸°ì˜ˆê¸ˆ)",
+    "company": "ì¤‘ì†Œê¸°ì—…ì€í–‰",
     "interest_rate": 2.35,
     "special_rate": 2.35,
     "term": 12,
-    "target": "½Ç¸íÀÇ °³ÀÎ\n(°³ÀÎ»ç¾÷ÀÚ Á¦¿Ü)",
+    "target": "ì‹¤ëª…ì˜ ê°œì¸\n(ê°œì¸ì‚¬ì—…ì ì œì™¸)",
     "created_at": "2025-05-27T04:09:11.670Z",
     "updated_at": "2025-05-27T04:09:11.681Z"
   }
@@ -389,12 +389,12 @@
   "fields": {
     "product_code": null,
     "type": "deposit",
-    "name": "KDB Á¤±â¿¹±İ",
-    "company": "ÇÑ±¹»ê¾÷ÀºÇà",
+    "name": "KDB ì •ê¸°ì˜ˆê¸ˆ",
+    "company": "í•œêµ­ì‚°ì—…ì€í–‰",
     "interest_rate": 2.5,
     "special_rate": 2.5,
     "term": 36,
-    "target": "Á¦ÇÑ¾øÀ½",
+    "target": "ì œí•œì—†ìŒ",
     "created_at": "2025-05-27T04:09:11.684Z",
     "updated_at": "2025-05-27T04:09:11.701Z"
   }
@@ -405,12 +405,12 @@
   "fields": {
     "product_code": null,
     "type": "deposit",
-    "name": "KB Star Á¤±â¿¹±İ",
-    "company": "±¹¹ÎÀºÇà",
+    "name": "KB Star ì •ê¸°ì˜ˆê¸ˆ",
+    "company": "êµ­ë¯¼ì€í–‰",
     "interest_rate": 2.4,
     "special_rate": 2.45,
     "term": 36,
-    "target": "½Ç¸íÀÇ °³ÀÎ ¶Ç´Â °³ÀÎ»ç¾÷ÀÚ",
+    "target": "ì‹¤ëª…ì˜ ê°œì¸ ë˜ëŠ” ê°œì¸ì‚¬ì—…ì",
     "created_at": "2025-05-27T04:09:11.704Z",
     "updated_at": "2025-05-27T04:09:11.721Z"
   }
@@ -421,12 +421,12 @@
   "fields": {
     "product_code": null,
     "type": "deposit",
-    "name": "½òÆíÇÑ Á¤±â¿¹±İ",
-    "company": "½ÅÇÑÀºÇà",
+    "name": "ì í¸í•œ ì •ê¸°ì˜ˆê¸ˆ",
+    "company": "ì‹ í•œì€í–‰",
     "interest_rate": 2.25,
     "special_rate": 2.45,
     "term": 36,
-    "target": "¸¸14¼¼ÀÌ»ó °³ÀÎ°í°´",
+    "target": "ë§Œ14ì„¸ì´ìƒ ê°œì¸ê³ ê°",
     "created_at": "2025-05-27T04:09:11.725Z",
     "updated_at": "2025-05-27T04:09:11.742Z"
   }
@@ -437,12 +437,12 @@
   "fields": {
     "product_code": null,
     "type": "deposit",
-    "name": "NH¿ĞÃ÷È¸Àü¿¹±İ II",
-    "company": "³óÇùÀºÇàÁÖ½ÄÈ¸»ç",
+    "name": "NHì™ˆì¸ íšŒì „ì˜ˆê¸ˆ II",
+    "company": "ë†í˜‘ì€í–‰ì£¼ì‹íšŒì‚¬",
     "interest_rate": 2.55,
     "special_rate": 2.65,
     "term": 12,
-    "target": "°³ÀÎ",
+    "target": "ê°œì¸",
     "created_at": "2025-05-27T04:09:11.746Z",
     "updated_at": "2025-05-27T04:09:11.758Z"
   }
@@ -453,12 +453,12 @@
   "fields": {
     "product_code": null,
     "type": "deposit",
-    "name": "NH³»°¡GreenÃÊ·Ï¼¼»ó¿¹±İ",
-    "company": "³óÇùÀºÇàÁÖ½ÄÈ¸»ç",
+    "name": "NHë‚´ê°€Greenì´ˆë¡ì„¸ìƒì˜ˆê¸ˆ",
+    "company": "ë†í˜‘ì€í–‰ì£¼ì‹íšŒì‚¬",
     "interest_rate": 2.3,
     "special_rate": 2.7,
     "term": 36,
-    "target": "°³ÀÎ",
+    "target": "ê°œì¸",
     "created_at": "2025-05-27T04:09:11.762Z",
     "updated_at": "2025-05-27T04:09:11.769Z"
   }
@@ -469,12 +469,12 @@
   "fields": {
     "product_code": null,
     "type": "deposit",
-    "name": "NH¿Ã¿øe¿¹±İ",
-    "company": "³óÇùÀºÇàÁÖ½ÄÈ¸»ç",
+    "name": "NHì˜¬ì›eì˜ˆê¸ˆ",
+    "company": "ë†í˜‘ì€í–‰ì£¼ì‹íšŒì‚¬",
     "interest_rate": 2.48,
     "special_rate": 2.48,
     "term": 36,
-    "target": "°³ÀÎ",
+    "target": "ê°œì¸",
     "created_at": "2025-05-27T04:09:11.772Z",
     "updated_at": "2025-05-27T04:09:11.798Z"
   }
@@ -485,12 +485,12 @@
   "fields": {
     "product_code": null,
     "type": "deposit",
-    "name": "NH°íÇâ»ç¶û±âºÎ¿¹±İ",
-    "company": "³óÇùÀºÇàÁÖ½ÄÈ¸»ç",
+    "name": "NHê³ í–¥ì‚¬ë‘ê¸°ë¶€ì˜ˆê¸ˆ",
+    "company": "ë†í˜‘ì€í–‰ì£¼ì‹íšŒì‚¬",
     "interest_rate": 2.4,
     "special_rate": 3.1,
     "term": 12,
-    "target": "°³ÀÎ",
+    "target": "ê°œì¸",
     "created_at": "2025-05-27T04:09:11.802Z",
     "updated_at": "2025-05-27T04:09:11.802Z"
   }
@@ -501,12 +501,12 @@
   "fields": {
     "product_code": null,
     "type": "deposit",
-    "name": "ÇÏ³ªÀÇÁ¤±â¿¹±İ",
-    "company": "ÇÏ³ªÀºÇà",
+    "name": "í•˜ë‚˜ì˜ì •ê¸°ì˜ˆê¸ˆ",
+    "company": "í•˜ë‚˜ì€í–‰",
     "interest_rate": 2.2,
     "special_rate": 2.5,
     "term": 36,
-    "target": "½Ç¸íÀÇ °³ÀÎ ¶Ç´Â °³ÀÎ»ç¾÷ÀÚ",
+    "target": "ì‹¤ëª…ì˜ ê°œì¸ ë˜ëŠ” ê°œì¸ì‚¬ì—…ì",
     "created_at": "2025-05-27T04:09:11.806Z",
     "updated_at": "2025-05-27T04:09:11.823Z"
   }
@@ -517,12 +517,12 @@
   "fields": {
     "product_code": null,
     "type": "deposit",
-    "name": "ÄÚµåK Á¤±â¿¹±İ",
-    "company": "ÁÖ½ÄÈ¸»ç ÄÉÀÌ¹ğÅ©",
+    "name": "ì½”ë“œK ì •ê¸°ì˜ˆê¸ˆ",
+    "company": "ì£¼ì‹íšŒì‚¬ ì¼€ì´ë±…í¬",
     "interest_rate": 2.5,
     "special_rate": 2.5,
     "term": 36,
-    "target": "¸¸ 17¼¼ ÀÌ»ó ½Ç¸íÀÇ °³ÀÎ ¹× °³ÀÎ»ç¾÷ÀÚ",
+    "target": "ë§Œ 17ì„¸ ì´ìƒ ì‹¤ëª…ì˜ ê°œì¸ ë° ê°œì¸ì‚¬ì—…ì",
     "created_at": "2025-05-27T04:09:11.827Z",
     "updated_at": "2025-05-27T04:09:11.844Z"
   }
@@ -533,12 +533,12 @@
   "fields": {
     "product_code": null,
     "type": "deposit",
-    "name": "ShÆò»ıÁÖ°Å·¡¿ì´ë¿¹±İ\n(¸¸±âÀÏ½ÃÁö±Ş½Ä)",
-    "company": "¼öÇùÀºÇà",
+    "name": "Shí‰ìƒì£¼ê±°ë˜ìš°ëŒ€ì˜ˆê¸ˆ\n(ë§Œê¸°ì¼ì‹œì§€ê¸‰ì‹)",
+    "company": "ìˆ˜í˜‘ì€í–‰",
     "interest_rate": 2.1,
     "special_rate": 2.5,
     "term": 12,
-    "target": "½Ç¸íÀÇ °³ÀÎ",
+    "target": "ì‹¤ëª…ì˜ ê°œì¸",
     "created_at": "2025-05-27T04:09:11.847Z",
     "updated_at": "2025-05-27T04:09:11.847Z"
   }
@@ -549,12 +549,12 @@
   "fields": {
     "product_code": null,
     "type": "deposit",
-    "name": "ShÇØ¾çÇÃ¶ó½ºÆ½Zero!¿¹±İ\n(¸¸±âÀÏ½ÃÁö±Ş½Ä)",
-    "company": "¼öÇùÀºÇà",
+    "name": "Shí•´ì–‘í”Œë¼ìŠ¤í‹±Zero!ì˜ˆê¸ˆ\n(ë§Œê¸°ì¼ì‹œì§€ê¸‰ì‹)",
+    "company": "ìˆ˜í˜‘ì€í–‰",
     "interest_rate": 2.35,
     "special_rate": 2.7,
     "term": 12,
-    "target": "½Ç¸íÀÇ °³ÀÎ",
+    "target": "ì‹¤ëª…ì˜ ê°œì¸",
     "created_at": "2025-05-27T04:09:11.852Z",
     "updated_at": "2025-05-27T04:09:11.855Z"
   }
@@ -565,12 +565,12 @@
   "fields": {
     "product_code": null,
     "type": "deposit",
-    "name": "ÇìÀÌ(Hey)Á¤±â¿¹±İ",
-    "company": "¼öÇùÀºÇà",
+    "name": "í—¤ì´(Hey)ì •ê¸°ì˜ˆê¸ˆ",
+    "company": "ìˆ˜í˜‘ì€í–‰",
     "interest_rate": 2.72,
     "special_rate": 2.72,
     "term": 12,
-    "target": "½Ç¸íÀÇ °³ÀÎ",
+    "target": "ì‹¤ëª…ì˜ ê°œì¸",
     "created_at": "2025-05-27T04:09:11.859Z",
     "updated_at": "2025-05-27T04:09:11.867Z"
   }
@@ -581,12 +581,12 @@
   "fields": {
     "product_code": null,
     "type": "deposit",
-    "name": "ShÃ¹¸¸³²¿ì´ë¿¹±İ",
-    "company": "¼öÇùÀºÇà",
+    "name": "Shì²«ë§Œë‚¨ìš°ëŒ€ì˜ˆê¸ˆ",
+    "company": "ìˆ˜í˜‘ì€í–‰",
     "interest_rate": 2.05,
     "special_rate": 3.1,
     "term": 12,
-    "target": "½Ç¸íÀÇ °³ÀÎ",
+    "target": "ì‹¤ëª…ì˜ ê°œì¸",
     "created_at": "2025-05-27T04:09:11.870Z",
     "updated_at": "2025-05-27T04:09:11.870Z"
   }
@@ -597,12 +597,12 @@
   "fields": {
     "product_code": null,
     "type": "deposit",
-    "name": "Ä«Ä«¿À¹ğÅ© Á¤±â¿¹±İ",
-    "company": "ÁÖ½ÄÈ¸»ç Ä«Ä«¿À¹ğÅ©",
+    "name": "ì¹´ì¹´ì˜¤ë±…í¬ ì •ê¸°ì˜ˆê¸ˆ",
+    "company": "ì£¼ì‹íšŒì‚¬ ì¹´ì¹´ì˜¤ë±…í¬",
     "interest_rate": 2.5,
     "special_rate": 2.5,
     "term": 36,
-    "target": "¸¸ 14¼¼ ÀÌ»óÀÇ ½Ç¸íÀÇ °³ÀÎ",
+    "target": "ë§Œ 14ì„¸ ì´ìƒì˜ ì‹¤ëª…ì˜ ê°œì¸",
     "created_at": "2025-05-27T04:09:11.874Z",
     "updated_at": "2025-05-27T04:09:11.892Z"
   }
@@ -613,12 +613,12 @@
   "fields": {
     "product_code": null,
     "type": "deposit",
-    "name": "Åä½º¹ğÅ© ¸ÕÀú ÀÌÀÚ ¹Ş´Â Á¤±â¿¹±İ",
-    "company": "Åä½º¹ğÅ© ÁÖ½ÄÈ¸»ç",
+    "name": "í† ìŠ¤ë±…í¬ ë¨¼ì € ì´ì ë°›ëŠ” ì •ê¸°ì˜ˆê¸ˆ",
+    "company": "í† ìŠ¤ë±…í¬ ì£¼ì‹íšŒì‚¬",
     "interest_rate": 2.5,
     "special_rate": 2.5,
     "term": 6,
-    "target": "Åä½º¹ğÅ© ÅëÀå ¶Ç´Â Åä½º¹ğÅ© ¼­ºê ÅëÀåÀ» º¸À¯ÇÑ ¸¸ 17¼¼ ÀÌ»ó ½Ç¸íÀÇ °³ÀÎ",
+    "target": "í† ìŠ¤ë±…í¬ í†µì¥ ë˜ëŠ” í† ìŠ¤ë±…í¬ ì„œë¸Œ í†µì¥ì„ ë³´ìœ í•œ ë§Œ 17ì„¸ ì´ìƒ ì‹¤ëª…ì˜ ê°œì¸",
     "created_at": "2025-05-27T04:09:11.895Z",
     "updated_at": "2025-05-27T04:09:11.899Z"
   }
@@ -629,12 +629,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "¿ì¸®SUPERÁÖ°Å·¡Àû±İ",
-    "company": "¿ì¸®ÀºÇà",
+    "name": "ìš°ë¦¬SUPERì£¼ê±°ë˜ì ê¸ˆ",
+    "company": "ìš°ë¦¬ì€í–‰",
     "interest_rate": 2.35,
     "special_rate": 3.75,
     "term": 36,
-    "target": "½Ç¸íÀÇ °³ÀÎ",
+    "target": "ì‹¤ëª…ì˜ ê°œì¸",
     "created_at": "2025-05-27T04:09:22.127Z",
     "updated_at": "2025-05-27T04:09:22.149Z"
   }
@@ -645,12 +645,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "WONÀû±İ",
-    "company": "¿ì¸®ÀºÇà",
+    "name": "WONì ê¸ˆ",
+    "company": "ìš°ë¦¬ì€í–‰",
     "interest_rate": 3.15,
     "special_rate": 3.35,
     "term": 12,
-    "target": "½Ç¸íÀÇ °³ÀÎ",
+    "target": "ì‹¤ëª…ì˜ ê°œì¸",
     "created_at": "2025-05-27T04:09:22.153Z",
     "updated_at": "2025-05-27T04:09:22.157Z"
   }
@@ -661,12 +661,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "ÆÛ½ºÆ®°¡°èÀû±İ",
-    "company": "ÇÑ±¹½ºÅÄ´ÙµåÂ÷Å¸µåÀºÇà",
+    "name": "í¼ìŠ¤íŠ¸ê°€ê³„ì ê¸ˆ",
+    "company": "í•œêµ­ìŠ¤íƒ ë‹¤ë“œì°¨íƒ€ë“œì€í–‰",
     "interest_rate": 2.6,
     "special_rate": 2.6,
     "term": 6,
-    "target": "°³ÀÎ(°³ÀÎ»ç¾÷ÀÚ Æ÷ÇÔ)",
+    "target": "ê°œì¸(ê°œì¸ì‚¬ì—…ì í¬í•¨)",
     "created_at": "2025-05-27T04:09:22.161Z",
     "updated_at": "2025-05-27T04:09:22.188Z"
   }
@@ -677,12 +677,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "³»¼Õ¾È¿¡ Àû±İ",
-    "company": "¾ÆÀÌ¿¥¹ğÅ©",
+    "name": "ë‚´ì†ì•ˆì— ì ê¸ˆ",
+    "company": "ì•„ì´ì— ë±…í¬",
     "interest_rate": 2.65,
     "special_rate": 3.2,
     "term": 36,
-    "target": "½Ç¸íÀÇ °³ÀÎ",
+    "target": "ì‹¤ëª…ì˜ ê°œì¸",
     "created_at": "2025-05-27T04:09:22.192Z",
     "updated_at": "2025-05-27T04:09:22.199Z"
   }
@@ -693,12 +693,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "¿µÇÃ·¯½ºÀû±İ",
-    "company": "¾ÆÀÌ¿¥¹ğÅ©",
+    "name": "ì˜í”ŒëŸ¬ìŠ¤ì ê¸ˆ",
+    "company": "ì•„ì´ì— ë±…í¬",
     "interest_rate": 2.96,
     "special_rate": 3.51,
     "term": 12,
-    "target": "¸¸ 29¼¼ ÀÌÇÏ ½Ç¸íÀÇ °³ÀÎ",
+    "target": "ë§Œ 29ì„¸ ì´í•˜ ì‹¤ëª…ì˜ ê°œì¸",
     "created_at": "2025-05-27T04:09:22.203Z",
     "updated_at": "2025-05-27T04:09:22.203Z"
   }
@@ -709,12 +709,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "³»°¡¸¸µç º¸³Ê½ºÀû±İ",
-    "company": "¾ÆÀÌ¿¥¹ğÅ©",
+    "name": "ë‚´ê°€ë§Œë“  ë³´ë„ˆìŠ¤ì ê¸ˆ",
+    "company": "ì•„ì´ì— ë±…í¬",
     "interest_rate": 2.5,
     "special_rate": 3.3,
     "term": 6,
-    "target": "½Ç¸íÀÇ °³ÀÎ",
+    "target": "ì‹¤ëª…ì˜ ê°œì¸",
     "created_at": "2025-05-27T04:09:22.207Z",
     "updated_at": "2025-05-27T04:09:22.211Z"
   }
@@ -725,12 +725,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "iM½º¸¶Æ®Àû±İ",
-    "company": "¾ÆÀÌ¿¥¹ğÅ©",
+    "name": "iMìŠ¤ë§ˆíŠ¸ì ê¸ˆ",
+    "company": "ì•„ì´ì— ë±…í¬",
     "interest_rate": 2.7,
     "special_rate": 3.15,
     "term": 36,
-    "target": "½Ç¸íÀÇ °³ÀÎ",
+    "target": "ì‹¤ëª…ì˜ ê°œì¸",
     "created_at": "2025-05-27T04:09:22.214Z",
     "updated_at": "2025-05-27T04:09:22.226Z"
   }
@@ -741,12 +741,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "Æê Àû±İ",
-    "company": "ºÎ»êÀºÇà",
+    "name": "í« ì ê¸ˆ",
+    "company": "ë¶€ì‚°ì€í–‰",
     "interest_rate": 2.0,
     "special_rate": 2.9,
     "term": 12,
-    "target": "½Ç¸íÀÇ °³ÀÎ°í°´(1ÀÎ 1°èÁÂ)",
+    "target": "ì‹¤ëª…ì˜ ê°œì¸ê³ ê°(1ì¸ 1ê³„ì¢Œ)",
     "created_at": "2025-05-27T04:09:22.230Z",
     "updated_at": "2025-05-27T04:09:22.234Z"
   }
@@ -757,12 +757,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "ÀúÅº¼Ò ½ÇÃµ\nÀû±İ",
-    "company": "ºÎ»êÀºÇà",
+    "name": "ì €íƒ„ì†Œ ì‹¤ì²œ\nì ê¸ˆ",
+    "company": "ë¶€ì‚°ì€í–‰",
     "interest_rate": 1.7,
     "special_rate": 2.2,
     "term": 36,
-    "target": "Á¦ÇÑ¾øÀ½",
+    "target": "ì œí•œì—†ìŒ",
     "created_at": "2025-05-27T04:09:22.238Z",
     "updated_at": "2025-05-27T04:09:22.250Z"
   }
@@ -773,12 +773,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "BNK³»¸¾´ë·Î \nÀû±İ",
-    "company": "ºÎ»êÀºÇà",
+    "name": "BNKë‚´ë§˜ëŒ€ë¡œ \nì ê¸ˆ",
+    "company": "ë¶€ì‚°ì€í–‰",
     "interest_rate": 2.2,
     "special_rate": 2.4,
     "term": 6,
-    "target": "Á¦ÇÑ¾øÀ½",
+    "target": "ì œí•œì—†ìŒ",
     "created_at": "2025-05-27T04:09:22.253Z",
     "updated_at": "2025-05-27T04:09:22.264Z"
   }
@@ -789,12 +789,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "ºÎ»êÀÌ¶ó ÁÁ´Ù\nBigÀû±İ",
-    "company": "ºÎ»êÀºÇà",
+    "name": "ë¶€ì‚°ì´ë¼ ì¢‹ë‹¤\nBigì ê¸ˆ",
+    "company": "ë¶€ì‚°ì€í–‰",
     "interest_rate": 2.5,
     "special_rate": 4.7,
     "term": 12,
-    "target": "½Ç¸íÀÇ °³ÀÎ°í°´(1ÀÎ 1°èÁÂ)",
+    "target": "ì‹¤ëª…ì˜ ê°œì¸ê³ ê°(1ì¸ 1ê³„ì¢Œ)",
     "created_at": "2025-05-27T04:09:22.267Z",
     "updated_at": "2025-05-27T04:09:22.278Z"
   }
@@ -805,12 +805,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "ÇØÇÇ¶óÀÌÇÁ_¿©Çà½ºÄÉÄ¡Àû±İV",
-    "company": "±¤ÁÖÀºÇà",
+    "name": "í•´í”¼ë¼ì´í”„_ì—¬í–‰ìŠ¤ì¼€ì¹˜ì ê¸ˆV",
+    "company": "ê´‘ì£¼ì€í–‰",
     "interest_rate": 2.4,
     "special_rate": 3.6,
     "term": 6,
-    "target": "Á¦ÇÑ¾øÀ½(´Ü,±¹°¡¹×Áö¹æÀÚÄ¡´ÜÃ¼Á¦¿Ü)",
+    "target": "ì œí•œì—†ìŒ(ë‹¨,êµ­ê°€ë°ì§€ë°©ìì¹˜ë‹¨ì²´ì œì™¸)",
     "created_at": "2025-05-27T04:09:22.282Z",
     "updated_at": "2025-05-27T04:09:22.307Z"
   }
@@ -821,12 +821,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "¿©Çà½ºÄÉÄ¡_³²µµÅõ¾îÀû±İ",
-    "company": "±¤ÁÖÀºÇà",
+    "name": "ì—¬í–‰ìŠ¤ì¼€ì¹˜_ë‚¨ë„íˆ¬ì–´ì ê¸ˆ",
+    "company": "ê´‘ì£¼ì€í–‰",
     "interest_rate": 2.0,
     "special_rate": 3.9,
     "term": 12,
-    "target": "¸¸14¼¼ÀÌ»ó °³ÀÎ ¹× °³ÀÎ»ç¾÷ÀÚ",
+    "target": "ë§Œ14ì„¸ì´ìƒ ê°œì¸ ë° ê°œì¸ì‚¬ì—…ì",
     "created_at": "2025-05-27T04:09:22.310Z",
     "updated_at": "2025-05-27T04:09:22.315Z"
   }
@@ -837,12 +837,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "VIPÇÃ·¯½ºÀû±İ",
-    "company": "±¤ÁÖÀºÇà",
+    "name": "VIPí”ŒëŸ¬ìŠ¤ì ê¸ˆ",
+    "company": "ê´‘ì£¼ì€í–‰",
     "interest_rate": 2.3,
     "special_rate": 2.8,
     "term": 12,
-    "target": "½Ç¸íÀÇ °³ÀÎ",
+    "target": "ì‹¤ëª…ì˜ ê°œì¸",
     "created_at": "2025-05-27T04:09:22.318Z",
     "updated_at": "2025-05-27T04:09:22.322Z"
   }
@@ -853,12 +853,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "jbank Àú±İÅëÀû±İ",
-    "company": "Á¦ÁÖÀºÇà",
+    "name": "jbank ì €ê¸ˆí†µì ê¸ˆ",
+    "company": "ì œì£¼ì€í–‰",
     "interest_rate": 2.85,
     "special_rate": 4.95,
     "term": 12,
-    "target": "°³ÀÎ ¹× °³ÀÎ»ç¾÷ÀÚ",
+    "target": "ê°œì¸ ë° ê°œì¸ì‚¬ì—…ì",
     "created_at": "2025-05-27T04:09:22.325Z",
     "updated_at": "2025-05-27T04:09:22.329Z"
   }
@@ -869,12 +869,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "MZ ÇÃ·£Àû±İ",
-    "company": "Á¦ÁÖÀºÇà",
+    "name": "MZ í”Œëœì ê¸ˆ",
+    "company": "ì œì£¼ì€í–‰",
     "interest_rate": 3.2,
     "special_rate": 5.2,
     "term": 12,
-    "target": "°³ÀÎ ¹× °³ÀÎ»ç¾÷ÀÚ",
+    "target": "ê°œì¸ ë° ê°œì¸ì‚¬ì—…ì",
     "created_at": "2025-05-27T04:09:22.333Z",
     "updated_at": "2025-05-27T04:09:22.337Z"
   }
@@ -885,12 +885,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "Å½ÀÌ³ª¿äÀû±İ",
-    "company": "Á¦ÁÖÀºÇà",
+    "name": "íƒì´ë‚˜ìš”ì ê¸ˆ",
+    "company": "ì œì£¼ì€í–‰",
     "interest_rate": 1.9,
     "special_rate": 4.6,
     "term": 12,
-    "target": "°³ÀÎ ¹× °³ÀÎ»ç¾÷ÀÚ",
+    "target": "ê°œì¸ ë° ê°œì¸ì‚¬ì—…ì",
     "created_at": "2025-05-27T04:09:22.340Z",
     "updated_at": "2025-05-27T04:09:22.344Z"
   }
@@ -901,12 +901,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "JB ´ÙÀÌ·ºÆ®Àû±İ(ÀÚÀ¯Àû¸³½Ä)",
-    "company": "ÀüºÏÀºÇà",
+    "name": "JB ë‹¤ì´ë ‰íŠ¸ì ê¸ˆ(ììœ ì ë¦½ì‹)",
+    "company": "ì „ë¶ì€í–‰",
     "interest_rate": 2.65,
     "special_rate": 2.75,
     "term": 36,
-    "target": "½Ç¸íÀÇ °³ÀÎ ¹× °³ÀÎ»ç¾÷ÀÚ(ÀÓÀÇ´ÜÃ¼ Á¦¿Ü)",
+    "target": "ì‹¤ëª…ì˜ ê°œì¸ ë° ê°œì¸ì‚¬ì—…ì(ì„ì˜ë‹¨ì²´ ì œì™¸)",
     "created_at": "2025-05-27T04:09:22.348Z",
     "updated_at": "2025-05-27T04:09:22.355Z"
   }
@@ -917,12 +917,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "JB ´ÙÀÌ·ºÆ®Àû±İ(Á¤¾×Àû¸³½Ä)",
-    "company": "ÀüºÏÀºÇà",
+    "name": "JB ë‹¤ì´ë ‰íŠ¸ì ê¸ˆ(ì •ì•¡ì ë¦½ì‹)",
+    "company": "ì „ë¶ì€í–‰",
     "interest_rate": 2.75,
     "special_rate": 2.85,
     "term": 36,
-    "target": "½Ç¸íÀÇ °³ÀÎ ¹× °³ÀÎ»ç¾÷ÀÚ(ÀÓÀÇ´ÜÃ¼ Á¦¿Ü)",
+    "target": "ì‹¤ëª…ì˜ ê°œì¸ ë° ê°œì¸ì‚¬ì—…ì(ì„ì˜ë‹¨ì²´ ì œì™¸)",
     "created_at": "2025-05-27T04:09:22.358Z",
     "updated_at": "2025-05-27T04:09:22.365Z"
   }
@@ -933,12 +933,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "Çàº¹ DREAM Àû±İ",
-    "company": "°æ³²ÀºÇà",
+    "name": "í–‰ë³µ DREAM ì ê¸ˆ",
+    "company": "ê²½ë‚¨ì€í–‰",
     "interest_rate": 2.9,
     "special_rate": 3.9,
     "term": 12,
-    "target": "½Ç¸íÀÇ °³ÀÎ ¹× °³ÀÎ»ç¾÷ÀÚ",
+    "target": "ì‹¤ëª…ì˜ ê°œì¸ ë° ê°œì¸ì‚¬ì—…ì",
     "created_at": "2025-05-27T04:09:22.368Z",
     "updated_at": "2025-05-27T04:09:22.375Z"
   }
@@ -949,12 +949,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "BNK´õÁ¶ÀºÀÚÀ¯Àû±İ",
-    "company": "°æ³²ÀºÇà",
+    "name": "BNKë”ì¡°ì€ììœ ì ê¸ˆ",
+    "company": "ê²½ë‚¨ì€í–‰",
     "interest_rate": 3.3,
     "special_rate": 4.0,
     "term": 24,
-    "target": "°Å·¡´ë»óÀÚ´Â Á¦ÇÑÀ» µÎÁö ¾Æ´ÏÇÑ´Ù. ´Ù¸¸, ±¹°¡ ¹× Áö¹æÀÚÄ¡´ÜÃ¼´Â ÀÌ ¿¹±İÀ» °Å·¡ÇÒ ¼ö ¾ø´Ù.",
+    "target": "ê±°ë˜ëŒ€ìƒìëŠ” ì œí•œì„ ë‘ì§€ ì•„ë‹ˆí•œë‹¤. ë‹¤ë§Œ, êµ­ê°€ ë° ì§€ë°©ìì¹˜ë‹¨ì²´ëŠ” ì´ ì˜ˆê¸ˆì„ ê±°ë˜í•  ìˆ˜ ì—†ë‹¤.",
     "created_at": "2025-05-27T04:09:22.378Z",
     "updated_at": "2025-05-27T04:09:22.385Z"
   }
@@ -965,12 +965,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "BNK À§´õ½ºÀÚÀ¯Àû±İ",
-    "company": "°æ³²ÀºÇà",
+    "name": "BNK ìœ„ë”ìŠ¤ììœ ì ê¸ˆ",
+    "company": "ê²½ë‚¨ì€í–‰",
     "interest_rate": 2.1,
     "special_rate": 4.6,
     "term": 36,
-    "target": "½Ç¸íÀÇ °³ÀÎ ¹× °³ÀÎ»ç¾÷ÀÚ",
+    "target": "ì‹¤ëª…ì˜ ê°œì¸ ë° ê°œì¸ì‚¬ì—…ì",
     "created_at": "2025-05-27T04:09:22.389Z",
     "updated_at": "2025-05-27T04:09:22.402Z"
   }
@@ -981,12 +981,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "ÁÖ°Å·¡ ÇÁ¸®¹Ì¾ö Àû±İ",
-    "company": "°æ³²ÀºÇà",
+    "name": "ì£¼ê±°ë˜ í”„ë¦¬ë¯¸ì—„ ì ê¸ˆ",
+    "company": "ê²½ë‚¨ì€í–‰",
     "interest_rate": 2.75,
     "special_rate": 4.35,
     "term": 12,
-    "target": "½Ç¸íÀÇ °³ÀÎ ¹× °³ÀÎ»ç¾÷ÀÚ",
+    "target": "ì‹¤ëª…ì˜ ê°œì¸ ë° ê°œì¸ì‚¬ì—…ì",
     "created_at": "2025-05-27T04:09:22.406Z",
     "updated_at": "2025-05-27T04:09:22.413Z"
   }
@@ -997,12 +997,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "¿À´Ãµµ¼¼ÀÌºêÀû±İ",
-    "company": "°æ³²ÀºÇà",
+    "name": "ì˜¤ëŠ˜ë„ì„¸ì´ë¸Œì ê¸ˆ",
+    "company": "ê²½ë‚¨ì€í–‰",
     "interest_rate": 2.75,
     "special_rate": 4.5,
     "term": 6,
-    "target": "½Ç¸íÀÇ °³ÀÎ ¹× °³ÀÎ»ç¾÷ÀÚ",
+    "target": "ì‹¤ëª…ì˜ ê°œì¸ ë° ê°œì¸ì‚¬ì—…ì",
     "created_at": "2025-05-27T04:09:22.417Z",
     "updated_at": "2025-05-27T04:09:22.424Z"
   }
@@ -1013,12 +1013,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "»çÀå´Ô °ÆÁ¤ ZERO ÀÚÀ¯Àû±İ",
-    "company": "°æ³²ÀºÇà",
+    "name": "ì‚¬ì¥ë‹˜ ê±±ì • ZERO ììœ ì ê¸ˆ",
+    "company": "ê²½ë‚¨ì€í–‰",
     "interest_rate": 1.8,
     "special_rate": 5.0,
     "term": 12,
-    "target": "½Ç¸íÀÇ °³ÀÎ ¹× °³ÀÎ»ç¾÷ÀÚ",
+    "target": "ì‹¤ëª…ì˜ ê°œì¸ ë° ê°œì¸ì‚¬ì—…ì",
     "created_at": "2025-05-27T04:09:22.428Z",
     "updated_at": "2025-05-27T04:09:22.428Z"
   }
@@ -1029,12 +1029,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "IBK D-dayÀû±İ(ÀÚÀ¯Àû¸³½Ä)",
-    "company": "Áß¼Ò±â¾÷ÀºÇà",
+    "name": "IBK D-dayì ê¸ˆ(ììœ ì ë¦½ì‹)",
+    "company": "ì¤‘ì†Œê¸°ì—…ì€í–‰",
     "interest_rate": 2.85,
     "special_rate": 4.35,
     "term": 12,
-    "target": "½Ç¸íÀÇ °³ÀÎ\n(°³ÀÎ»ç¾÷ÀÚ Á¦¿Ü)",
+    "target": "ì‹¤ëª…ì˜ ê°œì¸\n(ê°œì¸ì‚¬ì—…ì ì œì™¸)",
     "created_at": "2025-05-27T04:09:22.431Z",
     "updated_at": "2025-05-27T04:09:22.441Z"
   }
@@ -1045,12 +1045,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "IBKÅº¼ÒÁ¦·ÎÀû±İ(ÀÚÀ¯Àû¸³½Ä)",
-    "company": "Áß¼Ò±â¾÷ÀºÇà",
+    "name": "IBKíƒ„ì†Œì œë¡œì ê¸ˆ(ììœ ì ë¦½ì‹)",
+    "company": "ì¤‘ì†Œê¸°ì—…ì€í–‰",
     "interest_rate": 2.5,
     "special_rate": 4.5,
     "term": 12,
-    "target": "½Ç¸íÀÇ °³ÀÎ\n(°³ÀÎ»ç¾÷ÀÚ Á¦¿Ü)",
+    "target": "ì‹¤ëª…ì˜ ê°œì¸\n(ê°œì¸ì‚¬ì—…ì ì œì™¸)",
     "created_at": "2025-05-27T04:09:22.445Z",
     "updated_at": "2025-05-27T04:09:22.445Z"
   }
@@ -1061,12 +1061,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "IBKÁß±â±Ù·ÎÀÚ¿ì´ëÀû±İ\n(ÀÚÀ¯Àû¸³½Ä)",
-    "company": "Áß¼Ò±â¾÷ÀºÇà",
+    "name": "IBKì¤‘ê¸°ê·¼ë¡œììš°ëŒ€ì ê¸ˆ\n(ììœ ì ë¦½ì‹)",
+    "company": "ì¤‘ì†Œê¸°ì—…ì€í–‰",
     "interest_rate": 2.75,
     "special_rate": 4.95,
     "term": 12,
-    "target": "Áß¼Ò±â¾÷¿¡¼­ ±Ù¹«ÇÏ´Â\n½Ç¸íÀÇ °³ÀÎ\n(°³ÀÎ»ç¾÷ÀÚ Á¦¿Ü)",
+    "target": "ì¤‘ì†Œê¸°ì—…ì—ì„œ ê·¼ë¬´í•˜ëŠ”\nì‹¤ëª…ì˜ ê°œì¸\n(ê°œì¸ì‚¬ì—…ì ì œì™¸)",
     "created_at": "2025-05-27T04:09:22.448Z",
     "updated_at": "2025-05-27T04:09:22.448Z"
   }
@@ -1077,12 +1077,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "IBK¸ğÀ¸±âÅëÀå(ÀÚÀ¯Àû¸³½Ä)",
-    "company": "Áß¼Ò±â¾÷ÀºÇà",
+    "name": "IBKëª¨ìœ¼ê¸°í†µì¥(ììœ ì ë¦½ì‹)",
+    "company": "ì¤‘ì†Œê¸°ì—…ì€í–‰",
     "interest_rate": 2.45,
     "special_rate": 2.65,
     "term": 6,
-    "target": "½Ç¸íÀÇ °³ÀÎ\n(°³ÀÎ»ç¾÷ÀÚ Á¦¿Ü)",
+    "target": "ì‹¤ëª…ì˜ ê°œì¸\n(ê°œì¸ì‚¬ì—…ì ì œì™¸)",
     "created_at": "2025-05-27T04:09:22.452Z",
     "updated_at": "2025-05-27T04:09:22.462Z"
   }
@@ -1093,12 +1093,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "KDB ±â¾÷Á¤±âÀû±İ",
-    "company": "ÇÑ±¹»ê¾÷ÀºÇà",
+    "name": "KDB ê¸°ì—…ì •ê¸°ì ê¸ˆ",
+    "company": "í•œêµ­ì‚°ì—…ì€í–‰",
     "interest_rate": 1.38,
     "special_rate": 1.38,
     "term": 36,
-    "target": "°³ÀÎ»ç¾÷ÀÚ, Á¶ÇÕ(ºñ¿µ¸®¹ıÀÎ Æ÷ÇÔ), ¹ıÀÎ",
+    "target": "ê°œì¸ì‚¬ì—…ì, ì¡°í•©(ë¹„ì˜ë¦¬ë²•ì¸ í¬í•¨), ë²•ì¸",
     "created_at": "2025-05-27T04:09:22.465Z",
     "updated_at": "2025-05-27T04:09:22.476Z"
   }
@@ -1109,12 +1109,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "KDB ÀÚÀ¯Àû±İ",
-    "company": "ÇÑ±¹»ê¾÷ÀºÇà",
+    "name": "KDB ììœ ì ê¸ˆ",
+    "company": "í•œêµ­ì‚°ì—…ì€í–‰",
     "interest_rate": 1.89,
     "special_rate": 1.89,
     "term": 1,
-    "target": "°³ÀÎ, °³ÀÎ»ç¾÷ÀÚ, ÀÓÀÇ´ÜÃ¼",
+    "target": "ê°œì¸, ê°œì¸ì‚¬ì—…ì, ì„ì˜ë‹¨ì²´",
     "created_at": "2025-05-27T04:09:22.480Z",
     "updated_at": "2025-05-27T04:09:22.497Z"
   }
@@ -1125,12 +1125,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "KB±¹¹ÎÇÁ¸®¹Ì¾öÀû±İ(Á¤¾×)",
-    "company": "±¹¹ÎÀºÇà",
+    "name": "KBêµ­ë¯¼í”„ë¦¬ë¯¸ì—„ì ê¸ˆ(ì •ì•¡)",
+    "company": "êµ­ë¯¼ì€í–‰",
     "interest_rate": 2.8,
     "special_rate": 4.0,
     "term": 36,
-    "target": "½Ç¸íÀÇ °³ÀÎ",
+    "target": "ì‹¤ëª…ì˜ ê°œì¸",
     "created_at": "2025-05-27T04:09:22.500Z",
     "updated_at": "2025-05-27T04:09:22.507Z"
   }
@@ -1141,12 +1141,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "KB³»¸¾´ë·ÎÀû±İ",
-    "company": "±¹¹ÎÀºÇà",
+    "name": "KBë‚´ë§˜ëŒ€ë¡œì ê¸ˆ",
+    "company": "êµ­ë¯¼ì€í–‰",
     "interest_rate": 2.95,
     "special_rate": 3.55,
     "term": 36,
-    "target": "½Ç¸íÀÇ °³ÀÎ ¶Ç´Â °³ÀÎ»ç¾÷ÀÚ",
+    "target": "ì‹¤ëª…ì˜ ê°œì¸ ë˜ëŠ” ê°œì¸ì‚¬ì—…ì",
     "created_at": "2025-05-27T04:09:22.510Z",
     "updated_at": "2025-05-27T04:09:22.528Z"
   }
@@ -1157,12 +1157,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "KB¸¼ÀºÇÏ´ÃÀû±İ",
-    "company": "±¹¹ÎÀºÇà",
+    "name": "KBë§‘ì€í•˜ëŠ˜ì ê¸ˆ",
+    "company": "êµ­ë¯¼ì€í–‰",
     "interest_rate": 2.45,
     "special_rate": 3.25,
     "term": 12,
-    "target": "½Ç¸íÀÇ °³ÀÎ",
+    "target": "ì‹¤ëª…ì˜ ê°œì¸",
     "created_at": "2025-05-27T04:09:22.532Z",
     "updated_at": "2025-05-27T04:09:22.539Z"
   }
@@ -1173,12 +1173,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "KB Æ¯¡ÚÇÑ Àû±İ",
-    "company": "±¹¹ÎÀºÇà",
+    "name": "KB íŠ¹â˜…í•œ ì ê¸ˆ",
+    "company": "êµ­ë¯¼ì€í–‰",
     "interest_rate": 2.0,
     "special_rate": 6.0,
     "term": 6,
-    "target": "½Ç¸íÀÇ °³ÀÎ",
+    "target": "ì‹¤ëª…ì˜ ê°œì¸",
     "created_at": "2025-05-27T04:09:22.542Z",
     "updated_at": "2025-05-27T04:09:22.549Z"
   }
@@ -1189,12 +1189,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "½ÅÇÑ ¾Ë.½ò Àû±İ",
-    "company": "½ÅÇÑÀºÇà",
+    "name": "ì‹ í•œ ì•Œ.ì  ì ê¸ˆ",
+    "company": "ì‹ í•œì€í–‰",
     "interest_rate": 2.65,
     "special_rate": 3.95,
     "term": 36,
-    "target": "Á¦ÇÑ¾øÀ½",
+    "target": "ì œí•œì—†ìŒ",
     "created_at": "2025-05-27T04:09:22.553Z",
     "updated_at": "2025-05-27T04:09:22.559Z"
   }
@@ -1205,12 +1205,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "NH¿Ã¿øe ¹Ì´ÏÀû±İ",
-    "company": "³óÇùÀºÇàÁÖ½ÄÈ¸»ç",
+    "name": "NHì˜¬ì›e ë¯¸ë‹ˆì ê¸ˆ",
+    "company": "ë†í˜‘ì€í–‰ì£¼ì‹íšŒì‚¬",
     "interest_rate": 2.45,
     "special_rate": 4.15,
     "term": 6,
-    "target": "°³ÀÎ",
+    "target": "ê°œì¸",
     "created_at": "2025-05-27T04:09:22.563Z",
     "updated_at": "2025-05-27T04:09:22.571Z"
   }
@@ -1221,12 +1221,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "NH1934¿ùº¹¸®Àû±İ",
-    "company": "³óÇùÀºÇàÁÖ½ÄÈ¸»ç",
+    "name": "NH1934ì›”ë³µë¦¬ì ê¸ˆ",
+    "company": "ë†í˜‘ì€í–‰ì£¼ì‹íšŒì‚¬",
     "interest_rate": 2.45,
     "special_rate": 5.95,
     "term": 6,
-    "target": "¸¸19¼¼~¸¸34¼¼ °³ÀÎ ¹× °³ÀÎ»ç¾÷ÀÚ",
+    "target": "ë§Œ19ì„¸~ë§Œ34ì„¸ ê°œì¸ ë° ê°œì¸ì‚¬ì—…ì",
     "created_at": "2025-05-27T04:09:22.574Z",
     "updated_at": "2025-05-27T04:09:22.581Z"
   }
@@ -1237,12 +1237,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "NH³»°¡GreenÃÊ·Ï¼¼»óÀû±İ",
-    "company": "³óÇùÀºÇàÁÖ½ÄÈ¸»ç",
+    "name": "NHë‚´ê°€Greenì´ˆë¡ì„¸ìƒì ê¸ˆ",
+    "company": "ë†í˜‘ì€í–‰ì£¼ì‹íšŒì‚¬",
     "interest_rate": 2.65,
     "special_rate": 3.65,
     "term": 36,
-    "target": "°³ÀÎ",
+    "target": "ê°œì¸",
     "created_at": "2025-05-27T04:09:22.585Z",
     "updated_at": "2025-05-27T04:09:22.591Z"
   }
@@ -1253,12 +1253,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "NH°íÇâ»ç¶û±âºÎÀû±İ",
-    "company": "³óÇùÀºÇàÁÖ½ÄÈ¸»ç",
+    "name": "NHê³ í–¥ì‚¬ë‘ê¸°ë¶€ì ê¸ˆ",
+    "company": "ë†í˜‘ì€í–‰ì£¼ì‹íšŒì‚¬",
     "interest_rate": 2.95,
     "special_rate": 3.75,
     "term": 36,
-    "target": "°³ÀÎ",
+    "target": "ê°œì¸",
     "created_at": "2025-05-27T04:09:22.595Z",
     "updated_at": "2025-05-27T04:09:22.602Z"
   }
@@ -1269,12 +1269,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "NHÁ÷ÀåÀÎ¿ùº¹¸®Àû±İ",
-    "company": "³óÇùÀºÇàÁÖ½ÄÈ¸»ç",
+    "name": "NHì§ì¥ì¸ì›”ë³µë¦¬ì ê¸ˆ",
+    "company": "ë†í˜‘ì€í–‰ì£¼ì‹íšŒì‚¬",
     "interest_rate": 2.5,
     "special_rate": 3.3,
     "term": 36,
-    "target": "¸¸18¼¼ÀÌ»ó °³ÀÎ",
+    "target": "ë§Œ18ì„¸ì´ìƒ ê°œì¸",
     "created_at": "2025-05-27T04:09:22.605Z",
     "updated_at": "2025-05-27T04:09:22.612Z"
   }
@@ -1285,12 +1285,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "ÁÖ°Å·¡ÇÏ³ª ¿ùº¹¸®Àû±İ",
-    "company": "ÇÏ³ªÀºÇà",
+    "name": "ì£¼ê±°ë˜í•˜ë‚˜ ì›”ë³µë¦¬ì ê¸ˆ",
+    "company": "í•˜ë‚˜ì€í–‰",
     "interest_rate": 2.95,
     "special_rate": 3.95,
     "term": 12,
-    "target": "½Ç¸íÀÇ °³ÀÎ\n¶Ç´Â °³ÀÎ»ç¾÷ÀÚ",
+    "target": "ì‹¤ëª…ì˜ ê°œì¸\në˜ëŠ” ê°œì¸ì‚¬ì—…ì",
     "created_at": "2025-05-27T04:09:22.615Z",
     "updated_at": "2025-05-27T04:09:22.622Z"
   }
@@ -1301,12 +1301,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "³»¸¾Àû±İ",
-    "company": "ÇÏ³ªÀºÇà",
+    "name": "ë‚´ë§˜ì ê¸ˆ",
+    "company": "í•˜ë‚˜ì€í–‰",
     "interest_rate": 2.0,
     "special_rate": 2.5,
     "term": 36,
-    "target": "½Ç¸íÀÇ °³ÀÎ\n¶Ç´Â °³ÀÎ»ç¾÷ÀÚ(1ÀÎ ´Ù°èÁÂ °¡´É)",
+    "target": "ì‹¤ëª…ì˜ ê°œì¸\në˜ëŠ” ê°œì¸ì‚¬ì—…ì(1ì¸ ë‹¤ê³„ì¢Œ ê°€ëŠ¥)",
     "created_at": "2025-05-27T04:09:22.625Z",
     "updated_at": "2025-05-27T04:09:22.651Z"
   }
@@ -1317,12 +1317,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "ÄÚµåK ÀÚÀ¯Àû±İ",
-    "company": "ÁÖ½ÄÈ¸»ç ÄÉÀÌ¹ğÅ©",
+    "name": "ì½”ë“œK ììœ ì ê¸ˆ",
+    "company": "ì£¼ì‹íšŒì‚¬ ì¼€ì´ë±…í¬",
     "interest_rate": 3.0,
     "special_rate": 3.0,
     "term": 1,
-    "target": "¸¸ 17¼¼ ÀÌ»ó ½Ç¸íÀÇ °³ÀÎ ¹× °³ÀÎ»ç¾÷ÀÚ",
+    "target": "ë§Œ 17ì„¸ ì´ìƒ ì‹¤ëª…ì˜ ê°œì¸ ë° ê°œì¸ì‚¬ì—…ì",
     "created_at": "2025-05-27T04:09:22.654Z",
     "updated_at": "2025-05-27T04:09:22.672Z"
   }
@@ -1333,12 +1333,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "±Ã±İÇÑ Àû±İ",
-    "company": "ÁÖ½ÄÈ¸»ç ÄÉÀÌ¹ğÅ©",
+    "name": "ê¶ê¸ˆí•œ ì ê¸ˆ",
+    "company": "ì£¼ì‹íšŒì‚¬ ì¼€ì´ë±…í¬",
     "interest_rate": 1.2,
     "special_rate": 7.2,
     "term": 1,
-    "target": "¸¸ 17¼¼ ÀÌ»ó ½Ç¸íÀÇ °³ÀÎ ¹× °³ÀÎ»ç¾÷ÀÚ",
+    "target": "ë§Œ 17ì„¸ ì´ìƒ ì‹¤ëª…ì˜ ê°œì¸ ë° ê°œì¸ì‚¬ì—…ì",
     "created_at": "2025-05-27T04:09:22.676Z",
     "updated_at": "2025-05-27T04:09:22.676Z"
   }
@@ -1349,12 +1349,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "ÁÖ°Å·¡¿ì´ë ÀÚÀ¯Àû±İ",
-    "company": "ÁÖ½ÄÈ¸»ç ÄÉÀÌ¹ğÅ©",
+    "name": "ì£¼ê±°ë˜ìš°ëŒ€ ììœ ì ê¸ˆ",
+    "company": "ì£¼ì‹íšŒì‚¬ ì¼€ì´ë±…í¬",
     "interest_rate": 3.2,
     "special_rate": 3.8,
     "term": 36,
-    "target": "¸¸ 17¼¼ ÀÌ»ó ½Ç¸íÀÇ °³ÀÎ ¹× °³ÀÎ»ç¾÷ÀÚ",
+    "target": "ë§Œ 17ì„¸ ì´ìƒ ì‹¤ëª…ì˜ ê°œì¸ ë° ê°œì¸ì‚¬ì—…ì",
     "created_at": "2025-05-27T04:09:22.679Z",
     "updated_at": "2025-05-27T04:09:22.690Z"
   }
@@ -1365,12 +1365,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "ShÇØ¾çÇÃ¶ó½ºÆ½Zero!Àû±İ\n(Á¤¾×Àû¸³½Ä)",
-    "company": "¼öÇùÀºÇà",
+    "name": "Shí•´ì–‘í”Œë¼ìŠ¤í‹±Zero!ì ê¸ˆ\n(ì •ì•¡ì ë¦½ì‹)",
+    "company": "ìˆ˜í˜‘ì€í–‰",
     "interest_rate": 3.5,
     "special_rate": 4.0,
     "term": 12,
-    "target": "½Ç¸íÀÇ °³ÀÎ",
+    "target": "ì‹¤ëª…ì˜ ê°œì¸",
     "created_at": "2025-05-27T04:09:22.693Z",
     "updated_at": "2025-05-27T04:09:22.700Z"
   }
@@ -1381,12 +1381,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "Sh¿ùº¹¸®ÀÚÀ¯Àû±İ",
-    "company": "¼öÇùÀºÇà",
+    "name": "Shì›”ë³µë¦¬ììœ ì ê¸ˆ",
+    "company": "ìˆ˜í˜‘ì€í–‰",
     "interest_rate": 1.9,
     "special_rate": 2.6,
     "term": 36,
-    "target": "½Ç¸íÀÇ °³ÀÎ ¹× °³ÀÎ»ç¾÷ÀÚ",
+    "target": "ì‹¤ëª…ì˜ ê°œì¸ ë° ê°œì¸ì‚¬ì—…ì",
     "created_at": "2025-05-27T04:09:22.704Z",
     "updated_at": "2025-05-27T04:09:22.711Z"
   }
@@ -1397,12 +1397,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "ShÇØ¾çÇÃ¶ó½ºÆ½Zero!Àû±İ\n(ÀÚÀ¯Àû¸³½Ä)",
-    "company": "¼öÇùÀºÇà",
+    "name": "Shí•´ì–‘í”Œë¼ìŠ¤í‹±Zero!ì ê¸ˆ\n(ììœ ì ë¦½ì‹)",
+    "company": "ìˆ˜í˜‘ì€í–‰",
     "interest_rate": 2.35,
     "special_rate": 2.85,
     "term": 36,
-    "target": "½Ç¸íÀÇ °³ÀÎ",
+    "target": "ì‹¤ëª…ì˜ ê°œì¸",
     "created_at": "2025-05-27T04:09:22.714Z",
     "updated_at": "2025-05-27T04:09:22.721Z"
   }
@@ -1413,12 +1413,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "Ä«Ä«¿À¹ğÅ© ÀÚÀ¯Àû±İ",
-    "company": "ÁÖ½ÄÈ¸»ç Ä«Ä«¿À¹ğÅ©",
+    "name": "ì¹´ì¹´ì˜¤ë±…í¬ ììœ ì ê¸ˆ",
+    "company": "ì£¼ì‹íšŒì‚¬ ì¹´ì¹´ì˜¤ë±…í¬",
     "interest_rate": 2.75,
     "special_rate": 2.95,
     "term": 6,
-    "target": "¸¸ 14¼¼ ÀÌ»óÀÇ ½Ç¸íÀÇ °³ÀÎ",
+    "target": "ë§Œ 14ì„¸ ì´ìƒì˜ ì‹¤ëª…ì˜ ê°œì¸",
     "created_at": "2025-05-27T04:09:22.726Z",
     "updated_at": "2025-05-27T04:09:22.737Z"
   }
@@ -1429,12 +1429,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "Ä«Ä«¿À¹ğÅ© 26ÁÖÀû±İ",
-    "company": "ÁÖ½ÄÈ¸»ç Ä«Ä«¿À¹ğÅ©",
+    "name": "ì¹´ì¹´ì˜¤ë±…í¬ 26ì£¼ì ê¸ˆ",
+    "company": "ì£¼ì‹íšŒì‚¬ ì¹´ì¹´ì˜¤ë±…í¬",
     "interest_rate": 2.5,
     "special_rate": 5.5,
     "term": 6,
-    "target": "¸¸ 14¼¼ ÀÌ»óÀÇ ½Ç¸íÀÇ °³ÀÎ",
+    "target": "ë§Œ 14ì„¸ ì´ìƒì˜ ì‹¤ëª…ì˜ ê°œì¸",
     "created_at": "2025-05-27T04:09:22.741Z",
     "updated_at": "2025-05-27T04:09:22.741Z"
   }
@@ -1445,12 +1445,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "Ä«Ä«¿À¹ğÅ© ÇÑ´ŞÀû±İ",
-    "company": "ÁÖ½ÄÈ¸»ç Ä«Ä«¿À¹ğÅ©",
+    "name": "ì¹´ì¹´ì˜¤ë±…í¬ í•œë‹¬ì ê¸ˆ",
+    "company": "ì£¼ì‹íšŒì‚¬ ì¹´ì¹´ì˜¤ë±…í¬",
     "interest_rate": 1.5,
     "special_rate": 7.0,
     "term": 1,
-    "target": "¸¸ 14¼¼ ÀÌ»óÀÇ ½Ç¸íÀÇ °³ÀÎ",
+    "target": "ë§Œ 14ì„¸ ì´ìƒì˜ ì‹¤ëª…ì˜ ê°œì¸",
     "created_at": "2025-05-27T04:09:22.746Z",
     "updated_at": "2025-05-27T04:09:22.746Z"
   }
@@ -1461,12 +1461,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "Åä½º¹ğÅ© Å°¿öºÁ¿ä Àû±İ",
-    "company": "Åä½º¹ğÅ© ÁÖ½ÄÈ¸»ç",
+    "name": "í† ìŠ¤ë±…í¬ í‚¤ì›Œë´ìš” ì ê¸ˆ",
+    "company": "í† ìŠ¤ë±…í¬ ì£¼ì‹íšŒì‚¬",
     "interest_rate": 1.8,
     "special_rate": 3.8,
     "term": 6,
-    "target": "¡¤ Åä½º¹ğÅ© ÅëÀå ¶Ç´Â Åä½º¹ğÅ© ¼­ºê ÅëÀåÀ» º¸À¯ÇÑ ½Ç¸íÀÇ °³ÀÎ",
+    "target": "Â· í† ìŠ¤ë±…í¬ í†µì¥ ë˜ëŠ” í† ìŠ¤ë±…í¬ ì„œë¸Œ í†µì¥ì„ ë³´ìœ í•œ ì‹¤ëª…ì˜ ê°œì¸",
     "created_at": "2025-05-27T04:09:22.749Z",
     "updated_at": "2025-05-27T04:09:22.749Z"
   }
@@ -1477,12 +1477,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "Åä½º¹ğÅ© ±¼ºñ Àû±İ",
-    "company": "Åä½º¹ğÅ© ÁÖ½ÄÈ¸»ç",
+    "name": "í† ìŠ¤ë±…í¬ êµ´ë¹„ ì ê¸ˆ",
+    "company": "í† ìŠ¤ë±…í¬ ì£¼ì‹íšŒì‚¬",
     "interest_rate": 1.8,
     "special_rate": 4.3,
     "term": 6,
-    "target": "¡¤ Åä½º¹ğÅ© ÅëÀå ¶Ç´Â Åä½º¹ğÅ© ¼­ºê ÅëÀåÀ» º¸À¯ÇÑ ½Ç¸íÀÇ °³ÀÎ",
+    "target": "Â· í† ìŠ¤ë±…í¬ í†µì¥ ë˜ëŠ” í† ìŠ¤ë±…í¬ ì„œë¸Œ í†µì¥ì„ ë³´ìœ í•œ ì‹¤ëª…ì˜ ê°œì¸",
     "created_at": "2025-05-27T04:09:22.753Z",
     "updated_at": "2025-05-27T04:09:22.753Z"
   }
@@ -1493,12 +1493,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "Åä½º¹ğÅ© ÀÚÀ¯ Àû±İ",
-    "company": "Åä½º¹ğÅ© ÁÖ½ÄÈ¸»ç",
+    "name": "í† ìŠ¤ë±…í¬ ììœ  ì ê¸ˆ",
+    "company": "í† ìŠ¤ë±…í¬ ì£¼ì‹íšŒì‚¬",
     "interest_rate": 2.8,
     "special_rate": 3.3,
     "term": 36,
-    "target": "¡¤ Åä½º¹ğÅ© ÅëÀå ¶Ç´Â Åä½º¹ğÅ© ¼­ºê ÅëÀåÀ» º¸À¯ÇÑ ½Ç¸íÀÇ °³ÀÎ",
+    "target": "Â· í† ìŠ¤ë±…í¬ í†µì¥ ë˜ëŠ” í† ìŠ¤ë±…í¬ ì„œë¸Œ í†µì¥ì„ ë³´ìœ í•œ ì‹¤ëª…ì˜ ê°œì¸",
     "created_at": "2025-05-27T04:09:22.756Z",
     "updated_at": "2025-05-27T04:09:22.771Z"
   }
@@ -1509,12 +1509,12 @@
   "fields": {
     "product_code": null,
     "type": "saving",
-    "name": "Åä½º¹ğÅ© ¾ÆÀÌ Àû±İ",
-    "company": "Åä½º¹ğÅ© ÁÖ½ÄÈ¸»ç",
+    "name": "í† ìŠ¤ë±…í¬ ì•„ì´ ì ê¸ˆ",
+    "company": "í† ìŠ¤ë±…í¬ ì£¼ì‹íšŒì‚¬",
     "interest_rate": 2.8,
     "special_rate": 5.3,
     "term": 12,
-    "target": "¡¤ Åä½º¹ğÅ© ¾ÆÀÌ ÅëÀåÀ» º¸À¯ÇÑ 15¼¼ ÀÌÇÏ ½Ç¸íÀÇ °³ÀÎ",
+    "target": "Â· í† ìŠ¤ë±…í¬ ì•„ì´ í†µì¥ì„ ë³´ìœ í•œ 15ì„¸ ì´í•˜ ì‹¤ëª…ì˜ ê°œì¸",
     "created_at": "2025-05-27T04:09:22.775Z",
     "updated_at": "2025-05-27T04:09:22.775Z"
   }
