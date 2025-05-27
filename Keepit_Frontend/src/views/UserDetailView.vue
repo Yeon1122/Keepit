@@ -55,7 +55,7 @@
           </template>
           <div v-else class="empty-state">
             <i class="fas fa-chart-line"></i>
-            <p>{{ user.nickname }}님은 아직 투자 성향 테스트를 하지 않으셨네요!</p>
+            <p>{{ user.nickname }}님은 <br>아직 투자 성향 테스트를 하지 않으셨네요!</p>
           </div>
         </div>
       </div>
