@@ -4,7 +4,13 @@
       <button class="close-btn" @click="close">&times;</button>
 
       <div v-if="loading" class="loading-state">
-        데이터를 불러오는 중입니다...
+        <lottie-animation
+          :animationData="loadingAnimation"
+          :loop="true"
+          :autoplay="true"
+          style="width: 200px; height: 200px;"
+        />
+        <p class="loading-text">데이터를 불러오는 중입니다...</p>
       </div>
 
       <div v-else-if="error" class="error-state">
@@ -78,11 +84,13 @@
 </template>
 
 <script setup>
-import { onMounted, ref, computed } from 'vue'
+import { onMounted, ref, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import NewsCard from '@/components/NewsCard.vue'
 import { useAccountStore } from '@/stores/users'
 import HeartButton from '@/components/HeartButton.vue'
+import { LottieAnimation } from 'lottie-web-vue'
+import loadingAnimation from '@/assets/animations/stock_detail_loading.json'
 import axios from 'axios'
 
 const route = useRoute()
@@ -102,27 +110,29 @@ const close = () => router.back()
 const stockCode = route.params.stock_code
 
 const loadStockData = async () => {
+  if (!isAuthenticated.value) {
+    alert('로그인이 필요한 서비스입니다.')
+    router.push({ name: 'login' })
+    return
+  }
+
   try {
     console.log('주식 데이터 로딩 시작')
     const token = accountStore.token
     const response = await axios.get(
       `http://127.0.0.1:8000/api/v1/products/stocks/${stockCode}/`,
-      token ? { headers: { Authorization: `Token ${token}` } } : {}
+      { headers: { Authorization: `Token ${token}` } }
     )
     console.log('주식 데이터 응답:', response.data)
     stock.value = response.data
 
-    // 찜 여부
-    if (isAuthenticated.value) {
-      const favRes = await axios.get(
-        `http://127.0.0.1:8000/api/v1/products/stocks/${stockCode}/favorite/`,
-        { headers: { Authorization: `Token ${accountStore.token}` } }
-      )
-      isHearted.value = favRes.data.is_liked
-      heartCount.value = favRes.data.count
-    }
+    const favRes = await axios.get(
+      `http://127.0.0.1:8000/api/v1/products/stocks/${stockCode}/favorite/`,
+      { headers: { Authorization: `Token ${token}` } }
+    )
+    isHearted.value = favRes.data.is_liked
+    heartCount.value = favRes.data.count
 
-    // 뉴스 데이터 가져오기
     try {
       console.log('뉴스 데이터 요청 시작:', stockCode)
       const newsRes = await axios.get(`http://127.0.0.1:8000/api/v1/news/stock/${stockCode}/`)
@@ -173,16 +183,13 @@ const handleHeart = async (value) => {
 
 const formatNumber = (val) => val == null ? '-' : Number(val).toLocaleString()
 
-// 시가총액 포맷팅 (조, 억 단위)
 const formatMarketCap = (val) => {
   if (val == null) return '-'
   const num = Number(val)
   if (isNaN(num)) return '-'
   
-  // 이미 억 단위로 들어오는 값
-  // 1조 = 10000억
-  const cho = Math.floor(num / 10000)  // 조 단위
-  const uk = num % 10000  // 억 단위 (1조 미만)
+  const cho = Math.floor(num / 10000)
+  const uk = num % 10000
   
   if (cho > 0) {
     return uk > 0 ? `${cho.toLocaleString()}조 ${uk.toLocaleString()}억` : `${cho.toLocaleString()}조`
@@ -192,6 +199,12 @@ const formatMarketCap = (val) => {
     return '1억 미만'
   }
 }
+
+watch(isAuthenticated, (newValue) => {
+  if (!newValue) {
+    router.push({ name: 'login' })
+  }
+})
 </script>
 
 <style scoped>
@@ -304,9 +317,17 @@ const formatMarketCap = (val) => {
 }
 
 .loading-state {
-  text-align: center;
-  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+}
+
+.loading-text {
+  margin-top: 1rem;
   color: #666;
+  font-size: 1.1rem;
 }
 
 .error-state {
