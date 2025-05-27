@@ -1,5 +1,18 @@
 <template>
   <div class="test-result">
+    <!-- 로딩 오버레이 추가 -->
+    <div v-if="isLoading" class="loading-overlay">
+      <div class="loading-container">
+        <LottieAnimation
+          :animationData="emailLoadingAnimation"
+          :height="120"
+          :width="120"
+          :loop="true"
+        />
+        <p class="loading-text">이메일 전송 중...</p>
+      </div>
+    </div>
+
     <div v-if="testResult" class="result-container">
       <h1 class="result-title">투자 성향 분석 결과</h1>
 
@@ -75,11 +88,14 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAccountStore } from '@/stores/users.js'
+import { LottieAnimation } from 'lottie-web-vue'
+import emailLoadingAnimation from '@/assets/animations/email_loading.json'
 import axios from 'axios'
 
 const router = useRouter()
 const accountStore = useAccountStore()
 const testResult = ref(null)
+const isLoading = ref(false)
 
 onMounted(async () => {
   // 1. 먼저 router state에서 결과 확인
@@ -202,6 +218,7 @@ const goToTest = () => {
 }
 
 const sendResultEmail = async () => {
+  isLoading.value = true
   try {
     const response = await axios.post('/api/v1/test/send-result-email/', null, {
       headers: {
@@ -212,6 +229,8 @@ const sendResultEmail = async () => {
   } catch (err) {
     console.error('이메일 전송 실패:', err)
     alert('이메일 전송에 실패했습니다.')
+  } finally {
+    isLoading.value = false
   }
 }
 
@@ -429,5 +448,36 @@ const formatAnswerValue = (key, value) => {
 .no-result p {
   color: #666;
   margin-bottom: 2rem;
+}
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  backdrop-filter: blur(3px);
+}
+
+.loading-container {
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  max-width: 280px;
+  width: 90%;
+}
+
+.loading-text {
+  margin-top: 0.75rem;
+  color: #145c2b;
+  font-size: 1rem;
+  font-weight: 500;
 }
 </style> 
