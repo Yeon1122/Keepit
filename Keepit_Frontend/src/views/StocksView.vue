@@ -12,7 +12,8 @@
       <div v-if="selectedTab === 'stock'" class="search-box" ref="searchBoxRef">
         <input
           type="text"
-          v-model="searchKeyword"
+          :value="searchKeyword"
+          @input="(e) => searchKeyword = e.target.value"
           @click="isFocused = true"
           @focus="isFocused = true"
           @blur="() => setTimeout(() => isFocused = false, 100)"

@@ -12,11 +12,20 @@
                         <div class="no">{{ getPostNumber(index) }}</div>
                         <div class="title">
                             {{ post.title }}
-                            <span class="comment-count">({{ post.comments.length }})</span>
                             <span class="solved-badge" v-if="post.is_solved">해결됨</span>
                         </div>
-                        <div class="author">{{ post.author }}</div>
-                        <div class="date">{{ formatDate(post.created_at) }}</div>
+                        <div class="info-section">
+                            <span class="like-count">
+                                <i class="fas fa-thumbs-up"></i> {{ post.likes_count }}
+                            </span>
+                            <span class="comment-count">
+                                <i class="fas fa-comment"></i> {{ post.comments.length }}
+                            </span>
+                            <span class="author">
+                                <i class="fas fa-user"></i> {{ post.author_nickname }}
+                            </span>
+                            <span class="date">{{ formatDate(post.created_at) }}</span>
+                        </div>
                     </div>
                 </router-link>
             </div>
@@ -156,7 +165,7 @@ onMounted(async () => {
 
 .card-row {
     display: grid;
-    grid-template-columns: 60px 1fr 120px 120px;
+    grid-template-columns: 60px 1fr 300px;
     align-items: center;
     gap: 1.5rem;
 }
@@ -176,11 +185,6 @@ onMounted(async () => {
     gap: 0.5rem;
 }
 
-.comment-count {
-    color: #145c2b;
-    font-size: 0.9rem;
-}
-
 .solved-badge {
     background: #145c2b;
     color: white;
@@ -189,16 +193,39 @@ onMounted(async () => {
     font-size: 0.8rem;
 }
 
-.author {
+.info-section {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    justify-content: flex-end;
+}
+
+.like-count {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
     font-size: 0.9rem;
-    color: #444;
-    text-align: center;
+    color: #ff4b4b;
+}
+
+.like-count i {
+    color: #ff4b4b;
+}
+
+.comment-count, .author, .date {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.9rem;
+}
+
+.author {
+    color: #145c2b;
+    font-weight: 500;
 }
 
 .date {
-    font-size: 0.85rem;
     color: #666;
-    text-align: right;
 }
 
 .no-posts {
