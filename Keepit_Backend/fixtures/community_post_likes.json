@@ -14,21 +14,5 @@
     "post": 2,
     "user": 3
   }
-},
-{
-  "model": "community.post_likes",
-  "pk": 3,
-  "fields": {
-    "post": 4,
-    "user": 3
-  }
-},
-{
-  "model": "community.post_likes",
-  "pk": 4,
-  "fields": {
-    "post": 4,
-    "user": 1
-  }
 }
 ]
