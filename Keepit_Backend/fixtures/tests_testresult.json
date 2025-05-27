@@ -11,11 +11,11 @@
       "income": 5000,
       "assets": 10000,
       "risk_tolerance": "high",
-      "financial_knowledge": "³ôÀ½",
-      "investment_experience": "1~3³â",
-      "saving_goal": "¸ñµ· ¸¶·Ã",
-      "preferred_term": "Àå±â",
-      "user_type": "Á÷ÀåÀÎ"
+      "financial_knowledge": "ë†’ìŒ",
+      "investment_experience": "1~3ë…„",
+      "saving_goal": "ëª©ëˆ ë§ˆë ¨",
+      "preferred_term": "ì¥ê¸°",
+      "user_type": "ì§ì¥ì¸"
     },
     "created_at": "2025-05-27T04:19:35.639Z"
   }
@@ -32,11 +32,11 @@
       "income": 2000,
       "assets": 10000,
       "risk_tolerance": "low",
-      "financial_knowledge": "³·À½",
-      "investment_experience": "¾øÀ½",
-      "saving_goal": "´Ü±â ¿©Çà",
-      "preferred_term": "Àå±â",
-      "user_type": "»çÈ¸ÃÊ³â»ı"
+      "financial_knowledge": "ë‚®ìŒ",
+      "investment_experience": "ì—†ìŒ",
+      "saving_goal": "ë‹¨ê¸° ì—¬í–‰",
+      "preferred_term": "ì¥ê¸°",
+      "user_type": "ì‚¬íšŒì´ˆë…„ìƒ"
     },
     "created_at": "2025-05-27T04:21:44.956Z"
   }
@@ -53,11 +53,11 @@
       "income": 6000,
       "assets": 100000,
       "risk_tolerance": "high",
-      "financial_knowledge": "³ôÀ½",
-      "investment_experience": "3³â ÀÌ»ó",
-      "saving_goal": "¸ñµ· ¸¶·Ã",
-      "preferred_term": "Àå±â",
-      "user_type": "Á÷ÀåÀÎ"
+      "financial_knowledge": "ë†’ìŒ",
+      "investment_experience": "3ë…„ ì´ìƒ",
+      "saving_goal": "ëª©ëˆ ë§ˆë ¨",
+      "preferred_term": "ì¥ê¸°",
+      "user_type": "ì§ì¥ì¸"
     },
     "created_at": "2025-05-27T04:24:54.282Z"
   }
