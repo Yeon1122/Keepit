@@ -3,119 +3,119 @@
   "model": "regions.regioncity",
   "pk": 1,
   "fields": {
-    "name": "¼­¿ïÆ¯º°½Ã"
+    "name": "ì„œìš¸íŠ¹ë³„ì‹œ"
   }
 },
 {
   "model": "regions.regioncity",
   "pk": 2,
   "fields": {
-    "name": "ºÎ»ê±¤¿ª½Ã"
+    "name": "ë¶€ì‚°ê´‘ì—­ì‹œ"
   }
 },
 {
   "model": "regions.regioncity",
   "pk": 3,
   "fields": {
-    "name": "´ë±¸±¤¿ª½Ã"
+    "name": "ëŒ€êµ¬ê´‘ì—­ì‹œ"
   }
 },
 {
   "model": "regions.regioncity",
   "pk": 4,
   "fields": {
-    "name": "ÀÎÃµ±¤¿ª½Ã"
+    "name": "ì¸ì²œê´‘ì—­ì‹œ"
   }
 },
 {
   "model": "regions.regioncity",
   "pk": 5,
   "fields": {
-    "name": "±¤ÁÖ±¤¿ª½Ã"
+    "name": "ê´‘ì£¼ê´‘ì—­ì‹œ"
   }
 },
 {
   "model": "regions.regioncity",
   "pk": 6,
   "fields": {
-    "name": "´ëÀü±¤¿ª½Ã"
+    "name": "ëŒ€ì „ê´‘ì—­ì‹œ"
   }
 },
 {
   "model": "regions.regioncity",
   "pk": 7,
   "fields": {
-    "name": "¿ï»ê±¤¿ª½Ã"
+    "name": "ìš¸ì‚°ê´‘ì—­ì‹œ"
   }
 },
 {
   "model": "regions.regioncity",
   "pk": 8,
   "fields": {
-    "name": "°æ±âµµ"
+    "name": "ê²½ê¸°ë„"
   }
 },
 {
   "model": "regions.regioncity",
   "pk": 9,
   "fields": {
-    "name": "°­¿øµµ"
+    "name": "ê°•ì›ë„"
   }
 },
 {
   "model": "regions.regioncity",
   "pk": 10,
   "fields": {
-    "name": "ÃæÃ»ºÏµµ"
+    "name": "ì¶©ì²­ë¶ë„"
   }
 },
 {
   "model": "regions.regioncity",
   "pk": 11,
   "fields": {
-    "name": "ÃæÃ»³²µµ"
+    "name": "ì¶©ì²­ë‚¨ë„"
   }
 },
 {
   "model": "regions.regioncity",
   "pk": 12,
   "fields": {
-    "name": "Àü¶óºÏµµ"
+    "name": "ì „ë¼ë¶ë„"
   }
 },
 {
   "model": "regions.regioncity",
   "pk": 13,
   "fields": {
-    "name": "Àü¶ó³²µµ"
+    "name": "ì „ë¼ë‚¨ë„"
   }
 },
 {
   "model": "regions.regioncity",
   "pk": 14,
   "fields": {
-    "name": "°æ»óºÏµµ"
+    "name": "ê²½ìƒë¶ë„"
   }
 },
 {
   "model": "regions.regioncity",
   "pk": 15,
   "fields": {
-    "name": "°æ»ó³²µµ"
+    "name": "ê²½ìƒë‚¨ë„"
   }
 },
 {
   "model": "regions.regioncity",
   "pk": 16,
   "fields": {
-    "name": "Á¦ÁÖµµ"
+    "name": "ì œì£¼ë„"
   }
 },
 {
   "model": "regions.regioncity",
   "pk": 17,
   "fields": {
-    "name": "¼¼Á¾½Ã"
+    "name": "ì„¸ì¢…ì‹œ"
   }
 }
 ]
