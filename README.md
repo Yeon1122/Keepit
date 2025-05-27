@@ -1,4 +1,4 @@
-# 내 손 안의 금융 비서 - Keepit (킵잇)
+# 내 손 안의 금융 비서 - Keepit
 
 > **SSAFY 13기 대전 2반 10팀 송영지, 이하연**  
 > 본 프로젝트는 SSAFY 과정 중 개발된 팀 프로젝트입니다.
@@ -20,14 +20,14 @@
 
 ## 프로젝트 개요
 
-**Keepit**은 예·적금, 주식, ETF, 현물(금·은) 상품 정보를 한눈에 비교·분석할 수 있는 **올인원** 금융 플랫폼입니다.  
+**Keepit**은 정기 예금, 적금, 주식, ETF, 현물(금·은) 상품 정보를 한눈에 비교·분석할 수 있는 **올인원** 금융 플랫폼입니다.  
 
 사용자 투자 성향에 따라 **맞춤형 상품을 추천**하고, 주변 은행 위치 검색, 금융 커뮤니티, AI 챗봇 상담 등 폭넓은 기능을 제공합니다.  
 금융 초보자부터 투자 고수까지 모두 사용할 수 있도록 직관적 UI와 신뢰도 높은 데이터를 목표로 개발되었습니다.
 
 ###  핵심 가치
 - **개인화**: AI 기반 투자 성향 분석으로 맞춤형 상품 추천
-- **통합성**: 예적금부터 주식, ETF, 현물까지 한 곳에서
+- **통합성**: 정기 예금, 적금부터 주식, ETF, 현물까지 한 곳에서
 - **소통**: 활발한 금융 커뮤니티와 실시간 AI 상담
 - **사용성**: 직관적인 UI/UX와 매력적인 로딩 애니메이션
 
@@ -42,18 +42,18 @@
 - 시각적 결과 리포트 제공
 
 ### 2. 금융 상품 탐색
-- 예·적금 금리 비교 및 상세 정보 조회
+- 정기 예금, 적금 금리 비교 및 상세 정보 조회
 - 금·은 등 현물 정보 제공
 - 주식/ETF 실시간 정보 및 관련 뉴스 제공
 - 관심 상품 찜하기
 
 ### 3. 찜한 상품 비교하기
 - 관심 상품(정기 예금, 적금) **원클릭 찜하기**
-- 찜한 상품들의 **이자 분석**
+- 찜한 상품들의 **만기 예상금액 분석**
 
 ### 4. 금융 커뮤니티
-- **자유게시판**: 투자 경험 공유 및 토론
-- **질문게시판**: 금융 전문가와 사용자들의 Q&A
+- **자유 게시판**: 투자 경험 공유 및 토론
+- **질문 게시판**: 금융 전문가와 사용자들의 Q&A
 - **실시간 좋아요** 및 댓글 시스템
 - **팔로우/팔로워** 네트워킹 기능
 
@@ -103,7 +103,7 @@ Django + DRF
 ### External APIs
 ```
 금융 데이터
-├──  예적금: 금융감독원 오픈 API
+├──  정기 예금/적금: 금융감독원 오픈 API
 ├──  주식/ETF: 한국투자증권 Open API
 ├──  현물: Gold API.io
 ├──  뉴스: NAVER Developers API
@@ -161,12 +161,12 @@ npm run dev
 ```
 
 ### 백엔드
-- `.env.example` 파일 참고해 `.env` 파일 생성 (API Key 관리)
+- `.env.example` 파일 참고해 `.env` 파일 생성 (API Key 등 관리)
 
 ```bash
 cd Keepit_Backend
 python -m venv venv
-source venv/bin/activate   # Windows: venv\Scripts\activate
+source venv/bin/activate   # Windows: source venv/Scripts/activate
 pip install -r requirements.txt
 python manage.py migrate
 ```
@@ -187,23 +187,6 @@ python manage.py runserver
 ---
 
 ## 주요 페이지 안내
-
-| URL                              | 설명                                   |
-|----------------------------------|----------------------------------------|
-| `/`                          | 메인 홈                                |
-| `/products/deposits`             | 정기 예금 상품 정보                    |
-| `/products/savings`              | 적금 상품 정보                         |
-| `/products/goods`                | 현물(금·은) 정보                       |
-| `/products/stocks`               | 주식 정보                              |
-| `/products/etfs`                 | ETF 정보                               |
-| `/products/compare/deposits`     | 정기 예금 상품 비교                    |
-| `/products/compare/savings`      | 적금 상품 비교                         |
-| `/banks/nearby`                  | 내 위치 기반 은행 검색                 |
-| `/community`                     | 자유게시판/질문게시판                  |
-| `/profile`                       | 사용자 프로필 및 성향 설정             |
-| `/users`                         | 로그인, 회원가입, 마이페이지 등        |
-| `/chatbot`                       | 챗봇 상담                              |
-| `/test`                          | 투자 성향 테스트                       |
 
 | **메인 기능** | **URL** | **설명** |
 |---|---|---|
@@ -311,7 +294,7 @@ python manage.py runserver
 
 <div align="center">
 
-**🏦 Keepit - 내 손 안의 금융비서**
+**🏦 Keepit - 내 손 안의 금융 비서**
 
 Made with ❤️ by SSAFY 13기 대전 2반 10팀 송영지, 이하연
 
