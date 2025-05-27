@@ -4,9 +4,13 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from .models import TestResult
 from .serializers import TestResultSerializer
+from django.core.mail import send_mail, EmailMessage
+from django.template.loader import render_to_string
+from django.conf import settings
 import os
 import joblib
 import pandas as pd
+import traceback
 
 # Create your views here.
 
@@ -267,3 +271,55 @@ def get_user_test_result(request, userid):
         # }, status=status.HTTP_404_NOT_FOUND)
     except Exception as e:
         return Response({'error': str(e)}, status=500)
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def send_result_email(request):
+    """테스트 결과를 사용자의 이메일로 전송합니다."""
+    try:
+        # 사용자 이메일 확인
+        if not request.user.email:
+            return Response({
+                'error': '이메일 주소가 설정되어 있지 않습니다.'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        # 최신 테스트 결과 가져오기
+        try:
+            result = TestResult.objects.filter(user=request.user).latest('created_at')
+        except TestResult.DoesNotExist:
+            return Response({
+                'error': '테스트 결과가 없습니다.'
+            }, status=status.HTTP_404_NOT_FOUND)
+        
+        # 이메일 컨텍스트 준비
+        context = {
+            'user': request.user,
+            'risk_type': result.get_risk_type_display(),
+            'risk_description': result.result_description,
+            'test_data': result.test_data,
+        }
+        
+        # HTML 이메일 템플릿 렌더링
+        html_message = render_to_string('email/test_result.html', context)
+        
+        # 이메일 메시지 생성
+        email = EmailMessage(
+            subject='[Keepit] 투자 성향 분석 결과',
+            body=html_message,
+            from_email=settings.EMAIL_HOST_USER,
+            to=[request.user.email],
+        )
+        email.content_subtype = "html"
+        
+        # 이메일 전송
+        email.send(fail_silently=False)
+        
+        return Response({
+            'message': '테스트 결과가 이메일로 전송되었습니다.'
+        })
+        
+    except Exception as e:
+        print(f"Error sending email: {str(e)}")
+        return Response({
+            'error': f'이메일 전송 실패: {str(e)}'
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
