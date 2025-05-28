@@ -1,0 +1,40 @@
+[
+{
+  "model": "community.comment",
+  "pk": 1,
+  "fields": {
+    "post": 1,
+    "author": 2,
+    "content": "ETF는 실시간 매매 가능하고 펀드는 하루 단위예요.",
+    "created_at": "2025-05-27T06:23:40.942Z",
+    "updated_at": "2025-05-27T06:23:40.942Z",
+    "likes": []
+  }
+},
+{
+  "model": "community.comment",
+  "pk": 2,
+  "fields": {
+    "post": 2,
+    "author": 3,
+    "content": "꾸준히만 하면 큰 자산 됩니다!",
+    "created_at": "2025-05-27T06:25:28.009Z",
+    "updated_at": "2025-05-27T06:25:28.009Z",
+    "likes": [
+      1
+    ]
+  }
+},
+{
+  "model": "community.comment",
+  "pk": 3,
+  "fields": {
+    "post": 4,
+    "author": 3,
+    "content": "단기 차익 노리긴 어려워요...",
+    "created_at": "2025-05-27T06:25:41.247Z",
+    "updated_at": "2025-05-27T06:25:41.247Z",
+    "likes": []
+  }
+}
+]

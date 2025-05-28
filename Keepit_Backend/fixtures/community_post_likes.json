@@ -1,0 +1,18 @@
+[
+{
+  "model": "community.post_likes",
+  "pk": 1,
+  "fields": {
+    "post": 1,
+    "user": 2
+  }
+},
+{
+  "model": "community.post_likes",
+  "pk": 2,
+  "fields": {
+    "post": 2,
+    "user": 3
+  }
+}
+]

@@ -1,0 +1,8 @@
+{
+    "message": "팔로우를 취소했습니다.",
+    "status": 200,
+    "data": {
+        "follower_id": 1,
+        "following_id": 2
+    }
+}

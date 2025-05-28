@@ -1,0 +1,16 @@
+{
+ "message": "회원가입이 완료되었습니다.",
+ "status": 201,
+ "data": {
+    "id": 1,
+    "name": "송영지",
+    "nickname": "동작구 봉춤남",
+    "userid":"youngji123",
+    "email": "youngji@example.com",
+    "region_city": "서울특별시",
+    "region_district": "동작구",
+    "birth_year": 1999,
+    "birth_month": 11,
+    "birth_day": 28
+ }
+}

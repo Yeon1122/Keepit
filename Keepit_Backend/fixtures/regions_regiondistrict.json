@@ -1,0 +1,2018 @@
+[
+{
+  "model": "regions.regiondistrict",
+  "pk": 1,
+  "fields": {
+    "name": "강남구",
+    "city": 1
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 2,
+  "fields": {
+    "name": "강동구",
+    "city": 1
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 3,
+  "fields": {
+    "name": "강북구",
+    "city": 1
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 4,
+  "fields": {
+    "name": "강서구",
+    "city": 1
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 5,
+  "fields": {
+    "name": "관악구",
+    "city": 1
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 6,
+  "fields": {
+    "name": "광진구",
+    "city": 1
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 7,
+  "fields": {
+    "name": "구로구",
+    "city": 1
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 8,
+  "fields": {
+    "name": "금천구",
+    "city": 1
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 9,
+  "fields": {
+    "name": "노원구",
+    "city": 1
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 10,
+  "fields": {
+    "name": "도봉구",
+    "city": 1
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 11,
+  "fields": {
+    "name": "동대문구",
+    "city": 1
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 12,
+  "fields": {
+    "name": "동작구",
+    "city": 1
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 13,
+  "fields": {
+    "name": "마포구",
+    "city": 1
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 14,
+  "fields": {
+    "name": "서대문구",
+    "city": 1
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 15,
+  "fields": {
+    "name": "서초구",
+    "city": 1
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 16,
+  "fields": {
+    "name": "성동구",
+    "city": 1
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 17,
+  "fields": {
+    "name": "성북구",
+    "city": 1
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 18,
+  "fields": {
+    "name": "송파구",
+    "city": 1
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 19,
+  "fields": {
+    "name": "양천구",
+    "city": 1
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 20,
+  "fields": {
+    "name": "영등포구",
+    "city": 1
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 21,
+  "fields": {
+    "name": "용산구",
+    "city": 1
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 22,
+  "fields": {
+    "name": "은평구",
+    "city": 1
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 23,
+  "fields": {
+    "name": "종로구",
+    "city": 1
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 24,
+  "fields": {
+    "name": "중구",
+    "city": 1
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 25,
+  "fields": {
+    "name": "중랑구",
+    "city": 1
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 26,
+  "fields": {
+    "name": "강서구",
+    "city": 2
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 27,
+  "fields": {
+    "name": "금정구",
+    "city": 2
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 28,
+  "fields": {
+    "name": "기장군",
+    "city": 2
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 29,
+  "fields": {
+    "name": "남구",
+    "city": 2
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 30,
+  "fields": {
+    "name": "동구",
+    "city": 2
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 31,
+  "fields": {
+    "name": "동래구",
+    "city": 2
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 32,
+  "fields": {
+    "name": "부산진구",
+    "city": 2
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 33,
+  "fields": {
+    "name": "북구",
+    "city": 2
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 34,
+  "fields": {
+    "name": "사상구",
+    "city": 2
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 35,
+  "fields": {
+    "name": "사하구",
+    "city": 2
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 36,
+  "fields": {
+    "name": "서구",
+    "city": 2
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 37,
+  "fields": {
+    "name": "수영구",
+    "city": 2
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 38,
+  "fields": {
+    "name": "연제구",
+    "city": 2
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 39,
+  "fields": {
+    "name": "영도구",
+    "city": 2
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 40,
+  "fields": {
+    "name": "중구",
+    "city": 2
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 41,
+  "fields": {
+    "name": "해운대구",
+    "city": 2
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 42,
+  "fields": {
+    "name": "남구",
+    "city": 3
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 43,
+  "fields": {
+    "name": "달서구",
+    "city": 3
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 44,
+  "fields": {
+    "name": "달성군",
+    "city": 3
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 45,
+  "fields": {
+    "name": "동구",
+    "city": 3
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 46,
+  "fields": {
+    "name": "북구",
+    "city": 3
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 47,
+  "fields": {
+    "name": "서구",
+    "city": 3
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 48,
+  "fields": {
+    "name": "수성구",
+    "city": 3
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 49,
+  "fields": {
+    "name": "중구",
+    "city": 3
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 50,
+  "fields": {
+    "name": "강화군",
+    "city": 4
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 51,
+  "fields": {
+    "name": "계양구",
+    "city": 4
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 52,
+  "fields": {
+    "name": "남구",
+    "city": 4
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 53,
+  "fields": {
+    "name": "남동구",
+    "city": 4
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 54,
+  "fields": {
+    "name": "동구",
+    "city": 4
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 55,
+  "fields": {
+    "name": "부평구",
+    "city": 4
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 56,
+  "fields": {
+    "name": "서구",
+    "city": 4
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 57,
+  "fields": {
+    "name": "연수구",
+    "city": 4
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 58,
+  "fields": {
+    "name": "옹진군",
+    "city": 4
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 59,
+  "fields": {
+    "name": "중구",
+    "city": 4
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 60,
+  "fields": {
+    "name": "광산구",
+    "city": 5
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 61,
+  "fields": {
+    "name": "남구",
+    "city": 5
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 62,
+  "fields": {
+    "name": "동구",
+    "city": 5
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 63,
+  "fields": {
+    "name": "북구",
+    "city": 5
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 64,
+  "fields": {
+    "name": "서구",
+    "city": 5
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 65,
+  "fields": {
+    "name": "대덕구",
+    "city": 6
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 66,
+  "fields": {
+    "name": "동구",
+    "city": 6
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 67,
+  "fields": {
+    "name": "서구",
+    "city": 6
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 68,
+  "fields": {
+    "name": "유성구",
+    "city": 6
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 69,
+  "fields": {
+    "name": "중구",
+    "city": 6
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 70,
+  "fields": {
+    "name": "남구",
+    "city": 7
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 71,
+  "fields": {
+    "name": "동구",
+    "city": 7
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 72,
+  "fields": {
+    "name": "북구",
+    "city": 7
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 73,
+  "fields": {
+    "name": "울주군",
+    "city": 7
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 74,
+  "fields": {
+    "name": "중구",
+    "city": 7
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 75,
+  "fields": {
+    "name": "가평군",
+    "city": 8
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 76,
+  "fields": {
+    "name": "고양시 덕양구",
+    "city": 8
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 77,
+  "fields": {
+    "name": "고양시 일산동구",
+    "city": 8
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 78,
+  "fields": {
+    "name": "고양시 일산서구",
+    "city": 8
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 79,
+  "fields": {
+    "name": "과천시",
+    "city": 8
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 80,
+  "fields": {
+    "name": "광명시",
+    "city": 8
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 81,
+  "fields": {
+    "name": "광주시",
+    "city": 8
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 82,
+  "fields": {
+    "name": "구리시",
+    "city": 8
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 83,
+  "fields": {
+    "name": "군포시",
+    "city": 8
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 84,
+  "fields": {
+    "name": "김포시",
+    "city": 8
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 85,
+  "fields": {
+    "name": "남양주시",
+    "city": 8
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 86,
+  "fields": {
+    "name": "동두천시",
+    "city": 8
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 87,
+  "fields": {
+    "name": "부천시 소사구",
+    "city": 8
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 88,
+  "fields": {
+    "name": "부천시 오정구",
+    "city": 8
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 89,
+  "fields": {
+    "name": "부천시 원미구",
+    "city": 8
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 90,
+  "fields": {
+    "name": "성남시 분당구",
+    "city": 8
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 91,
+  "fields": {
+    "name": "성남시 수정구",
+    "city": 8
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 92,
+  "fields": {
+    "name": "성남시 중원구",
+    "city": 8
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 93,
+  "fields": {
+    "name": "수원시 권선구",
+    "city": 8
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 94,
+  "fields": {
+    "name": "수원시 영통구",
+    "city": 8
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 95,
+  "fields": {
+    "name": "수원시 장안구",
+    "city": 8
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 96,
+  "fields": {
+    "name": "수원시 팔달구",
+    "city": 8
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 97,
+  "fields": {
+    "name": "시흥시",
+    "city": 8
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 98,
+  "fields": {
+    "name": "안산시 단원구",
+    "city": 8
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 99,
+  "fields": {
+    "name": "안산시 상록구",
+    "city": 8
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 100,
+  "fields": {
+    "name": "안성시",
+    "city": 8
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 101,
+  "fields": {
+    "name": "안양시 동안구",
+    "city": 8
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 102,
+  "fields": {
+    "name": "안양시 만안구",
+    "city": 8
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 103,
+  "fields": {
+    "name": "양주시",
+    "city": 8
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 104,
+  "fields": {
+    "name": "양평군",
+    "city": 8
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 105,
+  "fields": {
+    "name": "여주군",
+    "city": 8
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 106,
+  "fields": {
+    "name": "연천군",
+    "city": 8
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 107,
+  "fields": {
+    "name": "오산시",
+    "city": 8
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 108,
+  "fields": {
+    "name": "용인시 기흥구",
+    "city": 8
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 109,
+  "fields": {
+    "name": "용인시 수지구",
+    "city": 8
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 110,
+  "fields": {
+    "name": "용인시 처인구",
+    "city": 8
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 111,
+  "fields": {
+    "name": "의왕시",
+    "city": 8
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 112,
+  "fields": {
+    "name": "의정부시",
+    "city": 8
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 113,
+  "fields": {
+    "name": "이천시",
+    "city": 8
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 114,
+  "fields": {
+    "name": "파주시",
+    "city": 8
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 115,
+  "fields": {
+    "name": "평택시",
+    "city": 8
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 116,
+  "fields": {
+    "name": "포천시",
+    "city": 8
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 117,
+  "fields": {
+    "name": "하남시",
+    "city": 8
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 118,
+  "fields": {
+    "name": "화성시",
+    "city": 8
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 119,
+  "fields": {
+    "name": "강릉시",
+    "city": 9
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 120,
+  "fields": {
+    "name": "고성군",
+    "city": 9
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 121,
+  "fields": {
+    "name": "동해시",
+    "city": 9
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 122,
+  "fields": {
+    "name": "삼척시",
+    "city": 9
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 123,
+  "fields": {
+    "name": "속초시",
+    "city": 9
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 124,
+  "fields": {
+    "name": "양구군",
+    "city": 9
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 125,
+  "fields": {
+    "name": "양양군",
+    "city": 9
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 126,
+  "fields": {
+    "name": "영월군",
+    "city": 9
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 127,
+  "fields": {
+    "name": "원주시",
+    "city": 9
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 128,
+  "fields": {
+    "name": "인제군",
+    "city": 9
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 129,
+  "fields": {
+    "name": "정선군",
+    "city": 9
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 130,
+  "fields": {
+    "name": "철원군",
+    "city": 9
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 131,
+  "fields": {
+    "name": "춘천시",
+    "city": 9
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 132,
+  "fields": {
+    "name": "태백시",
+    "city": 9
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 133,
+  "fields": {
+    "name": "평창군",
+    "city": 9
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 134,
+  "fields": {
+    "name": "홍천군",
+    "city": 9
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 135,
+  "fields": {
+    "name": "화천군",
+    "city": 9
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 136,
+  "fields": {
+    "name": "횡성군",
+    "city": 9
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 137,
+  "fields": {
+    "name": "괴산군",
+    "city": 10
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 138,
+  "fields": {
+    "name": "단양군",
+    "city": 10
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 139,
+  "fields": {
+    "name": "보은군",
+    "city": 10
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 140,
+  "fields": {
+    "name": "영동군",
+    "city": 10
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 141,
+  "fields": {
+    "name": "옥천군",
+    "city": 10
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 142,
+  "fields": {
+    "name": "음성군",
+    "city": 10
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 143,
+  "fields": {
+    "name": "제천시",
+    "city": 10
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 144,
+  "fields": {
+    "name": "증평군",
+    "city": 10
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 145,
+  "fields": {
+    "name": "진천군",
+    "city": 10
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 146,
+  "fields": {
+    "name": "청원군",
+    "city": 10
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 147,
+  "fields": {
+    "name": "청주시 상당구",
+    "city": 10
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 148,
+  "fields": {
+    "name": "청주시 흥덕구",
+    "city": 10
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 149,
+  "fields": {
+    "name": "충주시",
+    "city": 10
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 150,
+  "fields": {
+    "name": "계룡시",
+    "city": 11
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 151,
+  "fields": {
+    "name": "공주시",
+    "city": 11
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 152,
+  "fields": {
+    "name": "금산군",
+    "city": 11
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 153,
+  "fields": {
+    "name": "논산시",
+    "city": 11
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 154,
+  "fields": {
+    "name": "당진시",
+    "city": 11
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 155,
+  "fields": {
+    "name": "보령시",
+    "city": 11
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 156,
+  "fields": {
+    "name": "부여군",
+    "city": 11
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 157,
+  "fields": {
+    "name": "서산시",
+    "city": 11
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 158,
+  "fields": {
+    "name": "서천군",
+    "city": 11
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 159,
+  "fields": {
+    "name": "아산시",
+    "city": 11
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 160,
+  "fields": {
+    "name": "연기군",
+    "city": 11
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 161,
+  "fields": {
+    "name": "예산군",
+    "city": 11
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 162,
+  "fields": {
+    "name": "천안시 동남구",
+    "city": 11
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 163,
+  "fields": {
+    "name": "천안시 서북구",
+    "city": 11
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 164,
+  "fields": {
+    "name": "청양군",
+    "city": 11
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 165,
+  "fields": {
+    "name": "태안군",
+    "city": 11
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 166,
+  "fields": {
+    "name": "홍성군",
+    "city": 11
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 167,
+  "fields": {
+    "name": "고창군",
+    "city": 12
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 168,
+  "fields": {
+    "name": "군산시",
+    "city": 12
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 169,
+  "fields": {
+    "name": "김제시",
+    "city": 12
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 170,
+  "fields": {
+    "name": "남원시",
+    "city": 12
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 171,
+  "fields": {
+    "name": "무주군",
+    "city": 12
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 172,
+  "fields": {
+    "name": "부안군",
+    "city": 12
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 173,
+  "fields": {
+    "name": "순창군",
+    "city": 12
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 174,
+  "fields": {
+    "name": "완주군",
+    "city": 12
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 175,
+  "fields": {
+    "name": "익산시",
+    "city": 12
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 176,
+  "fields": {
+    "name": "임실군",
+    "city": 12
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 177,
+  "fields": {
+    "name": "장수군",
+    "city": 12
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 178,
+  "fields": {
+    "name": "전주시 덕진구",
+    "city": 12
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 179,
+  "fields": {
+    "name": "전주시 완산구",
+    "city": 12
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 180,
+  "fields": {
+    "name": "정읍시",
+    "city": 12
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 181,
+  "fields": {
+    "name": "진안군",
+    "city": 12
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 182,
+  "fields": {
+    "name": "강진군",
+    "city": 13
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 183,
+  "fields": {
+    "name": "고흥군",
+    "city": 13
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 184,
+  "fields": {
+    "name": "곡성군",
+    "city": 13
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 185,
+  "fields": {
+    "name": "광양시",
+    "city": 13
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 186,
+  "fields": {
+    "name": "구례군",
+    "city": 13
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 187,
+  "fields": {
+    "name": "나주시",
+    "city": 13
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 188,
+  "fields": {
+    "name": "담양군",
+    "city": 13
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 189,
+  "fields": {
+    "name": "목포시",
+    "city": 13
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 190,
+  "fields": {
+    "name": "무안군",
+    "city": 13
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 191,
+  "fields": {
+    "name": "보성군",
+    "city": 13
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 192,
+  "fields": {
+    "name": "순천시",
+    "city": 13
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 193,
+  "fields": {
+    "name": "신안군",
+    "city": 13
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 194,
+  "fields": {
+    "name": "여수시",
+    "city": 13
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 195,
+  "fields": {
+    "name": "영광군",
+    "city": 13
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 196,
+  "fields": {
+    "name": "영암군",
+    "city": 13
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 197,
+  "fields": {
+    "name": "완도군",
+    "city": 13
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 198,
+  "fields": {
+    "name": "장성군",
+    "city": 13
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 199,
+  "fields": {
+    "name": "장흥군",
+    "city": 13
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 200,
+  "fields": {
+    "name": "진도군",
+    "city": 13
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 201,
+  "fields": {
+    "name": "함평군",
+    "city": 13
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 202,
+  "fields": {
+    "name": "해남군",
+    "city": 13
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 203,
+  "fields": {
+    "name": "화순군",
+    "city": 13
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 204,
+  "fields": {
+    "name": "경산시",
+    "city": 14
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 205,
+  "fields": {
+    "name": "경주시",
+    "city": 14
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 206,
+  "fields": {
+    "name": "고령군",
+    "city": 14
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 207,
+  "fields": {
+    "name": "구미시",
+    "city": 14
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 208,
+  "fields": {
+    "name": "군위군",
+    "city": 14
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 209,
+  "fields": {
+    "name": "김천시",
+    "city": 14
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 210,
+  "fields": {
+    "name": "문경시",
+    "city": 14
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 211,
+  "fields": {
+    "name": "봉화군",
+    "city": 14
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 212,
+  "fields": {
+    "name": "상주시",
+    "city": 14
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 213,
+  "fields": {
+    "name": "성주군",
+    "city": 14
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 214,
+  "fields": {
+    "name": "안동시",
+    "city": 14
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 215,
+  "fields": {
+    "name": "영덕군",
+    "city": 14
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 216,
+  "fields": {
+    "name": "영양군",
+    "city": 14
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 217,
+  "fields": {
+    "name": "영주시",
+    "city": 14
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 218,
+  "fields": {
+    "name": "영천시",
+    "city": 14
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 219,
+  "fields": {
+    "name": "예천군",
+    "city": 14
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 220,
+  "fields": {
+    "name": "울릉군",
+    "city": 14
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 221,
+  "fields": {
+    "name": "울진군",
+    "city": 14
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 222,
+  "fields": {
+    "name": "의성군",
+    "city": 14
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 223,
+  "fields": {
+    "name": "청도군",
+    "city": 14
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 224,
+  "fields": {
+    "name": "청송군",
+    "city": 14
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 225,
+  "fields": {
+    "name": "칠곡군",
+    "city": 14
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 226,
+  "fields": {
+    "name": "포항시 남구",
+    "city": 14
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 227,
+  "fields": {
+    "name": "포항시 북구",
+    "city": 14
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 228,
+  "fields": {
+    "name": "거제시",
+    "city": 15
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 229,
+  "fields": {
+    "name": "거창군",
+    "city": 15
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 230,
+  "fields": {
+    "name": "고성군",
+    "city": 15
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 231,
+  "fields": {
+    "name": "김해시",
+    "city": 15
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 232,
+  "fields": {
+    "name": "남해군",
+    "city": 15
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 233,
+  "fields": {
+    "name": "밀양시",
+    "city": 15
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 234,
+  "fields": {
+    "name": "사천시",
+    "city": 15
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 235,
+  "fields": {
+    "name": "산청군",
+    "city": 15
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 236,
+  "fields": {
+    "name": "양산시",
+    "city": 15
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 237,
+  "fields": {
+    "name": "의령군",
+    "city": 15
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 238,
+  "fields": {
+    "name": "진주시",
+    "city": 15
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 239,
+  "fields": {
+    "name": "창녕군",
+    "city": 15
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 240,
+  "fields": {
+    "name": "창원시 마산합포구",
+    "city": 15
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 241,
+  "fields": {
+    "name": "창원시 마산회원구",
+    "city": 15
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 242,
+  "fields": {
+    "name": "창원시 성산구",
+    "city": 15
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 243,
+  "fields": {
+    "name": "창원시 의창구",
+    "city": 15
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 244,
+  "fields": {
+    "name": "창원시 진해구",
+    "city": 15
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 245,
+  "fields": {
+    "name": "통영시",
+    "city": 15
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 246,
+  "fields": {
+    "name": "하동군",
+    "city": 15
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 247,
+  "fields": {
+    "name": "함안군",
+    "city": 15
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 248,
+  "fields": {
+    "name": "함양군",
+    "city": 15
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 249,
+  "fields": {
+    "name": "합천군",
+    "city": 15
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 250,
+  "fields": {
+    "name": "서귀포시",
+    "city": 16
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 251,
+  "fields": {
+    "name": "제주시",
+    "city": 16
+  }
+},
+{
+  "model": "regions.regiondistrict",
+  "pk": 252,
+  "fields": {
+    "name": "세종시",
+    "city": 17
+  }
+}
+]

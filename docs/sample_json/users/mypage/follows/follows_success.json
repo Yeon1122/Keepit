@@ -1,0 +1,26 @@
+{
+  "message": "팔로우 정보를 불러왔습니다.",
+  "status": 200,
+  "data": {
+    "following": [
+      {
+        "user_id": 10,
+        "nickname": "금융고수"
+      },
+      {
+        "user_id": 11,
+        "nickname": "동작구 봉춤남"
+      }
+    ],
+    "followers": [
+      {
+        "user_id": 11,
+        "nickname": "투자왕"
+      },
+      {
+        "user_id": 2,
+        "nickname": "킹왕짱하연"
+      }
+    ]
+  }
+}

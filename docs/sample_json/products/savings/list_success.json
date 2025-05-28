@@ -1,0 +1,25 @@
+{
+  "message": "예금/적금 상품 목록을 불러왔습니다.",
+  "status": 200,
+  "data": [
+    {
+      "name": "WON플러스예금",
+      "company": "우리은행",
+      "link": "",
+      "interest_rate": 2.7,
+      "special_rate": 2.7,
+      "term": 1,
+      "target": "실명의 개인"
+    },
+    {
+      "id": 2,
+      "type": "적금",
+      "name": "삼성전자",
+      "company": "삼성전자",
+      "stock_code": "005930",
+      "market_type": "KOSPI",
+      "current_price": 76000,
+      "price_change": -300
+    }
+  ]
+}

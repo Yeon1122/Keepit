@@ -1,0 +1,65 @@
+[
+{
+  "model": "tests.testresult",
+  "pk": 3,
+  "fields": {
+    "user": 2,
+    "risk_type": "aggressive",
+    "test_data": {
+      "age": 26,
+      "gender": "F",
+      "income": 5000,
+      "assets": 10000,
+      "risk_tolerance": "high",
+      "financial_knowledge": "높음",
+      "investment_experience": "1~3년",
+      "saving_goal": "목돈 마련",
+      "preferred_term": "장기",
+      "user_type": "직장인"
+    },
+    "created_at": "2025-05-27T04:19:35.639Z"
+  }
+},
+{
+  "model": "tests.testresult",
+  "pk": 4,
+  "fields": {
+    "user": 1,
+    "risk_type": "conservative",
+    "test_data": {
+      "age": 27,
+      "gender": "F",
+      "income": 2000,
+      "assets": 10000,
+      "risk_tolerance": "low",
+      "financial_knowledge": "낮음",
+      "investment_experience": "없음",
+      "saving_goal": "단기 여행",
+      "preferred_term": "장기",
+      "user_type": "사회초년생"
+    },
+    "created_at": "2025-05-27T04:21:44.956Z"
+  }
+},
+{
+  "model": "tests.testresult",
+  "pk": 5,
+  "fields": {
+    "user": 3,
+    "risk_type": "aggressive",
+    "test_data": {
+      "age": 25,
+      "gender": "F",
+      "income": 6000,
+      "assets": 100000,
+      "risk_tolerance": "high",
+      "financial_knowledge": "높음",
+      "investment_experience": "3년 이상",
+      "saving_goal": "목돈 마련",
+      "preferred_term": "장기",
+      "user_type": "직장인"
+    },
+    "created_at": "2025-05-27T04:24:54.282Z"
+  }
+}
+]

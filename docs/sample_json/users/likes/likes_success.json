@@ -1,0 +1,27 @@
+{
+  "message": "찜한 상품 목록을 불러왔습니다.",
+  "status": 200,
+  "data": [
+    {
+      "id": 201,
+      "type": "정기예금",
+      "name": "국민 튼튼예금",
+      "bank": "국민은행",
+      "interest_rate": 2.5,
+      "special_rate": 3.7,
+      "term": 24,
+      "target": "누구나"
+    },
+    {
+      "id": 202,
+      "type": "주식",
+      "name": "삼성전자",
+      "company": "삼성전자",
+      "stock_code": "005930",
+      "market_type": "KOSPI",
+      "current_price": 76000,
+      "trade_volume": 2670538,
+      "market_cap": 368920000000000
+    }
+  ]
+}

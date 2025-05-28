@@ -1,0 +1,22 @@
+{
+    "products": [
+        {
+            "name": "우리SUPER주거래적금",
+            "company": "우리은행",
+            "target": "실명의 개인",
+            "interest_rate": 2.35,
+            "special_rate": 3.75,
+            "term": 12,
+            "expected_amount": 1215275.0
+        },
+        {
+            "name": "WON적금",
+            "company": "우리은행",
+            "target": "실명의 개인",
+            "interest_rate": 3.15,
+            "special_rate": 3.35,
+            "term": 12,
+            "expected_amount": 1220475.0
+        }
+    ]
+}
